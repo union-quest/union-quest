@@ -5,13 +5,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy('GreetingsRegistry', {
+  await deploy('UnionQuestCore', {
     from: deployer,
-    args: [2],
+    args: ["0x15B12b8dB6665B31E15Da26275fD54590f2E989c", "0x08AF898e65493D8212c8981FAdF60Ff023A91150", "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa"],
     log: true,
     autoMine: true,
   });
 };
 export default func;
-func.id = 'deploy_greetings_registry'; // id required to prevent reexecution
-func.tags = ['GreetingsRegistry'];
