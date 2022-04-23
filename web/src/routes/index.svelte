@@ -41,7 +41,7 @@
     </p>
     <div class="max-w-md mx-auto pt-1 mt-5 space-y-3 md:mt-8 md:space-y-5">
       <div class="space-y-5 sm:flex sm:justify-center sm:space-y-0 sm:space-x-3">
-        <NavButton class="big secondary" href={url('demo/')} label="Try the Demo!">Demo</NavButton>
+        <NavButton class="big secondary" href={url('map/')} label="Try the Demo!">Demo</NavButton>
         <NavButton
           blank={true}
           class="big secondary"
