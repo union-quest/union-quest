@@ -8,6 +8,7 @@
   import Modal from '$lib/components/styled/Modal.svelte';
   import {onMount} from 'svelte';
   import DaiSymbol from './DaiSymbol.svelte';
+  import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
 
   export let x: number;
   export let y: number;
@@ -79,9 +80,12 @@
           <ul class="list-disc">
             {#each players.filter((p) => p.x === x && p.y === y) as player}
               <li>
-                <a href={`https://etherscan.io/address/${player.id}`}>
-                  {player.id.slice(0, 6)}...{player.id.slice(-4)}
-                </a>
+                <div class="flex">
+                  <Blockie address={player.id} class="m-1 h-6 w-6" />
+                  <a href={`https://kovan.union.finance/profile/${player.id}`}>
+                    {player.id.slice(0, 4)}...{player.id.slice(-4)}
+                  </a>
+                </div>
               </li>
             {/each}
           </ul>
@@ -92,10 +96,13 @@
             <ul class="list-disc">
               {#each $trusts.data as trust}
                 <li>
-                  <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
-                    {trust.borrower.id.slice(0, 6)}...{trust.borrower.id.slice(-4)}
-                  </a>
-                  <div class="flex">{trust.trustAmount}<DaiSymbol /></div>
+                  <div class="flex">
+                    <Blockie address={trust.borrower.id} class="m-1 h-6 w-6" />
+                    <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
+                      {trust.borrower.id.slice(0, 4)}...{trust.borrower.id.slice(-4)}
+                    </a>
+                    <div class="flex">: {trust.trustAmount}<DaiSymbol /></div>
+                  </div>
                 </li>
               {/each}
               <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${village.member}`}>
@@ -224,6 +231,13 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
       ? 'border-yellow-500 hover:border-yellow-500'
       : 'border-black-500'}"
   >
+    <div class="absolute">
+      {#each players as player}
+        {#if !player.arrivalTime && player.x === x && player.y === y}
+          <Blockie address={player.id} class="m-1 h-6 w-6" />
+        {/if}
+      {/each}
+    </div>
     <svg width="100" height="100" on:click={() => (showModal = true)}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
         <rect fill="#009A17" width="1" height="1" />
@@ -272,17 +286,6 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
           </svg>
         {/if}
       {/if}
-      {#each players as player}
-        {#if player.arrivalTime && player.xDestination === x && player.yDestination === y}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-            <circle fill="grey" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
-          </svg>
-        {:else if !player.arrivalTime && player.x === x && player.y === y}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-            <circle fill="grey" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
-          </svg>
-        {/if}
-      {/each}
     </svg>
   </div>
 </div>
