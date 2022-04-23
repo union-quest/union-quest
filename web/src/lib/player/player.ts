@@ -13,6 +13,8 @@ export type Player = {
   id: string;
   x: number;
   y: number;
+  xDestination: number;
+  yDestination: number;
   arrivalTime: number;
 }
 

@@ -39,6 +39,8 @@ export function handleStart(event: BeginMove): void {
 export function handleBeginMove(event: BeginMove): void {
   let entity = getOrCreatePlayer(event.params._address.toHexString());
 
+  entity.xDestination = event.params._player.x.toI32();
+  entity.yDestination = event.params._player.y.toI32();
   entity.arrivalTime = event.params._player.arrivalTime.toI32();
 
   entity.save();

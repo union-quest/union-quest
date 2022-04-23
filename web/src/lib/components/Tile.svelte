@@ -57,7 +57,7 @@
         <div>This tile is an empty field.</div>
       {/if}
       <div>There are {players.length} player(s) in this square.</div>
-      {#if currentPlayer}
+      {#if currentPlayer && !currentPlayer.arrivalTime}
         <div>
           This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} units away. It will take
           <span class="font-bold"
@@ -68,13 +68,14 @@
       {/if}
       <button
         on:click={() => beginMove(x, y)}
+        disabled={currentPlayer.arrivalTime}
         class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
         text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
         type="button"
       >
         BEGIN MOVE
       </button>
-      {#if currentPlayer.arrivalTime}
+      {#if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
         <button
           class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
       text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
