@@ -8,17 +8,14 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
+import type { Player } from '$lib/player/player';
 
-export type Village = {
+export type Trust = {
   id: string;
-  x: number;
-  y: number;
-  name: string;
-  description: string;
-  member: string;
-}
-
-export type Villages = Village[]
+  staker: Player;
+  borrower: Player;
+  trustAmount: number;
+}[]
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
@@ -48,29 +45,31 @@ type TransactionRecord = {
   events?: unknown[]; // TODO
 };
 
-class UserStore implements QueryStore<Villages> {
-  private queryStore: QueryStore<Villages>;
-  private store: Readable<QueryState<Villages>>;
-  constructor(endpoint: EndPoint, private transactions: TransactionStore) {
+class TrustsStore implements QueryStore<Trust> {
+  private queryStore: QueryStore<Trust>;
+  private store: Readable<QueryState<Trust>>;
+  constructor(endpoint: EndPoint, private transactions: TransactionStore, staker: string) {
     this.queryStore = new HookedQueryStore(
       endpoint,
       `
-    query {
-      villages{
+    query getTrust($staker: String){
+      trusts(where: {staker: $staker}) {
         id
-        x
-        y
-        name
-        description
-        member
+        staker {
+          id
+        }
+        borrower{
+          id
+        }
+        trustAmount
       }
     }`,
       chainTempo,
-      { path: 'villages' }
+      { path: 'trusts', variables: { staker: staker.toLowerCase() } }
     );
     this.store = derived([this.queryStore, this.transactions], (values) => this.update(values));
   }
-  private update([$query]: [QueryState<Villages>, TransactionRecord[]]): QueryState<Villages> {
+  private update([$query]: [QueryState<Trust>, TransactionRecord[]]): QueryState<Trust> {
     if (!$query.data) {
       return $query;
     } else {
@@ -88,11 +87,11 @@ class UserStore implements QueryStore<Villages> {
   }
 
   subscribe(
-    run: Subscriber<QueryState<Villages>>,
-    invalidate?: Invalidator<QueryState<Villages>> | undefined
+    run: Subscriber<QueryState<Trust>>,
+    invalidate?: Invalidator<QueryState<Trust>> | undefined
   ): Unsubscriber {
     return this.store.subscribe(run, invalidate);
   }
 }
 
-export const villages = new UserStore(SUBGRAPH_ENDPOINT, transactions);
+export const getTrusts = (staker: string) => new TrustsStore(SUBGRAPH_ENDPOINT, transactions, staker);

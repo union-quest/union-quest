@@ -103,6 +103,7 @@ export function handleAddVillage(event: AddVillage): void {
   entity.y = event.params._y.toI32();
   entity.name = event.params._village.name;
   entity.description = event.params._village.description;
+  entity.member = event.params._village.member.toHexString();
 
   entity.save();
 }

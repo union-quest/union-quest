@@ -4,6 +4,7 @@
   import type {Players} from '$lib/player/players';
   import type {Village} from '$lib/village/villages';
   import type {Items} from '$lib/item/items';
+  import {getTrusts} from '$lib/trust/trust';
   import Modal from '$lib/components/styled/Modal.svelte';
   import {onMount} from 'svelte';
   import DaiSymbol from './DaiSymbol.svelte';
@@ -19,6 +20,7 @@
 
   let showModal = false;
   let currentTimestamp = Date.now();
+  let trusts = getTrusts(village ? village.member : '');
 
   function distance(x0, y0, x1, y1) {
     return Math.abs(x1 - x0) + Math.abs(y1 - y0);
@@ -71,15 +73,32 @@
         </div>
         <div class="m-2 rounded-md border-4 p-4 ">
           <div class="text-xl">Players</div>
-          <div class="italic">There are {players.length} player(s) in this tile.</div>
+          <div class="italic">
+            There are {players.filter((p) => p.x === x && p.y === y).length} player(s) in this tile.
+          </div>
           <ul class="list-disc">
-            {#each players as player}
+            {#each players.filter((p) => p.x === x && p.y === y) as player}
               <li>
                 <a href={`https://etherscan.io/address/${player.id}`}>
                   {player.id.slice(0, 6)}...{player.id.slice(-4)}
                 </a>
               </li>
             {/each}
+          </ul>
+        </div>
+        <div class="m-2 rounded-md border-4 p-4 ">
+          <div class="text-xl">Leaderboard</div>
+          <ul class="list-disc">
+            {#if $trusts.data}
+              {#each $trusts.data as trust}
+                <li>
+                  <a href={`https://etherscan.io/address/${trust.borrower.id}`}>
+                    {trust.borrower.id.slice(0, 6)}...{trust.borrower.id.slice(-4)}
+                  </a>
+                  <div class="flex">{trust.trustAmount}<DaiSymbol /></div>
+                </li>
+              {/each}
+            {/if}
           </ul>
         </div>
 
@@ -125,6 +144,7 @@
 
                 <button
                   on:click={fight}
+                  disabled={currentPlayer.x !== x || currentPlayer.y !== y}
                   class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
       text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
                   type="button"
