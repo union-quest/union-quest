@@ -23,6 +23,8 @@ export function getOrCreateVillage(
     entity = new Village(id);
     entity.x = 0;
     entity.y = 0;
+    entity.name = "";
+    entity.description = "";
   }
 
   return entity;
@@ -42,6 +44,8 @@ export function handleAddVillage(event: AddVillage): void {
 
   entity.x = event.params._x.toI32();
   entity.y = event.params._y.toI32();
+  entity.name = event.params._village.name;
+  entity.description = event.params._village.description;
 
   entity.save();
 }

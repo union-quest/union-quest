@@ -1,6 +1,7 @@
 <script lang="ts">
   import {flow, wallet} from '$lib/blockchain/wallet';
-  import type {Player, Players} from '$lib/player/players';
+  import type {Player} from '$lib/player/player';
+  import type {Players} from '$lib/player/players';
   import type {Village} from '$lib/village/villages';
   import Modal from '$lib/components/styled/Modal.svelte';
 
@@ -9,6 +10,8 @@
   export let village: Village | null;
   export let players: Players;
   export let currentPlayer: Player | null;
+
+  const DISTANCE_MULTIPLIER = 2;
 
   let showModal = false;
 
@@ -29,6 +32,10 @@
   {#if showModal}
     <Modal title={`Tile ${x},${y}`} on:close={() => (showModal = false)} closeButton={true}>
       {#if village}
+        <div>
+          <div>Name: {village.name}</div>
+          <div>Description: {village.description}</div>
+        </div>
         <div>This tile is a village.</div>
       {:else}
         <div>This tile is an empty field.</div>
@@ -37,7 +44,7 @@
       {#if currentPlayer}
         <div>
           This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} units away. It will take
-          {60 * distance(x, y, currentPlayer.x, currentPlayer.y)} seconds to travel to.
+          {DISTANCE_MULTIPLIER * distance(x, y, currentPlayer.x, currentPlayer.y)} seconds to travel to.
         </div>
       {/if}
       <button
