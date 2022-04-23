@@ -38,7 +38,7 @@
 <NavBar
   links={[
     {href: url(''), title: 'Home'},
-    {href: url('demo/'), title: 'Demo'},
+    {href: url('map/'), title: 'Map'},
   ]}
 />
 
