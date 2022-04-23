@@ -3,6 +3,8 @@
 </script>
 
 <script lang="ts">
+  import {flow, wallet} from '$lib/blockchain/wallet';
+
   import NavButton from '$lib/components/styled/navigation/NavButton.svelte';
   import {url} from '$lib/utils/url';
   const name = 'Union Quest';
@@ -19,6 +21,11 @@
   }
   function select(e: MouseEvent) {
     _select(e.currentTarget as HTMLElement);
+  }
+
+  async function mintTokens() {
+    await flow.execute((contracts) => contracts.DAI.approve(contracts.UnionQuestCore.address, 100000000000000));
+    await flow.execute((contracts) => contracts.DAI.mint($wallet.address, 100000000000000));
   }
 </script>
 
@@ -44,6 +51,7 @@
         >
           Check out the Github
         </NavButton>
+        <button on:click={mintTokens}>Mint some free DAI</button>
       </div>
     </div>
   </div>

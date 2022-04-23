@@ -1,6 +1,11 @@
 /* eslint-disable prefer-const */
 import { AddVillage, BeginMove, ResolveMove } from '../generated/UnionQuestCore/UnionQuestCoreContract';
+import { Transfer } from '../generated/DAI/DAIContract';
 import { Player, Village } from '../generated/schema';
+import { Bytes } from '@graphprotocol/graph-ts';
+
+let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
+let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
 
 export function getOrCreatePlayer(
   id: string
@@ -10,6 +15,7 @@ export function getOrCreatePlayer(
     entity = new Player(id);
     entity.x = 0;
     entity.y = 0;
+    entity.balance = 0;
   }
 
   return entity;
@@ -65,4 +71,18 @@ export function handleAddVillage(event: AddVillage): void {
   entity.description = event.params._village.description;
 
   entity.save();
+}
+
+export function handleTransfer(event: Transfer): void {
+  if (event.params.from != ZERO_ADDRESS) {
+    let from = getOrCreatePlayer(event.params.from.toHexString());
+    from.balance = from.balance - event.params.value.toI32();
+    from.save()
+  }
+
+  if (event.params.to != ZERO_ADDRESS) {
+    let to = getOrCreatePlayer(event.params.to.toHexString());
+    to.balance = to.balance + event.params.value.toI32();
+    to.save()
+  }
 }

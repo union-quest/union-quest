@@ -2,6 +2,7 @@ type Player @entity {
   id: ID!
   x: Int!
   y: Int!
+  balance: Int!
   xDestination: Int
   yDestination: Int
   arrivalTime: Int

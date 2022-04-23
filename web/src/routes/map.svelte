@@ -6,6 +6,7 @@
   import {players} from '$lib/player/players';
   import {villages} from '$lib/village/villages';
   import Tile from '$lib/components/Tile.svelte';
+  import DaiSymbol from '$lib/components/DaiSymbol.svelte';
 
   async function start() {
     await flow.execute((contracts) => contracts.UnionQuestCore.start());
@@ -36,21 +37,28 @@
     {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
       <button on:click={() => start()}>START</button>
     {:else}
-      <div class="flex justify-center">
-        <div class="grid grid-cols-6 w-fit h-fit">
-          {#each [0, 1, 2, 3, 4, 5] as x}
-            {#each [0, 1, 2, 3, 4, 5] as y}
-              <Tile
-                {x}
-                {y}
-                village={$villages.data.find((v) => v.x === x && v.y === y)}
-                players={$players.data.filter((p) => p.x === x && p.y === y)}
-                currentPlayer={$players.data.find((p) =>
-                  $wallet.address ? p.id === $wallet.address.toLowerCase() : false
-                )}
-              />
+      <div>
+        <div class="flex">
+          Balance: {$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))
+            .balance}
+          <DaiSymbol />
+        </div>
+        <div class="flex justify-center">
+          <div class="grid grid-cols-6 w-fit h-fit">
+            {#each [0, 1, 2, 3, 4, 5] as x}
+              {#each [0, 1, 2, 3, 4, 5] as y}
+                <Tile
+                  {x}
+                  {y}
+                  village={$villages.data.find((v) => v.x === x && v.y === y)}
+                  players={$players.data.filter((p) => p.x === x && p.y === y)}
+                  currentPlayer={$players.data.find((p) =>
+                    $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+                  )}
+                />
+              {/each}
             {/each}
-          {/each}
+          </div>
         </div>
       </div>
     {/if}
