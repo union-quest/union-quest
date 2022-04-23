@@ -28,7 +28,6 @@ export function getOrCreateVillage(
   return entity;
 }
 
-
 export function handleMove(event: Move): void {
   let entity = getOrCreatePlayer(event.params._player.toHexString());
 

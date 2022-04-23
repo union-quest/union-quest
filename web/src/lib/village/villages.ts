@@ -9,11 +9,13 @@ import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 
-export type Villages = {
+export type Village = {
   id: string;
   x: number;
   y: number;
-}[]
+}
+
+export type Villages = Village[]
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
