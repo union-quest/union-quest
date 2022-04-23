@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+	<polygon fill="gold" points="0.25,0.35 0.5,0.1 0.75,0.35" />
+	<rect fill="darkkhaki" x="0.25" y="0.35" width="0.5" height="0.5" />
+	<rect fill="brown" x="0.45" y="0.65" width="0.1" height="0.2" />
+</svg>

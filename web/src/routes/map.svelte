@@ -4,6 +4,7 @@
   import {onMount} from 'svelte';
   import {combine} from 'union-quest-common';
   import {getPlayer} from '$lib/player/player';
+  import {each} from 'svelte/internal';
 
   let player = getPlayer('0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199');
 
@@ -38,14 +39,30 @@
       y: {$player.data.y}
 
       <table>
-        <tr>
-          <th on:click={() => move(0, 0)}>0,0</th>
-          <th on:click={() => move(0, 1)}>0,1</th>
-        </tr>
-        <tr>
-          <th on:click={() => move(1, 0)}>1,0</th>
-          <th on:click={() => move(1, 1)}>1,1</th>
-        </tr>
+        {#each [0, 1, 2, 3] as i}
+          <tr>
+            {#each [0, 1, 2, 3] as j}
+              <th on:click={() => move(i, j)}>
+                <svg width="100">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+                    <rect fill="#009A17" width="1" height="1" />
+                    <path d="M 0.161,0.178 0.249,0.336" fill="none" stroke="#004400" stroke-width="0.02" />
+                    <path d="M 0.314,0.173 V 0.33" fill="none" stroke="#004400" stroke-width="0.02" />
+                    <path d="M 0.469,0.178 0.376,0.336" fill="none" stroke="#004400" stroke-width="0.02" />
+                    <path d="m 0.48277796,0.53428125 0.088,0.158" fill="none" stroke="#004400" stroke-width="0.02" />
+                    <path d="m 0.63577796,0.52928125 v 0.157" fill="none" stroke="#004400" stroke-width="0.02" />
+                    <path d="m 0.79077796,0.53428125 -0.093,0.158" fill="none" stroke="#004400" stroke-width="0.02" />
+                  </svg>
+                  {#if $player.data.x === i && $player.data.y === j}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+                      <circle fill="red" r="0.25" cx="0.5" cy="0.5" />
+                    </svg>
+                  {/if}
+                </svg>
+              </th>
+            {/each}
+          </tr>
+        {/each}
       </table>
     {/if}
   </section>
