@@ -46,25 +46,25 @@
     : 'border-black-500'}"
 >
   {#if showModal}
-    <Modal title={`${village ? 'Village' : 'Tile'} ${x},${y}`} on:close={() => (showModal = false)} closeButton={true}>
+    <Modal
+      title={`${village ? village.name : `Tile ${x},${y}`}`}
+      on:close={() => (showModal = false)}
+      closeButton={true}
+    >
       <div class="flex flex-col">
         <div class="m-2 rounded-md border-4 p-4">
           <div class="text-xl">Overview</div>
           {#if village}
             <div>
-              <div>Name: {village.name}</div>
-              <div>Description: {village.description}</div>
+              {village.description}
             </div>
           {:else}
-            <div>
-              <div>Name: None.</div>
-              <div>Description: This tile is an empty field.</div>
-            </div>
+            <div>An empty field!</div>
           {/if}
         </div>
         <div class="m-2 rounded-md border-4 p-4 ">
           <div class="text-xl">Players</div>
-          <div class="italic">There are {players.length} player(s) in this square.</div>
+          <div class="italic">There are {players.length} player(s) in this tile.</div>
           <ul class="list-disc">
             {#each players as player}
               <li>
@@ -81,32 +81,43 @@
             <div class="text-lg">Movement</div>
             {#if currentPlayer && !currentPlayer.arrivalTime}
               <div>
-                This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} units away. It will take
-                <span class="font-bold"
-                  >{DISTANCE_MULTIPLIER} * {distance(x, y, currentPlayer.x, currentPlayer.y)} = {DISTANCE_MULTIPLIER *
-                    distance(x, y, currentPlayer.x, currentPlayer.y)}</span
-                > seconds to travel to.
+                This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} unit(s) away.
               </div>
-            {/if}
-            <button
-              on:click={() => beginMove(x, y)}
-              disabled={currentPlayer.arrivalTime}
-              class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-              type="button"
-            >
-              BEGIN MOVE
-            </button>
-            {#if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
-              <button
-                class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+              <div>
+                Travel time:
+                {DISTANCE_MULTIPLIER} * {distance(x, y, currentPlayer.x, currentPlayer.y)} =
+                <span class="font-bold">
+                  {DISTANCE_MULTIPLIER * distance(x, y, currentPlayer.x, currentPlayer.y)}
+                  seconds
+                </span>
+                <button
+                  on:click={() => beginMove(x, y)}
+                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
       text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                type="button"
-                disabled={currentPlayer.arrivalTime > currentTimestamp / 1000}
-                on:click={resolveMove}
-                >RESOLVE MOVE ({Math.round(currentPlayer.arrivalTime - currentTimestamp / 1000)}s)</button
-              >
+                  type="button"
+                >
+                  MOVE HERE
+                </button>
+              </div>
+            {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y && currentPlayer.arrivalTime < currentTimestamp / 1000}
+              <div>
+                <div>You have arrived!</div>
+                <button
+                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                  type="button"
+                  disabled={currentPlayer.arrivalTime > currentTimestamp / 1000}
+                  on:click={resolveMove}
+                >
+                  RESOLVE MOVE ({Math.round(currentPlayer.arrivalTime - currentTimestamp / 1000)}s)
+                </button>
+              </div>
+            {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
+              <div>You are travelling here.</div>
+            {:else}
+              <div>You are already travelling.</div>
             {/if}
+            {#if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}{/if}
           </div>
         </div>
       </div>
