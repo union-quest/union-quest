@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
-import { Move } from '../generated/UnionQuestCore/UnionQuestCoreContract';
-import { Player } from '../generated/schema';
+import { AddVillage, Move } from '../generated/UnionQuestCore/UnionQuestCoreContract';
+import { Player, Village } from '../generated/schema';
 
 export function getOrCreatePlayer(
   id: string
@@ -15,8 +15,31 @@ export function getOrCreatePlayer(
   return entity;
 }
 
+export function getOrCreateVillage(
+  id: string
+): Village {
+  let entity = Village.load(id);
+  if (!entity) {
+    entity = new Village(id);
+    entity.x = 0;
+    entity.y = 0;
+  }
+
+  return entity;
+}
+
+
 export function handleMove(event: Move): void {
   let entity = getOrCreatePlayer(event.params._player.toHexString());
+
+  entity.x = event.params._x.toI32();
+  entity.y = event.params._y.toI32();
+
+  entity.save();
+}
+
+export function handleAddVillage(event: AddVillage): void {
+  let entity = getOrCreateVillage(event.params._x.toString() + "_" + event.params._y.toString());
 
   entity.x = event.params._x.toI32();
   entity.y = event.params._y.toI32();

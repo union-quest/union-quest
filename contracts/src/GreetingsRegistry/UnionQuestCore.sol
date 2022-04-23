@@ -36,6 +36,7 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
     mapping(uint256 => mapping(uint256 => Village)) private villages;
 
     event AddItemType(uint256 _index, ItemType _itemType);
+    event AddVillage(uint256 _x, uint256 _y, Village _village);
     event Move(address _player, uint256 _x, uint256 _y);
 
     constructor(
@@ -63,10 +64,13 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         string calldata name,
         string calldata description
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        villages[x][y].name = name;
-        villages[x][y].description = description;
+        Village storage village = villages[x][y];
+        village.name = name;
+        village.description = description;
 
-        villages[x][y].member = new UnionQuestVillage(marketRegistry, unionToken, underlyingToken);
+        village.member = new UnionQuestVillage(marketRegistry, unionToken, underlyingToken);
+
+        emit AddVillage(x, y, village);
     }
 
     function move(uint256 x, uint256 y) external {

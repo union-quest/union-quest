@@ -3,3 +3,9 @@ type Player @entity {
   x: Int!
   y: Int!
 }
+
+type Village @entity {
+  id: ID!
+  x: Int!
+  y: Int!
+}

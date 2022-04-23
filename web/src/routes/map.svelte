@@ -4,7 +4,7 @@
   import {onMount} from 'svelte';
   import {combine} from 'union-quest-common';
   import {getPlayer} from '$lib/player/player';
-  import {each} from 'svelte/internal';
+  import {villages} from '$lib/village/villages';
 
   let player = getPlayer('0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199');
 
@@ -34,6 +34,8 @@
       <div>Loading Messages...</div>
     {:else if !$player.data}
       <button on:click={() => move(0, 0)}>move</button>
+    {:else if !$villages.data}
+      <div>loading villages</div>
     {:else}
       x: {$player.data.x}
       y: {$player.data.y}
@@ -53,6 +55,13 @@
                     <path d="m 0.63577796,0.52928125 v 0.157" fill="none" stroke="#004400" stroke-width="0.02" />
                     <path d="m 0.79077796,0.53428125 -0.093,0.158" fill="none" stroke="#004400" stroke-width="0.02" />
                   </svg>
+                  {#if $villages.data.some((v) => v.x === i && v.y === j)}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+                      <polygon fill="gold" points="0.25,0.35 0.5,0.1 0.75,0.35" />
+                      <rect fill="darkkhaki" x="0.25" y="0.35" width="0.5" height="0.5" />
+                      <rect fill="brown" x="0.45" y="0.65" width="0.1" height="0.2" />
+                    </svg>
+                  {/if}
                   {#if $player.data.x === i && $player.data.y === j}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
                       <circle fill="red" r="0.25" cx="0.5" cy="0.5" />
