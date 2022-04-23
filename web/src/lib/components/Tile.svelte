@@ -1,12 +1,20 @@
 <script lang="ts">
   import {flow, wallet} from '$lib/blockchain/wallet';
-  import type {Players} from '$lib/player/players';
+  import type {Player, Players} from '$lib/player/players';
   import type {Village} from '$lib/village/villages';
+  import Modal from '$lib/components/styled/Modal.svelte';
 
   export let x: number;
   export let y: number;
-  export let village: Village;
+  export let village: Village | null;
   export let players: Players;
+  export let currentPlayer: Player | null;
+
+  let showModal = false;
+
+  function distance(x0, y0, x1, y1) {
+    return Math.abs(x1 - x0) + Math.abs(y1 - y0);
+  }
 
   async function move(x, y) {
     await flow.execute((contracts) => contracts.UnionQuestCore.move(x, y));
@@ -18,7 +26,21 @@
     ? 'border-yellow-500 hover:border-yellow-500'
     : 'border-black-500'}"
 >
-  <svg width="100" on:click={() => move(x, y)}>
+  {#if showModal}
+    <Modal title={`Tile ${x},${y}`} on:close={() => (showModal = false)} closeButton={true}>
+      {#if village}
+        <div>This tile is a village.</div>
+      {:else}
+        <div>This tile is an empty field.</div>
+      {/if}
+      <div>There are {players.length} player(s) in this square.</div>
+      {#if currentPlayer}
+        <div>This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} units away.</div>
+      {/if}
+      <button on:click={() => move(x, y)}>MOVE</button>
+    </Modal>
+  {/if}
+  <svg width="100" on:click={() => (showModal = true)}>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
       <rect fill="#009A17" width="1" height="1" />
       <path d="M 0.161,0.178 0.249,0.336" fill="none" stroke="#004400" stroke-width="0.02" />
