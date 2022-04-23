@@ -8,6 +8,7 @@
   import Modal from '$lib/components/styled/Modal.svelte';
   import {onMount} from 'svelte';
   import DaiSymbol from './DaiSymbol.svelte';
+  import NavButton from './styled/navigation/NavButton.svelte';
 
   export let x: number;
   export let y: number;
@@ -89,16 +90,17 @@
         <div class="m-2 rounded-md border-4 p-4 ">
           <div class="text-xl">Leaderboard</div>
           <ul class="list-disc">
-            {#if $trusts.data}
-              {#each $trusts.data as trust}
-                <li>
-                  <a href={`https://etherscan.io/address/${trust.borrower.id}`}>
-                    {trust.borrower.id.slice(0, 6)}...{trust.borrower.id.slice(-4)}
-                  </a>
-                  <div class="flex">{trust.trustAmount}<DaiSymbol /></div>
-                </li>
-              {/each}
-            {/if}
+            {#each $trusts.data as trust}
+              <li>
+                <NavButton blank={true} href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
+                  {trust.borrower.id.slice(0, 6)}...{trust.borrower.id.slice(-4)}
+                </NavButton>
+                <div class="flex">{trust.trustAmount}<DaiSymbol /></div>
+              </li>
+            {/each}
+            <NavButton blank={true} href={`https://kovan.union.finance/profile/${village.member}`}
+              >View this village on Union</NavButton
+            >
           </ul>
         </div>
 
