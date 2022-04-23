@@ -36,20 +36,22 @@
     {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
       <button on:click={() => start()}>START</button>
     {:else}
-      <div class="grid grid-cols-6 w-fit">
-        {#each [0, 1, 2, 3, 4, 5] as x}
-          {#each [0, 1, 2, 3, 4, 5] as y}
-            <Tile
-              {x}
-              {y}
-              village={$villages.data.find((v) => v.x === x && v.y === y)}
-              players={$players.data.filter((p) => p.x === x && p.y === y)}
-              currentPlayer={$players.data.find((p) =>
-                $wallet.address ? p.id === $wallet.address.toLowerCase() : false
-              )}
-            />
+      <div class="flex justify-center">
+        <div class="grid grid-cols-6 w-fit h-fit">
+          {#each [0, 1, 2, 3, 4, 5] as x}
+            {#each [0, 1, 2, 3, 4, 5] as y}
+              <Tile
+                {x}
+                {y}
+                village={$villages.data.find((v) => v.x === x && v.y === y)}
+                players={$players.data.filter((p) => p.x === x && p.y === y)}
+                currentPlayer={$players.data.find((p) =>
+                  $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+                )}
+              />
+            {/each}
           {/each}
-        {/each}
+        </div>
       </div>
     {/if}
   </section>

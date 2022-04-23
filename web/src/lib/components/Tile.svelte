@@ -40,11 +40,7 @@
   });
 </script>
 
-<div
-  class="border-4 hover:border-green-500 {currentPlayer && players.some((p) => p.id === currentPlayer.id)
-    ? 'border-yellow-500 hover:border-yellow-500'
-    : 'border-black-500'}"
->
+<div>
   {#if showModal}
     <Modal
       title={`${village ? `${village.name} (${x},${y})` : `Field (${x},${y})`}`}
@@ -149,43 +145,80 @@
       </div>
     </Modal>
   {/if}
-  <svg width="100" on:click={() => (showModal = true)}>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-      <rect fill="#009A17" width="1" height="1" />
-      <path d="M 0.161,0.178 0.249,0.336" fill="none" stroke="#004400" stroke-width="0.02" />
-      <path d="M 0.314,0.173 V 0.33" fill="none" stroke="#004400" stroke-width="0.02" />
-      <path d="M 0.469,0.178 0.376,0.336" fill="none" stroke="#004400" stroke-width="0.02" />
-      <path d="m 0.48277796,0.53428125 0.088,0.158" fill="none" stroke="#004400" stroke-width="0.02" />
-      <path d="m 0.63577796,0.52928125 v 0.157" fill="none" stroke="#004400" stroke-width="0.02" />
-      <path d="m 0.79077796,0.53428125 -0.093,0.158" fill="none" stroke="#004400" stroke-width="0.02" />
-    </svg>
-    {#if village}
+  <div
+    class="border-4 hover:border-green-500 {currentPlayer && players.some((p) => p.id === currentPlayer.id)
+      ? 'border-yellow-500 hover:border-yellow-500'
+      : 'border-black-500'}"
+  >
+    <svg width="100" height="100" on:click={() => (showModal = true)}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-        <polygon fill="gold" points="0.25,0.35 0.5,0.1 0.75,0.35" />
-        <rect fill="darkkhaki" x="0.25" y="0.35" width="0.5" height="0.5" />
-        <rect fill="brown" x="0.45" y="0.65" width="0.1" height="0.2" />
+        <rect fill="#009A17" width="1" height="1" />
+        <path d="M 0.161,0.178 0.249,0.336" fill="none" stroke="#004400" stroke-width="0.02" />
+        <path d="M 0.314,0.173 V 0.33" fill="none" stroke="#004400" stroke-width="0.02" />
+        <path d="M 0.469,0.178 0.376,0.336" fill="none" stroke="#004400" stroke-width="0.02" />
+        <path d="m 0.48277796,0.53428125 0.088,0.158" fill="none" stroke="#004400" stroke-width="0.02" />
+        <path d="m 0.63577796,0.52928125 v 0.157" fill="none" stroke="#004400" stroke-width="0.02" />
+        <path d="m 0.79077796,0.53428125 -0.093,0.158" fill="none" stroke="#004400" stroke-width="0.02" />
       </svg>
-    {/if}
-    {#each players as player}
-      {#if currentPlayer && player.id === currentPlayer.id}
-        {#if player.arrivalTime}
+      {#if village}
+        {#if village.x > 2}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-            <circle fill="white" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
+            <polygon fill="gold" points="0.25,0.35 0.5,0.1 0.75,0.35" />
+            <rect fill="darkkhaki" x="0.25" y="0.35" width="0.5" height="0.5" />
+            <rect fill="brown" x="0.45" y="0.65" width="0.1" height="0.2" />
+          </svg>
+        {:else}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 3">
+            <rect fill="burlywood" x="0.25" y="0.3" width="1.5" height="2.5" />
+            <rect fill="sienna" x="0.7" y="2.1" width="0.6" height="0.7" />
+            <g transform="translate(1 0.7)">
+              <path stroke="brown" d="M0 0.8 V -0.8" fill="transparent" stroke-width="0.4">
+                <animateTransform
+                  attributeName="transform"
+                  attributeType="XML"
+                  type="rotate"
+                  from="0 0 0"
+                  to="360 0 0"
+                  dur="4s"
+                  repeatCount="indefinite"
+                />
+              </path>
+              <path stroke="brown" d="M0.8 0 H -0.8" fill="transparent" stroke-width="0.4">
+                <animateTransform
+                  attributeName="transform"
+                  attributeType="XML"
+                  type="rotate"
+                  from="0 0 0"
+                  to="360 0 0"
+                  dur="4s"
+                  repeatCount="indefinite"
+                />
+              </path>
+            </g>
+          </svg>
+        {/if}
+      {/if}
+      {#each players as player}
+        {#if currentPlayer && player.id === currentPlayer.id}
+          {#if player.arrivalTime}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+              <circle fill="white" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
+            </svg>
+          {:else}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+              <circle fill="white" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
+            </svg>
+          {/if}
+        {:else if player.arrivalTime}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+            <circle fill="black" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
           </svg>
         {:else}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-            <circle fill="white" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
+            <circle fill="black" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
           </svg>
         {/if}
-      {:else if player.arrivalTime}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-          <circle fill="black" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
-        </svg>
-      {:else}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-          <circle fill="black" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
-        </svg>
-      {/if}
-    {/each}
-  </svg>
+      {/each}
+    </svg>
+  </div>
 </div>
