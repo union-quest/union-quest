@@ -9,9 +9,8 @@
   import Tile from '$lib/components/Tile.svelte';
 
   let player = getPlayer('0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199');
-
-  async function move(x, y) {
-    await flow.execute((contracts) => contracts.UnionQuestCore.move(x, y));
+  async function start() {
+    await flow.execute((contracts) => contracts.UnionQuestCore.start());
   }
 
   onMount(() => {
@@ -35,7 +34,7 @@
     {:else if $player.step === 'LOADING'}
       <div>Loading Messages...</div>
     {:else if !$player.data}
-      <button on:click={() => move(0, 0)}>move</button>
+      <button on:click={() => start()}>START</button>
     {:else if !$villages.data || !$players.data}
       <div>loading map...</div>
     {:else}

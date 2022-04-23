@@ -4,6 +4,7 @@
   import type {Players} from '$lib/player/players';
   import type {Village} from '$lib/village/villages';
   import Modal from '$lib/components/styled/Modal.svelte';
+  import {onMount} from 'svelte';
 
   export let x: number;
   export let y: number;
@@ -14,14 +15,29 @@
   const DISTANCE_MULTIPLIER = 2;
 
   let showModal = false;
+  let currentTimestamp = Date.now();
 
   function distance(x0, y0, x1, y1) {
     return Math.abs(x1 - x0) + Math.abs(y1 - y0);
   }
 
-  async function move(x, y) {
-    await flow.execute((contracts) => contracts.UnionQuestCore.move(x, y));
+  async function resolveMove() {
+    await flow.execute((contracts) => contracts.UnionQuestCore.resolveMove());
   }
+
+  async function beginMove(x, y) {
+    await flow.execute((contracts) => contracts.UnionQuestCore.beginMove(x, y));
+  }
+
+  onMount(() => {
+    const interval = setInterval(() => {
+      currentTimestamp = Date.now();
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
 </script>
 
 <div
@@ -32,11 +48,11 @@
   {#if showModal}
     <Modal title={`Tile ${x},${y}`} on:close={() => (showModal = false)} closeButton={true}>
       {#if village}
-        <div>
+        <div>This tile is a village.</div>
+        <div class="border-2">
           <div>Name: {village.name}</div>
           <div>Description: {village.description}</div>
         </div>
-        <div>This tile is a village.</div>
       {:else}
         <div>This tile is an empty field.</div>
       {/if}
@@ -44,17 +60,30 @@
       {#if currentPlayer}
         <div>
           This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} units away. It will take
-          {DISTANCE_MULTIPLIER * distance(x, y, currentPlayer.x, currentPlayer.y)} seconds to travel to.
+          <span class="font-bold"
+            >{DISTANCE_MULTIPLIER} * {distance(x, y, currentPlayer.x, currentPlayer.y)} = {DISTANCE_MULTIPLIER *
+              distance(x, y, currentPlayer.x, currentPlayer.y)}</span
+          > seconds to travel to.
         </div>
       {/if}
       <button
-        on:click={() => move(x, y)}
+        on:click={() => beginMove(x, y)}
         class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
         text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
         type="button"
       >
-        MOVE
+        BEGIN MOVE
       </button>
+      {#if currentPlayer.arrivalTime}
+        <button
+          class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+      text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+          type="button"
+          disabled={currentPlayer.arrivalTime > currentTimestamp / 1000}
+          on:click={resolveMove}
+          >RESOLVE MOVE ({Math.round(currentPlayer.arrivalTime - currentTimestamp / 1000)}s)</button
+        >
+      {/if}
     </Modal>
   {/if}
   <svg width="100" on:click={() => (showModal = true)}>

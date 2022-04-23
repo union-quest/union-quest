@@ -13,6 +13,7 @@ export type Player = {
   id: string;
   x: number;
   y: number;
+  arrivalTime: number;
 }
 
 // TODO web3w needs to export the type
@@ -55,6 +56,7 @@ class UserStore implements QueryStore<Player> {
         id
         x
         y
+        arrivalTime
       }
     }`,
       chainTempo,

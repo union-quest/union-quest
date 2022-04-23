@@ -2,6 +2,7 @@ type Player @entity {
   id: ID!
   x: Int!
   y: Int!
+  arrivalTime: Int
 }
 
 type Village @entity {

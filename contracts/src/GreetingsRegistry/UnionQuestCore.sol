@@ -25,7 +25,10 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
     struct Player {
         uint256 x;
         uint256 y;
+        uint256 arrivalTime;
     }
+
+    uint256 private constant DISTANCE_MULTIPLIER = 2;
 
     address marketRegistry;
     address unionToken;
@@ -37,7 +40,9 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
 
     event AddItemType(uint256 _index, ItemType _itemType);
     event AddVillage(uint256 _x, uint256 _y, Village _village);
-    event Move(address _player, uint256 _x, uint256 _y);
+    event Start(address _address, Player _player);
+    event BeginMove(address _address, Player _player);
+    event ResolveMove(address _address, Player _player);
 
     constructor(
         address _marketRegistry,
@@ -73,13 +78,33 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         emit AddVillage(x, y, village);
     }
 
-    function move(uint256 x, uint256 y) external {
+    function start() external {
+        emit Start(msg.sender, players[msg.sender]);
+    }
+
+    function beginMove(uint256 x, uint256 y) external {
         Player storage player = players[msg.sender];
 
+        require(player.arrivalTime == 0, "Player is already moving.");
+
+        player.arrivalTime =
+            block.timestamp +
+            DISTANCE_MULTIPLIER *
+            ((x > player.x ? x - player.x : player.x - x) + (y > player.y ? y - player.y : player.y - y));
         player.x = x;
         player.y = y;
 
-        emit Move(msg.sender, x, y);
+        emit BeginMove(msg.sender, player);
+    }
+
+    function resolveMove() external {
+        Player storage player = players[msg.sender];
+
+        require(block.timestamp > player.arrivalTime, "Player journey is not complete.");
+
+        player.arrivalTime = 0;
+
+        emit ResolveMove(msg.sender, player);
     }
 
     function buyItem(
@@ -88,6 +113,7 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         bytes memory data
     ) external {
         Player storage player = players[msg.sender];
+        require(player.arrivalTime == 0, "Player is moving.");
         require(address(villages[player.x][player.y].member) != address(0), "Player is not in village.");
 
         // Get the buy price from the Item Manager
