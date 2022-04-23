@@ -4,12 +4,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: GreetingsRegistry
+    name: UnionQuestCore
     network: {{chainName}}
     source:
-      address: '{{contracts.GreetingsRegistry.address}}'
-      abi: GreetingsRegistryContract
-      startBlock: {{contracts.GreetingsRegistry.receipt.blockNumber}}
+      address: '{{contracts.UnionQuestCore.address}}'
+      abi: UnionQuestCoreContract
+      startBlock: {{contracts.UnionQuestCore.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -17,9 +17,9 @@ dataSources:
       entities:
         - MessageEntry
       abis:
-        - name: GreetingsRegistryContract
-          file: ./abis/GreetingsRegistry.json
+        - name: UnionQuestCoreContract
+          file: ./abis/UnionQuestCore.json
       eventHandlers:
-        - event: MessageChanged(indexed address,string)
-          handler: handleMessageChanged
+        - event: Move(address,uint256,uint256)
+          handler: handleMove
       file: ./src/mapping.ts

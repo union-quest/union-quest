@@ -36,6 +36,7 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
     mapping(uint256 => mapping(uint256 => Village)) private villages;
 
     event AddItemType(uint256 _index, ItemType _itemType);
+    event Move(address _player, uint256 _x, uint256 _y);
 
     constructor(
         address _marketRegistry,
@@ -73,6 +74,8 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
 
         player.x = x;
         player.y = y;
+
+        emit Move(msg.sender, x, y);
     }
 
     function buyItem(

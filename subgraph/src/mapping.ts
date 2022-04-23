@@ -1,17 +1,25 @@
 /* eslint-disable prefer-const */
-import {MessageChanged} from '../generated/GreetingsRegistry/GreetingsRegistryContract';
-import {MessageEntry} from '../generated/schema';
-// import {log} from '@graphprotocol/graph-ts';
+import { Move } from '../generated/UnionQuestCore/UnionQuestCoreContract';
+import { Player } from '../generated/schema';
 
-// const zeroAddress = '0x0000000000000000000000000000000000000000';
-
-export function handleMessageChanged(event: MessageChanged): void {
-  let id = event.params.user.toHex();
-  let entity = MessageEntry.load(id);
+export function getOrCreatePlayer(
+  id: string
+): Player {
+  let entity = Player.load(id);
   if (!entity) {
-    entity = new MessageEntry(id);
+    entity = new Player(id);
+    entity.x = 0;
+    entity.y = 0;
   }
-  entity.message = event.params.message;
-  entity.timestamp = event.block.timestamp;
+
+  return entity;
+}
+
+export function handleMove(event: Move): void {
+  let entity = getOrCreatePlayer(event.params._player.toHexString());
+
+  entity.x = event.params._x.toI32();
+  entity.y = event.params._y.toI32();
+
   entity.save();
 }

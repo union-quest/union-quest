@@ -26,7 +26,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     autoMine: true,
   });
 
-
   const core = await deploy('UnionQuestCore', {
     from: deployer,
     args: [market.address, "0x08AF898e65493D8212c8981FAdF60Ff023A91150", dai.address],
