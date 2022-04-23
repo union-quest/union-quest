@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "name": "Union Quest",
+  "description": "A Production Ready Template for Decentralised Applications.",
+  "icons": {
+    "60": "../pwa/firefox_app_60x60.png",
+    "128": "../pwa/firefox_app_128x128.png",
+    "512": "../pwa/firefox_app_512x512.png"
+  },
+  "developer": {
+    "name": "You",
+    "url": ""
+  }
+}
