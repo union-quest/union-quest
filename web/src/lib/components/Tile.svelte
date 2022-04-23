@@ -35,9 +35,19 @@
       {/if}
       <div>There are {players.length} player(s) in this square.</div>
       {#if currentPlayer}
-        <div>This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} units away.</div>
+        <div>
+          This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} units away. It will take
+          {60 * distance(x, y, currentPlayer.x, currentPlayer.y)} seconds to travel to.
+        </div>
       {/if}
-      <button on:click={() => move(x, y)}>MOVE</button>
+      <button
+        on:click={() => move(x, y)}
+        class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+        type="button"
+      >
+        MOVE
+      </button>
     </Modal>
   {/if}
   <svg width="100" on:click={() => (showModal = true)}>
