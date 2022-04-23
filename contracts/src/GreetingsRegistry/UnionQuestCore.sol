@@ -36,6 +36,7 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
 
     ItemType[] private itemTypes;
     mapping(address => Player) private players;
+    mapping(uint256 => mapping(uint256 => uint256)) private vouches;
     mapping(uint256 => mapping(uint256 => Village)) private villages;
 
     event AddItemType(uint256 _index, ItemType _itemType);
@@ -105,6 +106,15 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         player.arrivalTime = 0;
 
         emit ResolveMove(msg.sender, player);
+    }
+
+    function fight() external {
+        Player storage player = players[msg.sender];
+        require(player.arrivalTime == 0, "Player is moving.");
+        require(address(villages[player.x][player.y].member) != address(0), "Player is not in village.");
+
+        vouches[player.x][player.y] += 1;
+        villages[player.x][player.y].member.updateTrust(msg.sender, vouches[player.x][player.y]);
     }
 
     function buyItem(

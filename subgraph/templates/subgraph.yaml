@@ -20,6 +20,8 @@ dataSources:
         - name: UnionQuestCoreContract
           file: ./abis/UnionQuestCore.json
       eventHandlers:
+        - event: AddItemType(uint256,(string,string,uint256,uint256))
+          handler: handleAddItemType
         - event: AddVillage(uint256,uint256,(string,string,address))
           handler: handleAddVillage
         - event: Start(address,(uint256,uint256,uint256))
@@ -28,6 +30,26 @@ dataSources:
           handler: handleBeginMove
         - event: ResolveMove(address,(uint256,uint256,uint256))
           handler: handleResolveMove
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: UserManager
+    network: {{chainName}}
+    source:
+      address: '{{contracts.UserManager.address}}'
+      abi: UserManagerContract
+      startBlock: {{contracts.UserManager.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - User
+      abis:
+        - name: UserManagerContract
+          file: ./abis/UserManager.json
+      eventHandlers:
+        - event: LogUpdateTrust(indexed address,indexed address,uint256)
+          handler: handleUpdateTrust
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: DAI

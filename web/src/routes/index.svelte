@@ -24,8 +24,8 @@
   }
 
   async function mintTokens() {
-    await flow.execute((contracts) => contracts.DAI.approve(contracts.UnionQuestCore.address, 10000000));
-    await flow.execute((contracts) => contracts.DAI.mint($wallet.address, 10000000));
+    await flow.execute((contracts) => contracts.DAI.approve(contracts.UnionQuestCore.address, '100000000000000000000'));
+    await flow.execute((contracts) => contracts.DAI.mint($wallet.address, '100000000000000000000'));
   }
 </script>
 
@@ -51,7 +51,7 @@
         >
           Check out the Github
         </NavButton>
-        <button on:click={mintTokens}>Mint some free DAI</button>
+        <button on:click={mintTokens}>Mint 100 free DAI</button>
       </div>
     </div>
   </div>

@@ -30,6 +30,10 @@ contract UnionQuestVillage is UnionVoucher, Ownable {
         _unstake(amount);
     }
 
+    function updateTrust(address borrower_, uint256 trustAmount) external onlyOwner {
+        _updateTrust(borrower_, trustAmount);
+    }
+
     function transferUnderlying(address to, uint256 amount) external onlyOwner {
         underlyingToken.transfer(to, amount);
     }

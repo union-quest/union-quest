@@ -5,6 +5,7 @@
   import {combine} from 'union-quest-common';
   import {players} from '$lib/player/players';
   import {villages} from '$lib/village/villages';
+  import {items} from '$lib/item/items';
   import Tile from '$lib/components/Tile.svelte';
   import DaiSymbol from '$lib/components/DaiSymbol.svelte';
 
@@ -31,16 +32,18 @@
     {:else if $villages.error}
       <div>Error: {$villages.error}</div>
     {:else if $villages.step === 'LOADING'}
-      <div>Loading Messages...</div>
-    {:else if !$villages.data || !$players.data}
-      <div>loading map...</div>
+      <div>Loading Map...</div>
+    {:else if !$villages.data || !$players.data || !$items.data}
+      <div>Null!</div>
     {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
       <button on:click={() => start()}>START</button>
     {:else}
       <div>
         <div class="flex">
-          Balance: {$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))
-            .balance}
+          Balance: {Math.round(
+            $players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false)).balance /
+              10 ** 18
+          )}
           <DaiSymbol />
         </div>
         <div class="flex justify-center">
@@ -51,7 +54,8 @@
                   {x}
                   {y}
                   village={$villages.data.find((v) => v.x === x && v.y === y)}
-                  players={$players.data.filter((p) => p.x === x && p.y === y)}
+                  players={$players.data}
+                  items={$items.data}
                   currentPlayer={$players.data.find((p) =>
                     $wallet.address ? p.id === $wallet.address.toLowerCase() : false
                   )}

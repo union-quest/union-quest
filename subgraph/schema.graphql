@@ -2,7 +2,7 @@ type Player @entity {
   id: ID!
   x: Int!
   y: Int!
-  balance: Int!
+  balance: BigInt!
   xDestination: Int
   yDestination: Int
   arrivalTime: Int
@@ -14,4 +14,19 @@ type Village @entity {
   y: Int!
   name: String!
   description: String!
+}
+
+type ItemType @entity {
+  id: ID!
+  name: String!
+  description: String!
+  buyPrice: BigInt!
+  sellPrice: BigInt!
+}
+
+type Trust @entity {
+  id: ID!
+  staker: Player!
+  borrower: Player!
+  trustAmount: BigInt!
 }

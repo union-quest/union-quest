@@ -1,15 +1,18 @@
 <script lang="ts">
-  import {flow, wallet} from '$lib/blockchain/wallet';
+  import {flow} from '$lib/blockchain/wallet';
   import type {Player} from '$lib/player/player';
   import type {Players} from '$lib/player/players';
   import type {Village} from '$lib/village/villages';
+  import type {Items} from '$lib/item/items';
   import Modal from '$lib/components/styled/Modal.svelte';
   import {onMount} from 'svelte';
+  import DaiSymbol from './DaiSymbol.svelte';
 
   export let x: number;
   export let y: number;
   export let village: Village | null;
   export let players: Players;
+  export let items: Items;
   export let currentPlayer: Player | null;
 
   const DISTANCE_MULTIPLIER = 2;
@@ -23,6 +26,10 @@
 
   async function resolveMove() {
     await flow.execute((contracts) => contracts.UnionQuestCore.resolveMove());
+  }
+
+  async function fight() {
+    await flow.execute((contracts) => contracts.UnionQuestCore.fight());
   }
 
   async function beginMove(x, y) {
@@ -68,8 +75,9 @@
           <ul class="list-disc">
             {#each players as player}
               <li>
-                <a href={`https://etherscan.io/address/${player.id}`}>{player.id.slice(0, 6)}...{player.id.slice(-4)}</a
-                >
+                <a href={`https://etherscan.io/address/${player.id}`}>
+                  {player.id.slice(0, 6)}...{player.id.slice(-4)}
+                </a>
               </li>
             {/each}
           </ul>
@@ -114,6 +122,15 @@
                 >
                   MOVE HERE
                 </button>
+
+                <button
+                  on:click={fight}
+                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+      text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                  type="button"
+                >
+                  FIGHT
+                </button>
               </div>
             {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y && currentPlayer.arrivalTime < currentTimestamp / 1000}
               <div>
@@ -148,16 +165,31 @@
           {#if village}
             <div class="rounded-md border-2 p-4">
               <div class="text-lg">Shop</div>
-
-              <button
-                class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+              <div class="flex">
+                {#each items as item}
+                  <div class="border-2 border-dashed w-48">
+                    <div>
+                      {item.name}
+                    </div>
+                    <div class="italic">
+                      {item.description}
+                    </div>
+                    <div class="flex">
+                      Price: {item.buyPrice / 10 ** 18}
+                      <DaiSymbol />
+                    </div>
+                    <button
+                      class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
 text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                type="button"
-                disabled={currentPlayer.x !== x || currentPlayer.y !== y}
-                on:click={buyItem}
-              >
-                BUY 1 SWORD
-              </button>
+                      type="button"
+                      disabled={currentPlayer.x !== x || currentPlayer.y !== y}
+                      on:click={buyItem}
+                    >
+                      BUY 1
+                    </button>
+                  </div>
+                {/each}
+              </div>
             </div>
           {/if}
         </div>
@@ -165,7 +197,8 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
     </Modal>
   {/if}
   <div
-    class="border-4 hover:border-green-500 {currentPlayer && players.some((p) => p.id === currentPlayer.id)
+    class="border-4 hover:border-green-500 {currentPlayer &&
+    players.some((p) => p.x === x && p.y === y && p.id === currentPlayer.id)
       ? 'border-yellow-500 hover:border-yellow-500'
       : 'border-black-500'}"
   >
@@ -218,23 +251,13 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
         {/if}
       {/if}
       {#each players as player}
-        {#if currentPlayer && player.id === currentPlayer.id}
-          {#if player.arrivalTime}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-              <circle fill="white" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
-            </svg>
-          {:else}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-              <circle fill="white" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
-            </svg>
-          {/if}
-        {:else if player.arrivalTime}
+        {#if player.arrivalTime && player.xDestination === x && player.yDestination === y}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-            <circle fill="black" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
+            <circle fill="grey" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
           </svg>
-        {:else}
+        {:else if !player.arrivalTime && player.x === x && player.y === y}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-            <circle fill="black" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
+            <circle fill="grey" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
           </svg>
         {/if}
       {/each}

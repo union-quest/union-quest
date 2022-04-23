@@ -304,6 +304,31 @@
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       "abi": [
         {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "staker",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "trustAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "LogUpdateTrust",
+          "type": "event"
+        },
+        {
           "inputs": [
             {
               "internalType": "uint256",
@@ -312,6 +337,24 @@
             }
           ],
           "name": "stake",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "updateTrust",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -973,6 +1016,13 @@
             }
           ],
           "name": "createVillage",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "fight",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
