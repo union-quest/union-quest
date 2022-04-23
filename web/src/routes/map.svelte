@@ -4,6 +4,7 @@
   import {onMount} from 'svelte';
   import {combine} from 'union-quest-common';
   import {getPlayer} from '$lib/player/player';
+  import {players} from '$lib/player/players';
   import {villages} from '$lib/village/villages';
 
   let player = getPlayer('0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199');
@@ -34,8 +35,8 @@
       <div>Loading Messages...</div>
     {:else if !$player.data}
       <button on:click={() => move(0, 0)}>move</button>
-    {:else if !$villages.data}
-      <div>loading villages</div>
+    {:else if !$villages.data || !$players.data}
+      <div>loading map...</div>
     {:else}
       x: {$player.data.x}
       y: {$player.data.y}
@@ -62,10 +63,16 @@
                       <rect fill="brown" x="0.45" y="0.65" width="0.1" height="0.2" />
                     </svg>
                   {/if}
-                  {#if $player.data.x === i && $player.data.y === j}
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-                      <circle fill="red" r="0.25" cx="0.5" cy="0.5" />
-                    </svg>
+                  {#if $players.data.some((v) => v.x === i && v.y === j)}
+                    {#if $players.data.find((v) => v.x === i && v.y === j).id === $wallet.address.toLowerCase()}
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+                        <circle fill="white" r="0.25" cx="0.5" cy="0.5" />
+                      </svg>
+                    {:else}
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+                        <circle fill="black" r="0.25" cx="0.5" cy="0.5" />
+                      </svg>
+                    {/if}
                   {/if}
                 </svg>
               </td>
