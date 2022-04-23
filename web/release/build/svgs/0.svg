@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+    <rect fill="#0ea5e9" width="1" height="1" />
+    <g>
+        <path stroke="#0284c7
+" d="M0.1 0.1 H 0.3 V0.3 H 0.5 V 0.5 H 0.7 V 0.7 H 0.9 V 0.9" fill="transparent" stroke-width="0.1">
+            <animateTransform attributeName="transform" type="scale" from="1 1" to="1.1 1.1" begin="0s" dur="2s"
+                repeatCount="indefinite" />
+        </path>
+        <animateTransform attributeName="transform" type="translate" from="0.0 -0.05" to="-0.1 0.05" begin="0s" dur="2s"
+            repeatCount="indefinite" />
+    </g>
+</svg>

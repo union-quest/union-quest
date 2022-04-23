@@ -1,0 +1,100 @@
+{
+  "address": "0xbcB4Ed6cC2dfa99FEF06015D88dd4b0aC9E6ED31",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_manager",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "tokens",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xf8eef4b5ee015890b7a3611ca372ee873086a1eb958d42b8dde39a202c3928d8",
+  "receipt": {
+    "to": null,
+    "from": "0xb19BC46C52A1352A071fe2389503B6FE1ABD50Ff",
+    "contractAddress": "0xbcB4Ed6cC2dfa99FEF06015D88dd4b0aC9E6ED31",
+    "transactionIndex": 1,
+    "gasUsed": "136422",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x2ffe4f82e07814fdd15202c8646ff9e4987bb01462e634cdeaddbdc8f16e7735",
+    "transactionHash": "0xf8eef4b5ee015890b7a3611ca372ee873086a1eb958d42b8dde39a202c3928d8",
+    "logs": [],
+    "blockNumber": 31202958,
+    "cumulativeGasUsed": "157422",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x7FEF01ADEFc2Ce6597E98a4D6B1E0Cd30533356f"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "ed08753924caaf985cafa62d05fe8ca3",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_manager\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"tokens\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"tokens(address)\":{\"details\":\"Returns the market address of the token\",\"returns\":{\"_0\":\"The market address\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/GreetingsRegistry/MarketRegistry.sol\":\"MarketRegistry\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":999999},\"remappings\":[]},\"sources\":{\"@unioncredit/v1-sdk/contracts/interfaces/IMarketRegistry.sol\":{\"content\":\"//SPDX-License-Identifier: UNLICENSED\\npragma solidity ^0.8.0;\\n\\n/**\\n * @title MarketRegistry Interface\\n * @dev Registering and managing all the lending markets.\\n */\\ninterface IMarketRegistry {\\n    function getUTokens() external view returns (address[] memory);\\n\\n    function getUserManagers() external view returns (address[] memory);\\n\\n    /**\\n     *  @dev Returns the market address of the token\\n     *  @return The market address\\n     */\\n    function tokens(address token) external view returns (address, address);\\n\\n    function createUToken(\\n        address token,\\n        address assetManager,\\n        uint256 originationFee,\\n        uint256 globalMaxLoan,\\n        uint256 maxBorrow,\\n        uint256 minLoan,\\n        uint256 maxLateBlock,\\n        address interestRateModel\\n    ) external returns (address);\\n\\n    function createUserManager(\\n        address assetManager,\\n        address unionToken,\\n        address stakingToken,\\n        address creditLimitModel,\\n        address inflationIndexModel,\\n        address comptroller\\n    ) external returns (address);\\n}\\n\",\"keccak256\":\"0x2ded003cb76e88e364c7ac892eecfae078726b3b899b7901c2f43c80f461f48d\",\"license\":\"UNLICENSED\"},\"src/GreetingsRegistry/MarketRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.9;\\n\\nimport \\\"@unioncredit/v1-sdk/contracts/interfaces/IMarketRegistry.sol\\\";\\n\\ncontract MarketRegistry {\\n    address private manager;\\n\\n    constructor(address _manager) {\\n        manager = _manager;\\n    }\\n\\n    /**\\n     *  @dev Returns the market address of the token\\n     *  @return The market address\\n     */\\n    function tokens(address token) external view returns (address, address) {\\n        return (0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199, manager);\\n    }\\n}\\n\",\"keccak256\":\"0xbec7943148c046ab39e22941722bb19389ba0cf46772cdb41873359f12844165\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516101a23803806101a283398101604081905261002f91610054565b600080546001600160a01b0319166001600160a01b0392909216919091179055610084565b60006020828403121561006657600080fd5b81516001600160a01b038116811461007d57600080fd5b9392505050565b61010f806100936000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063e486033914602d575b600080fd5b606d6038366004609e565b50600054738626f6940e2eb28930efb4cef49b2d1f2c9c11999173ffffffffffffffffffffffffffffffffffffffff90911690565b6040805173ffffffffffffffffffffffffffffffffffffffff93841681529290911660208301520160405180910390f35b60006020828403121560af57600080fd5b813573ffffffffffffffffffffffffffffffffffffffff8116811460d257600080fd5b939250505056fea26469706673582212201a6425177eae8a00c77380e7ef13bf075e831c0a33ecd5033b9041587bf5ee4b64736f6c63430008090033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063e486033914602d575b600080fd5b606d6038366004609e565b50600054738626f6940e2eb28930efb4cef49b2d1f2c9c11999173ffffffffffffffffffffffffffffffffffffffff90911690565b6040805173ffffffffffffffffffffffffffffffffffffffff93841681529290911660208301520160405180910390f35b60006020828403121560af57600080fd5b813573ffffffffffffffffffffffffffffffffffffffff8116811460d257600080fd5b939250505056fea26469706673582212201a6425177eae8a00c77380e7ef13bf075e831c0a33ecd5033b9041587bf5ee4b64736f6c63430008090033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "tokens(address)": {
+        "details": "Returns the market address of the token",
+        "returns": {
+          "_0": "The market address"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 3841,
+        "contract": "src/GreetingsRegistry/MarketRegistry.sol:MarketRegistry",
+        "label": "manager",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    }
+  }
+}

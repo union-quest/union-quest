@@ -1,0 +1,2 @@
+import{b as s}from"./paths-28a87002.js";import{q as n,g as f,a as l,p as i}from"./notifications-998beaef.js";function u(t,r){const{params:a,pathname:o}=f(t);for(const e of l)typeof i[e]!="undefined"&&typeof a[e]=="undefined"&&(a[e]=i[e]);return`${s}/${o}${n(a)}${r?`#${r}`:""}`}function p(t,r){return r.startsWith("//prerender")?r=r.slice(11):r.startsWith(s)&&(r=r.slice(s.length)),t.split("?")[0].split("#")[0].replace(s,"").replace(/^\/+|\/+$/g,"")===r.replace(/^\/+|\/+$/g,"")}export{u as a,p as u};
+//# sourceMappingURL=url-74349e09.js.map

@@ -8,7 +8,6 @@
   import Modal from '$lib/components/styled/Modal.svelte';
   import {onMount} from 'svelte';
   import DaiSymbol from './DaiSymbol.svelte';
-  import NavButton from './styled/navigation/NavButton.svelte';
 
   export let x: number;
   export let y: number;
@@ -39,8 +38,8 @@
     await flow.execute((contracts) => contracts.UnionQuestCore.beginMove(x, y));
   }
 
-  async function buyItem() {
-    await flow.execute((contracts) => contracts.UnionQuestCore.buyItem(0, 1, '0x'));
+  async function buyItem(id: string) {
+    await flow.execute((contracts) => contracts.UnionQuestCore.buyItem(id, 1, '0x'));
   }
 
   onMount(() => {
@@ -206,7 +205,7 @@
 text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
                       type="button"
                       disabled={currentPlayer.x !== x || currentPlayer.y !== y}
-                      on:click={buyItem}
+                      on:click={() => buyItem(item.id)}
                     >
                       BUY 1
                     </button>

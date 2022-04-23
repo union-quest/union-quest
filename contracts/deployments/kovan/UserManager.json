@@ -1,0 +1,104 @@
+{
+  "address": "0x7FEF01ADEFc2Ce6597E98a4D6B1E0Cd30533356f",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "staker",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "trustAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogUpdateTrust",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "stake",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateTrust",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x545e15ef5792fedae07411ed4609de64228c93be22249be71a308692fd036c54",
+  "receipt": {
+    "to": null,
+    "from": "0xb19BC46C52A1352A071fe2389503B6FE1ABD50Ff",
+    "contractAddress": "0x7FEF01ADEFc2Ce6597E98a4D6B1E0Cd30533356f",
+    "transactionIndex": 1,
+    "gasUsed": "123697",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x001e9a99b41e7f4c8a6d629d19f2eab74915796a53e30814eeea87aa67aa5226",
+    "transactionHash": "0x545e15ef5792fedae07411ed4609de64228c93be22249be71a308692fd036c54",
+    "logs": [],
+    "blockNumber": 31202955,
+    "cumulativeGasUsed": "203654",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "ed08753924caaf985cafa62d05fe8ca3",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"borrower\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"trustAmount\",\"type\":\"uint256\"}],\"name\":\"LogUpdateTrust\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"stake\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"updateTrust\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"stake(uint256)\":{\"details\":\"Stake\",\"params\":{\"amount\":\"Amount\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/GreetingsRegistry/UserManager.sol\":\"UserManager\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":999999},\"remappings\":[]},\"sources\":{\"@unioncredit/v1-sdk/contracts/interfaces/IUserManager.sol\":{\"content\":\"//SPDX-License-Identifier: UNLICENSED\\npragma solidity ^0.8.0;\\n\\n/**\\n * @title UserManager Interface\\n * @dev Manages the Union members credit lines, and their vouchees and borrowers info.\\n */\\ninterface IUserManager {\\n    /**\\n     *  @dev Check if the account is a valid member\\n     *  @param account Member address\\n     *  @return Address whether is member\\n     */\\n    function checkIsMember(address account) external view returns (bool);\\n\\n    /**\\n     *  @dev Get member borrowerAddresses\\n     *  @param account Member address\\n     *  @return Address array\\n     */\\n    function getBorrowerAddresses(address account) external view returns (address[] memory);\\n\\n    /**\\n     *  @dev Get member stakerAddresses\\n     *  @param account Member address\\n     *  @return Address array\\n     */\\n    function getStakerAddresses(address account) external view returns (address[] memory);\\n\\n    /**\\n     *  @dev Get member backer asset\\n     *  @param account Member address\\n     *  @param borrower Borrower address\\n     *  @return Trust amount, vouch amount, and locked stake amount\\n     */\\n    function getBorrowerAsset(address account, address borrower)\\n        external\\n        view\\n        returns (\\n            uint256,\\n            uint256,\\n            uint256\\n        );\\n\\n    /**\\n     *  @dev Get member stakers asset\\n     *  @param account Member address\\n     *  @param staker Staker address\\n     *  @return Vouch amount and lockedStake\\n     */\\n    function getStakerAsset(address account, address staker)\\n        external\\n        view\\n        returns (\\n            uint256,\\n            uint256,\\n            uint256\\n        );\\n\\n    /**\\n     *  @dev Get the member's available credit line\\n     *  @param account Member address\\n     *  @return Limit\\n     */\\n    function getCreditLimit(address account) external view returns (int256);\\n\\n    function totalStaked() external view returns (uint256);\\n\\n    function totalFrozen() external view returns (uint256);\\n\\n    function newMemberFee() external view returns (uint256);\\n\\n    function getFrozenCoinAge(address staker, uint256 pastBlocks) external view returns (uint256);\\n\\n    /**\\n     *  @dev Add a new member\\n     *  Accept claims only from the admin\\n     *  @param account Member address\\n     */\\n    function addMember(address account) external;\\n\\n    \\n    function withdrawRewards() external;\\n\\n    /**\\n     *  @dev Update the trust amount for exisitng members.\\n     *  @param borrower Borrower address\\n     *  @param trustAmount Trust amount\\n     */\\n    function updateTrust(address borrower, uint256 trustAmount) external;\\n\\n    /**\\n     *  @dev Apply for membership, and burn UnionToken as application fees\\n     *  @param newMember New member address\\n     */\\n    function registerMember(address newMember) external;\\n\\n    /**\\n     *  @dev Stop vouch for other member.\\n     *  @param staker Staker address\\n     *  @param account Account address\\n     */\\n    function cancelVouch(address staker, address account) external;\\n\\n    /**\\n     *  @dev Change the credit limit model\\n     *  Accept claims only from the admin\\n     *  @param newCreditLimitModel New credit limit model address\\n     */\\n    function setCreditLimitModel(address newCreditLimitModel) external;\\n\\n    /**\\n     *  @dev Get the user's locked stake from all his backed loans\\n     *  @param staker Staker address\\n     *  @return LockedStake\\n     */\\n    function getTotalLockedStake(address staker) external view returns (uint256);\\n\\n    /**\\n     *  @dev Get staker's defaulted / frozen staked token amount\\n     *  @param staker Staker address\\n     *  @return Frozen token amount\\n     */\\n    function getTotalFrozenAmount(address staker) external view returns (uint256);\\n\\n    /**\\n     *  @dev Update userManager locked info\\n     *  @param borrower Borrower address\\n     *  @param amount Borrow or repay amount(Including previously accrued interest)\\n     *  @param isBorrow True is borrow, false is repay\\n     */\\n    function updateLockedData(\\n        address borrower,\\n        uint256 amount,\\n        bool isBorrow\\n    ) external;\\n\\n    /**\\n     *  @dev Get the user's deposited stake amount\\n     *  @param account Member address\\n     *  @return Deposited stake amount\\n     */\\n    function getStakerBalance(address account) external view returns (uint256);\\n\\n    /**\\n     *  @dev Stake\\n     *  @param amount Amount\\n     */\\n    function stake(uint256 amount) external;\\n\\n    /**\\n     *  @dev Unstake\\n     *  @param amount Amount\\n     */\\n    function unstake(uint256 amount) external;\\n\\n    /**\\n     *  @dev Update total frozen\\n     *  @param account borrower address\\n     *  @param isOverdue account is overdue\\n     */\\n    function updateTotalFrozen(address account, bool isOverdue) external;\\n\\n    function batchUpdateTotalFrozen(address[] calldata account, bool[] calldata isOverdue) external;\\n\\n    /**\\n     *  @dev Repay user's loan overdue, called only from the lending market\\n     *  @param account User address\\n     *  @param lastRepay Last repay block number\\n     */\\n    function repayLoanOverdue(\\n        address account,\\n        address token,\\n        uint256 lastRepay\\n    ) external;\\n\\n    function debtWriteOff(address borrower, uint256 amount) external;\\n\\n    function getVouchingAmount(address staker, address borrower) external view returns (uint256);    \\n}\\n\",\"keccak256\":\"0x753e9eba796354e96c46b9888c907345415f02d0ac9d5d3458843e63edda0abc\",\"license\":\"UNLICENSED\"},\"src/GreetingsRegistry/UserManager.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.9;\\n\\nimport \\\"@unioncredit/v1-sdk/contracts/interfaces/IUserManager.sol\\\";\\n\\ncontract UserManager {\\n    event LogUpdateTrust(address indexed staker, address indexed borrower, uint256 trustAmount);\\n\\n    /**\\n     *  @dev Stake\\n     *  @param amount Amount\\n     */\\n    function stake(uint256 amount) external {}\\n\\n    function updateTrust(address account, uint256 amount) external {\\n        emit LogUpdateTrust(msg.sender, account, amount);\\n    }\\n}\\n\",\"keccak256\":\"0x98a6afc6b62cf10e047b94aa033aafe06967910f7241f8e10e7f7228fbf8d0f2\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610146806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806343fbb8f51461003b578063a694fc3a14610050575b600080fd5b61004e6100493660046100b2565b610061565b005b61004e61005e3660046100f7565b50565b60405181815273ffffffffffffffffffffffffffffffffffffffff83169033907f6726f80fa910f3db24051175cda8d3c2af86b536cc2b137c1dbbf83136fe7c5c9060200160405180910390a35050565b600080604083850312156100c557600080fd5b823573ffffffffffffffffffffffffffffffffffffffff811681146100e957600080fd5b946020939093013593505050565b60006020828403121561010957600080fd5b503591905056fea26469706673582212206c5a037524ce07220b638c03f010805e35f6b7adb03a270b8bf7b9138748cf3664736f6c63430008090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c806343fbb8f51461003b578063a694fc3a14610050575b600080fd5b61004e6100493660046100b2565b610061565b005b61004e61005e3660046100f7565b50565b60405181815273ffffffffffffffffffffffffffffffffffffffff83169033907f6726f80fa910f3db24051175cda8d3c2af86b536cc2b137c1dbbf83136fe7c5c9060200160405180910390a35050565b600080604083850312156100c557600080fd5b823573ffffffffffffffffffffffffffffffffffffffff811681146100e957600080fd5b946020939093013593505050565b60006020828403121561010957600080fd5b503591905056fea26469706673582212206c5a037524ce07220b638c03f010805e35f6b7adb03a270b8bf7b9138748cf3664736f6c63430008090033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "stake(uint256)": {
+        "details": "Stake",
+        "params": {
+          "amount": "Amount"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

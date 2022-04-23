@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 2">
+	<rect fill="sienna" x="0.25" y="0.2" width="0.5" height="1.5" />
+	<circle cx="0.5" cy="0.36" r="0.35" fill="green" stroke-width="0.01" stroke="black" />
+	<circle cx="0.64" cy="0.4" r="0.35" fill="green" stroke-width="0.01" stroke="black" />
+	<circle cx="0.36" cy="0.45" r="0.35" fill="green" stroke-width="0.01" stroke="black" />
+</svg>
