@@ -8,4 +8,6 @@ type Village @entity {
   id: ID!
   x: Int!
   y: Int!
+  name: String!
+  description: String!
 }

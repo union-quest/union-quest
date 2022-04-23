@@ -13,6 +13,8 @@ export type Village = {
   id: string;
   x: number;
   y: number;
+  name: string;
+  description: string;
 }
 
 export type Villages = Village[]
@@ -57,6 +59,8 @@ class UserStore implements QueryStore<Villages> {
         id
         x
         y
+        name
+        description
       }
     }`,
       chainTempo,

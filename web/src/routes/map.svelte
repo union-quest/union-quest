@@ -6,10 +6,8 @@
   import {getPlayer} from '$lib/player/player';
   import {players} from '$lib/player/players';
   import {villages} from '$lib/village/villages';
-  import Modal from '$lib/components/styled/Modal.svelte';
   import Tile from '$lib/components/Tile.svelte';
 
-  let showModal = false;
   let player = getPlayer('0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199');
 
   async function move(x, y) {
@@ -29,25 +27,6 @@
   />
 </symbol>
 <WalletAccess>
-  {#if showModal}
-    <Modal title={item.itemType.name} on:close={() => (showModal = false)} closeButton={true}>
-      <p class="w-64 text-black-500 p-1">
-        {item.itemType.description}
-      </p>
-      <p class="w-64 text-black-500 p-1">
-        Can only be place on
-        {#if item.itemType.tileType === 0}
-          <span class="w-64 text-blue-500">water</span>
-        {:else}
-          <span class="w-64 text-green-500">land</span>
-        {/if}
-        tiles.
-      </p>
-      <p class="w-64 text-blue-500 p-1">
-        You own {item.value}.
-      </p>
-    </Modal>
-  {/if}
   <section class="py-8 px-4">
     {#if !$player.step}
       <div>Messages not loaded</div>
@@ -70,7 +49,8 @@
               {x}
               {y}
               village={$villages.data.find((v) => v.x === x && v.y === y)}
-              players={$players.data.filter((v) => v.x === x && v.y === y)}
+              players={$players.data.filter((p) => p.x === x && p.y === y)}
+              currentPlayer={$players.data.find((p) => p.id === $wallet.address.toLowerCase())}
             />
           {/each}
         {/each}

@@ -35,10 +35,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await execute('DAI', { from: deployer, log: true }, 'mint', deployer, 10000000000);
   await execute('DAI', { from: deployer, log: true }, 'approve', core.address, 10000000000);
-  await execute('UnionQuestCore', { from: deployer, log: true }, 'addItemTypes', [["Townley", "Yup!", 2, 1]]);
+  await execute('UnionQuestCore', { from: deployer, log: true }, 'addItemTypes', [["Sword", "Stabby!", 2, 1]]);
   await execute('UnionQuestCore', { from: deployer, log: true }, 'createVillage', 1, 2, "Townley", "Yup!");
+  await execute('UnionQuestCore', { from: deployer, log: true }, 'createVillage', 3, 5, "Brickley", "Ho ya!");
 
-  await execute('UnionQuestCore', { from: deployer, log: true }, 'move', 1, 2);
-  await execute('UnionQuestCore', { from: deployer, log: true }, 'buyItem', 0, 2, "0x");
+  // await execute('UnionQuestCore', { from: deployer, log: true }, 'move', 0, 2);
+  // await execute('UnionQuestCore', { from: deployer, log: true }, 'buyItem', 0, 2, "0x");
 };
 export default func;
