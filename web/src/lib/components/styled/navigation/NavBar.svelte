@@ -11,7 +11,7 @@
 
 <!-- {JSON.stringify($navigating, null, '  ')} -->
 
-<ul class="flex m-1 border-b border-pink-600">
+<ul class="flex m-1 border-b border-yellow-600">
   {#each links as link}
     <NavLink href={link.href} active={urlOfPath(link.href, $page.url.pathname)}>
       {link.title}

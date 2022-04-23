@@ -29,6 +29,10 @@
     await flow.execute((contracts) => contracts.UnionQuestCore.beginMove(x, y));
   }
 
+  async function buyItem() {
+    await flow.execute((contracts) => contracts.UnionQuestCore.buyItem(0, 1, '0x'));
+  }
+
   onMount(() => {
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
@@ -141,6 +145,21 @@
               <div>You are already travelling to another tile.</div>
             {/if}
           </div>
+          {#if village}
+            <div class="rounded-md border-2 p-4">
+              <div class="text-lg">Shop</div>
+
+              <button
+                class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                type="button"
+                disabled={currentPlayer.x !== x || currentPlayer.y !== y}
+                on:click={buyItem}
+              >
+                BUY 1 SWORD
+              </button>
+            </div>
+          {/if}
         </div>
       </div>
     </Modal>
