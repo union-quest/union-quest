@@ -3,12 +3,10 @@
   import {wallet, flow} from '$lib/blockchain/wallet';
   import {onMount} from 'svelte';
   import {combine} from 'union-quest-common';
-  import {getPlayer} from '$lib/player/player';
   import {players} from '$lib/player/players';
   import {villages} from '$lib/village/villages';
   import Tile from '$lib/components/Tile.svelte';
 
-  let player = getPlayer('0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199');
   async function start() {
     await flow.execute((contracts) => contracts.UnionQuestCore.start());
   }
@@ -27,20 +25,17 @@
 </symbol>
 <WalletAccess>
   <section class="py-8 px-4">
-    {#if !$player.step}
+    {#if !$villages.step}
       <div>Messages not loaded</div>
-    {:else if $player.error}
-      <div>Error: {$player.error}</div>
-    {:else if $player.step === 'LOADING'}
+    {:else if $villages.error}
+      <div>Error: {$villages.error}</div>
+    {:else if $villages.step === 'LOADING'}
       <div>Loading Messages...</div>
-    {:else if !$player.data}
-      <button on:click={() => start()}>START</button>
     {:else if !$villages.data || !$players.data}
       <div>loading map...</div>
+    {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
+      <button on:click={() => start()}>START</button>
     {:else}
-      x: {$player.data.x}
-      y: {$player.data.y}
-
       <div class="grid grid-cols-6 w-fit">
         {#each [0, 1, 2, 3, 4, 5] as x}
           {#each [0, 1, 2, 3, 4, 5] as y}
@@ -49,7 +44,9 @@
               {y}
               village={$villages.data.find((v) => v.x === x && v.y === y)}
               players={$players.data.filter((p) => p.x === x && p.y === y)}
-              currentPlayer={$players.data.find((p) => p.id === $wallet.address.toLowerCase())}
+              currentPlayer={$players.data.find((p) =>
+                $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+              )}
             />
           {/each}
         {/each}

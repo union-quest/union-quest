@@ -41,7 +41,7 @@
 </script>
 
 <div
-  class="border-4 hover:border-green-500 {players.some((p) => p.id === $wallet.address.toLowerCase())
+  class="border-4 hover:border-green-500 {currentPlayer && players.some((p) => p.id === currentPlayer.id)
     ? 'border-yellow-500 hover:border-yellow-500'
     : 'border-black-500'}"
 >
@@ -105,13 +105,23 @@
       </svg>
     {/if}
     {#each players as player}
-      {#if player.id === $wallet.address.toLowerCase()}
+      {#if currentPlayer && player.id === currentPlayer.id}
+        {#if player.arrivalTime}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+            <circle fill="white" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
+          </svg>
+        {:else}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+            <circle fill="white" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
+          </svg>
+        {/if}
+      {:else if player.arrivalTime}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-          <circle fill="white" r="0.25" cx="0.5" cy="0.5" />
+          <circle fill="black" stroke-width="0.1" stroke="red" r="0.25" cx="0.5" cy="0.5" />
         </svg>
       {:else}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
-          <circle fill="black" r="0.25" cx="0.5" cy="0.5" />
+          <circle fill="black" stroke-width="0.1" stroke="green" r="0.25" cx="0.5" cy="0.5" />
         </svg>
       {/if}
     {/each}
