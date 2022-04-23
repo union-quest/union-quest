@@ -8,6 +8,7 @@
   import {items} from '$lib/item/items';
   import Tile from '$lib/components/Tile.svelte';
   import DaiSymbol from '$lib/components/DaiSymbol.svelte';
+  import JourneyInfo from '$lib/components/JourneyInfo.svelte';
 
   async function start() {
     await flow.execute((contracts) => contracts.UnionQuestCore.start());
@@ -38,7 +39,7 @@
     {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
       <button on:click={() => start()}>START</button>
     {:else}
-      <div>
+      <div class="flex flex-col justify-center">
         <div class="flex">
           Balance: {Math.round(
             $players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false)).balance /
@@ -46,6 +47,13 @@
           )}
           <DaiSymbol />
         </div>
+        {#if $wallet.address}
+          <JourneyInfo
+            currentPlayer={$players.data.find((p) =>
+              $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+            )}
+          />
+        {/if}
         <div class="flex justify-center">
           <div class="grid grid-cols-6 w-fit h-fit">
             {#each [0, 1, 2, 3, 4, 5] as x}

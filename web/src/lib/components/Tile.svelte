@@ -20,15 +20,10 @@
   const DISTANCE_MULTIPLIER = 2;
 
   let showModal = false;
-  let currentTimestamp = Date.now();
   let trusts = getTrusts(village ? village.member : '');
 
   function distance(x0, y0, x1, y1) {
     return Math.abs(x1 - x0) + Math.abs(y1 - y0);
-  }
-
-  async function resolveMove() {
-    await flow.execute((contracts) => contracts.UnionQuestCore.resolveMove());
   }
 
   async function fight() {
@@ -42,16 +37,6 @@
   async function buyItem(id: string) {
     await flow.execute((contracts) => contracts.UnionQuestCore.buyItem(id, 1, '0x'));
   }
-
-  onMount(() => {
-    const interval = setInterval(() => {
-      currentTimestamp = Date.now();
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  });
 </script>
 
 <div>
@@ -161,31 +146,9 @@
                   FIGHT
                 </button>
               </div>
-            {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y && currentPlayer.arrivalTime < currentTimestamp / 1000}
-              <div>
-                <div>You have arrived!</div>
-                <button
-                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                  type="button"
-                  disabled={currentPlayer.arrivalTime > currentTimestamp / 1000}
-                  on:click={resolveMove}
-                >
-                  RESOLVE MOVE ({Math.round(currentPlayer.arrivalTime - currentTimestamp / 1000)}s)
-                </button>
-              </div>
             {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
               <div>
                 <div>You are travelling here!</div>
-                <button
-                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-      text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                  type="button"
-                  disabled={currentPlayer.arrivalTime > currentTimestamp / 1000}
-                  on:click={resolveMove}
-                >
-                  RESOLVE MOVE ({Math.round(currentPlayer.arrivalTime - currentTimestamp / 1000)}s)
-                </button>
               </div>
             {:else}
               <div>You are already travelling to another tile.</div>
