@@ -66,21 +66,12 @@
       <div class="grid grid-cols-6 w-fit">
         {#each [0, 1, 2, 3, 4, 5] as x}
           {#each [0, 1, 2, 3, 4, 5] as y}
-            <div
-              class="border-4 hover:border-green-500 {$players.data.find((v) => v.x === x && v.y === y) &&
-              $players.data.find((v) => v.x === x && v.y === y).id === $wallet.address.toLowerCase()
-                ? 'border-yellow-500 hover:border-yellow-500'
-                : 'border-black-500'}"
-            >
-              <svg width="100">
-                <Tile
-                  {x}
-                  {y}
-                  village={$villages.data.find((v) => v.x === x && v.y === y)}
-                  players={$players.data.filter((v) => v.x === x && v.y === y)}
-                />
-              </svg>
-            </div>
+            <Tile
+              {x}
+              {y}
+              village={$villages.data.find((v) => v.x === x && v.y === y)}
+              players={$players.data.filter((v) => v.x === x && v.y === y)}
+            />
           {/each}
         {/each}
       </div>
