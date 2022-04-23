@@ -39,10 +39,10 @@
       y: {$player.data.y}
 
       <table>
-        {#each [0, 1, 2, 3] as i}
+        {#each [0, 1, 2, 3, 4, 5] as i}
           <tr>
-            {#each [0, 1, 2, 3] as j}
-              <th on:click={() => move(i, j)}>
+            {#each [0, 1, 2, 3, 4, 5] as j}
+              <td on:click={() => move(i, j)}>
                 <svg width="100">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
                     <rect fill="#009A17" width="1" height="1" />
@@ -59,7 +59,7 @@
                     </svg>
                   {/if}
                 </svg>
-              </th>
+              </td>
             {/each}
           </tr>
         {/each}
