@@ -87,23 +87,24 @@
             {/each}
           </ul>
         </div>
-        <div class="m-2 rounded-md border-4 p-4 ">
-          <div class="text-xl">Leaderboard</div>
-          <ul class="list-disc">
-            {#each $trusts.data as trust}
-              <li>
-                <NavButton blank={true} href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
-                  {trust.borrower.id.slice(0, 6)}...{trust.borrower.id.slice(-4)}
-                </NavButton>
-                <div class="flex">{trust.trustAmount}<DaiSymbol /></div>
-              </li>
-            {/each}
-            <NavButton blank={true} href={`https://kovan.union.finance/profile/${village.member}`}
-              >View this village on Union</NavButton
-            >
-          </ul>
-        </div>
-
+        {#if village}
+          <div class="m-2 rounded-md border-4 p-4 ">
+            <div class="text-xl">Reputation Leaderboard</div>
+            <ul class="list-disc">
+              {#each $trusts.data as trust}
+                <li>
+                  <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
+                    {trust.borrower.id.slice(0, 6)}...{trust.borrower.id.slice(-4)}
+                  </a>
+                  <div class="flex">{trust.trustAmount}<DaiSymbol /></div>
+                </li>
+              {/each}
+              <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${village.member}`}>
+                View this village on Union
+              </a>
+            </ul>
+          </div>
+        {/if}
         <div class="m-2 rounded-md border-4 p-4">
           <div class="text-xl">Actions</div>
           <div class="rounded-md border-2 p-4">
