@@ -231,7 +231,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
       ? 'border-yellow-500 hover:border-yellow-500'
       : 'border-black-500'}"
   >
-    <div class="absolute">
+    <div class="absolute grid grid-cols-3">
       {#each players as player}
         {#if !player.arrivalTime && player.x === x && player.y === y}
           <Blockie address={player.id} class="m-1 h-6 w-6" />
