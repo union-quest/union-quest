@@ -57,7 +57,7 @@
         </div>
         <div class="flex justify-center">
           <div class="border-2 w-fit p-2 m-2">
-            {#if $wallet.address && $players.data.find((p) => $wallet.address && p.id === $wallet.address.toLowerCase())}
+            {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
               <JourneyInfo
                 currentPlayer={$players.data.find((p) =>
                   $wallet.address ? p.id === $wallet.address.toLowerCase() : false

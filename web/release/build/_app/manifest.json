@@ -1,6 +1,6 @@
 {
   ".svelte-kit/build/runtime/internal/start.js": {
-    "file": "start-4d399b92.js",
+    "file": "start-c05cf064.js",
     "src": ".svelte-kit/build/runtime/internal/start.js",
     "isEntry": true,
     "imports": [
@@ -18,19 +18,19 @@
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-fb2bee25.js",
+    "file": "pages/__layout.svelte-597e1eee.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-986b52e5.js",
       "_paths-28a87002.js",
-      "_url-f7426fdb.js",
-      "_wallet-a0e0bbbf.js",
+      "_url-6ebb25d8.js",
+      "_wallet-aaa67539.js",
       "_CanvasBlockie-26496520.js"
     ],
     "css": [
-      "assets/pages/__layout.svelte-e09ff497.css"
+      "assets/pages/__layout.svelte-bcb56387.css"
     ]
   },
   ".svelte-kit/build/components/error.svelte": {
@@ -43,26 +43,26 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-2592ec6c.js",
+    "file": "pages/index.svelte-ac655769.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-986b52e5.js",
-      "_wallet-a0e0bbbf.js",
+      "_wallet-aaa67539.js",
       "_NavButton-db9aa491.js",
-      "_url-f7426fdb.js",
+      "_url-6ebb25d8.js",
       "_paths-28a87002.js"
     ]
   },
   "src/routes/map.svelte": {
-    "file": "pages/map.svelte-bfb8ce84.js",
+    "file": "pages/map.svelte-f53e7dd9.js",
     "src": "src/routes/map.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-986b52e5.js",
-      "_wallet-a0e0bbbf.js",
+      "_wallet-aaa67539.js",
       "_NavButton-db9aa491.js",
       "_paths-28a87002.js",
       "_CanvasBlockie-26496520.js"
@@ -77,11 +77,11 @@
   "_paths-28a87002.js": {
     "file": "chunks/paths-28a87002.js"
   },
-  "_url-f7426fdb.js": {
-    "file": "chunks/url-f7426fdb.js",
+  "_url-6ebb25d8.js": {
+    "file": "chunks/url-6ebb25d8.js",
     "imports": [
       "_paths-28a87002.js",
-      "_wallet-a0e0bbbf.js"
+      "_wallet-aaa67539.js"
     ]
   },
   "_CanvasBlockie-26496520.js": {
@@ -93,8 +93,8 @@
       "assets/CanvasBlockie-021ba57e.css"
     ]
   },
-  "_wallet-a0e0bbbf.js": {
-    "file": "chunks/wallet-a0e0bbbf.js",
+  "_wallet-aaa67539.js": {
+    "file": "chunks/wallet-aaa67539.js",
     "imports": [
       "_vendor-986b52e5.js",
       "_paths-28a87002.js"
