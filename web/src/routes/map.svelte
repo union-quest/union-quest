@@ -63,7 +63,7 @@
                   $wallet.address ? p.id === $wallet.address.toLowerCase() : false
                 )}
               />
-            {:else if $wallet.address}
+            {:else}
               <button
                 class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
         text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
