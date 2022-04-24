@@ -38,7 +38,7 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
 
     ItemType[] private itemTypes;
     mapping(address => Player) private players;
-    mapping(uint256 => mapping(uint256 => uint256)) private vouches;
+    mapping(uint256 => mapping(uint256 => mapping(address => uint256))) private vouches;
     mapping(uint256 => mapping(uint256 => Village)) private villages;
 
     event AddItemType(uint256 _index, ItemType _itemType);
@@ -130,8 +130,8 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
 
         player.workTime = 0;
 
-        vouches[player.x][player.y] += 1 ether;
-        villages[player.x][player.y].member.updateTrust(msg.sender, vouches[player.x][player.y]);
+        vouches[player.x][player.y][msg.sender] += 1 ether;
+        villages[player.x][player.y].member.updateTrust(msg.sender, vouches[player.x][player.y][msg.sender]);
 
         emit ResolveWork(msg.sender, player);
     }
