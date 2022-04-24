@@ -44,7 +44,7 @@
 <div>
   {#if showModal}
     <Modal
-      title={`${village ? `${village.name} (${x},${y})` : `Field (${x},${y})`}`}
+      title={`${village ? `${village.name} (${x},${y})` : `Tile (${x},${y})`}`}
       on:close={() => (showModal = false)}
       closeButton={true}
     >
@@ -98,7 +98,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
                 </div>
               </div>
             {:else}
-              <div>An empty field!</div>
+              <div>An empty forest!</div>
             {/if}
             <div class="rounded-md border-2 m-1">
               <div class="p-2 border-2 border-dashed">
