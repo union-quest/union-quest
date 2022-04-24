@@ -22,11 +22,6 @@
   function select(e: MouseEvent) {
     _select(e.currentTarget as HTMLElement);
   }
-
-  async function mintTokens() {
-    await flow.execute((contracts) => contracts.DAI.approve(contracts.UnionQuestCore.address, '100000000000000000000'));
-    await flow.execute((contracts) => contracts.DAI.mint($wallet.address, '100000000000000000000'));
-  }
 </script>
 
 <section class="py-2 px-4 text-center">
@@ -51,7 +46,6 @@
         >
           Check out the Github
         </NavButton>
-        <button on:click={mintTokens}>Approve DAI transfers</button>
       </div>
     </div>
   </div>

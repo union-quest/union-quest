@@ -7,7 +7,6 @@
   import {villages} from '$lib/village/villages';
   import {items} from '$lib/item/items';
   import Tile from '$lib/components/Tile.svelte';
-  import DaiSymbol from '$lib/components/DaiSymbol.svelte';
   import JourneyInfo from '$lib/components/JourneyInfo.svelte';
 
   async function start() {

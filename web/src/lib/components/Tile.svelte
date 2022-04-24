@@ -35,6 +35,7 @@
   }
 
   async function buyItem(id: string) {
+    await flow.execute((contracts) => contracts.DAI.approve(contracts.UnionQuestCore.address, '100000000000000000000'));
     await flow.execute((contracts) => contracts.UnionQuestCore.buyItem(id, 1, '0x'));
   }
 </script>
