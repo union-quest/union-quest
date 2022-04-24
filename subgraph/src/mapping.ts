@@ -106,14 +106,9 @@ export function handleAddVillage(event: AddVillage): void {
 export function handleUpdateTrust(event: LogUpdateTrust): void {
   let trust = getOrCreateTrust(event.params.staker.toHexString() + "_" + event.params.borrower.toHexString());
 
+  trust.staker = event.params.staker.toHexString();
+  trust.borrower = event.params.borrower.toHexString();
   trust.trustAmount = event.params.trustAmount;
 
-  let staker = getOrCreatePlayer(event.params.staker.toHexString());
-  let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
-  trust.staker = staker.id;
-  trust.borrower = borrower.id;
-
-  staker.save();
-  borrower.save();
   trust.save();
 }

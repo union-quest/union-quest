@@ -48,7 +48,7 @@
       on:close={() => (showModal = false)}
       closeButton={true}
     >
-      <div class="flex flex-col">
+      <div class="flex flex-col h-96">
         <div>
           <button
             class="flex-shrink-0 bg-gray-500 hover:bg-gray-600 {tab === 0
@@ -85,129 +85,133 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
             >
           {/if}
         </div>
-        {#if tab === 0}
-          <div class="text-xl">Overview</div>
-          {#if village}
-            <div>
-              {village.description}
-              <div class="w-fit mt-1">
-                <NavButton blank={true} href={`https://kovan.union.finance/profile/${village.member}`}>
-                  View on Union
-                </NavButton>
+        <div class="p-2">
+          {#if tab === 0}
+            <div class="text-xl">Overview</div>
+            {#if village}
+              <div>
+                {village.description}
+                <div class="w-fit mt-1">
+                  <NavButton blank={true} href={`https://kovan.union.finance/profile/${village.member}`}>
+                    View on Union
+                  </NavButton>
+                </div>
               </div>
-            </div>
-          {:else}
-            <div>An empty field!</div>
-          {/if}
-          <div class="rounded-md border-2 p-4">
-            <div class="p-1 border-2 border-dashed">
-              <div class="text-lg">Travel</div>
-              {#if currentPlayer && !currentPlayer.arrivalTime}
-                <div>
-                  <div class="p-1">
-                    This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} unit(s) from you. It will take
-                    <span class="font-bold"
-                      >{DISTANCE_MULTIPLIER * distance(x, y, currentPlayer.x, currentPlayer.y)} seconds</span
-                    >
-                    to walk there.
-                  </div>
-                  <button
-                    on:click={() => beginMove(x, y)}
-                    class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+            {:else}
+              <div>An empty field!</div>
+            {/if}
+            <div class="rounded-md border-2 p-4">
+              <div class="p-1 border-2 border-dashed">
+                <div class="text-lg">Travel</div>
+                {#if currentPlayer && !currentPlayer.arrivalTime}
+                  <div>
+                    <div class="p-1">
+                      This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} unit(s) from you. It will take
+                      <span class="font-bold"
+                        >{DISTANCE_MULTIPLIER * distance(x, y, currentPlayer.x, currentPlayer.y)} seconds</span
+                      >
+                      to walk there.
+                    </div>
+                    <button
+                      on:click={() => beginMove(x, y)}
+                      class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
         text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                      type="button"
+                    >
+                      BEGIN JOURNEY
+                    </button>
+                  </div>
+                {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
+                  <div>
+                    <div>You are travelling here!</div>
+                  </div>
+                {:else}
+                  <div>You are already travelling to another tile.</div>
+                {/if}
+              </div>
+              {#if village}
+                <div class="p-1 border-2 border-dashed">
+                  <div class="text-lg">Employment</div>
+                  <div>Work at a village to gain vouches.</div>
+                  <button
+                    on:click={work}
+                    disabled={currentPlayer.x !== x || currentPlayer.y !== y}
+                    class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+  text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
                     type="button"
                   >
-                    BEGIN JOURNEY
+                    WORK
                   </button>
                 </div>
-              {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
-                <div>
-                  <div>You are travelling here!</div>
-                </div>
-              {:else}
-                <div>You are already travelling to another tile.</div>
               {/if}
             </div>
-            <div class="p-1 border-2 border-dashed">
-              <div class="text-lg">Employment</div>
-              <div>Work at a village to gain vouches.</div>
-              <button
-                on:click={work}
-                disabled={currentPlayer.x !== x || currentPlayer.y !== y}
-                class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-  text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                type="button"
-              >
-                WORK
-              </button>
+          {/if}
+          {#if tab === 1}
+            <div class="text-xl">Residents</div>
+            <div class="italic">
+              There are {players.filter((p) => p.x === x && p.y === y).length} player(s) in this tile.
             </div>
-          </div>
-        {/if}
-        {#if tab === 1}
-          <div class="text-xl">Residents</div>
-          <div class="italic">
-            There are {players.filter((p) => p.x === x && p.y === y).length} player(s) in this tile.
-          </div>
-          <ul class="list-none">
-            {#each players.filter((p) => p.x === x && p.y === y) as player}
-              <li>
-                <div class="flex border-2 border-dashed">
-                  <Blockie address={player.id} class="m-1 h-6 w-6" />
-                  <a href={`https://kovan.union.finance/profile/${player.id}`}>
-                    {player.id.slice(0, 4)}...{player.id.slice(-4)}
-                  </a>
-                </div>
-              </li>
-            {/each}
-          </ul>
-        {/if}
+            <ul class="list-none">
+              {#each players.filter((p) => p.x === x && p.y === y) as player}
+                <li>
+                  <div class="flex border-2 border-dashed">
+                    <Blockie address={player.id} class="m-1 h-6 w-6" />
+                    <a href={`https://kovan.union.finance/profile/${player.id}`}>
+                      {player.id.slice(0, 4)}...{player.id.slice(-4)}
+                    </a>
+                  </div>
+                </li>
+              {/each}
+            </ul>
+          {/if}
 
-        {#if tab === 2}
-          <div class="text-xl">Vouch Leaderboard</div>
-          <ul class="list-none">
-            {#if $trusts.data.length === 0}No players have gained this town's trust yet.{/if}
-            {#each $trusts.data as trust}
-              <li>
-                <div class="flex border-2 border-dashed">
-                  <Blockie address={trust.borrower.id} class="m-1 h-6 w-6" />
-                  <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
-                    {trust.borrower.id.slice(0, 4)}...{trust.borrower.id.slice(-4)}
-                  </a>
-                  : {Math.round(trust.trustAmount / 10 ** 18)}<DaiSymbol />
-                </div>
-              </li>
-            {/each}
-          </ul>
-        {/if}
+          {#if tab === 2}
+            <div class="text-xl">Vouch Leaderboard</div>
+            <ul class="list-none">
+              {#if $trusts.data.length === 0}No players have gained this town's trust yet.{/if}
+              {#each $trusts.data as trust}
+                <li>
+                  <div class="flex border-2 border-dashed">
+                    <Blockie address={trust.borrower.id} class="m-1 h-6 w-6" />
+                    <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
+                      {trust.borrower.id.slice(0, 4)}...{trust.borrower.id.slice(-4)}
+                    </a>
+                    : {Math.round(trust.trustAmount / 10 ** 18)}<DaiSymbol />
+                  </div>
+                </li>
+              {/each}
+            </ul>
+          {/if}
 
-        {#if tab === 3}
-          <div class="text-lg">Shop</div>
-          <div class="flex">
-            {#each items as item}
-              <div class="border-2 border-dashed w-48 p-2">
-                <div>
-                  {item.name}
-                </div>
-                <div class="italic">
-                  {item.description}
-                </div>
-                <div class="flex">
-                  Price: {item.buyPrice / 10 ** 18}
-                  <DaiSymbol />
-                </div>
-                <button
-                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+          {#if tab === 3}
+            <div class="text-lg">Shop</div>
+            <div class="flex">
+              {#each items as item}
+                <div class="border-2 border-dashed w-48 p-2">
+                  <div>
+                    {item.name}
+                  </div>
+                  <div class="italic">
+                    {item.description}
+                  </div>
+                  <div class="flex">
+                    Price: {item.buyPrice / 10 ** 18}
+                    <DaiSymbol />
+                  </div>
+                  <button
+                    class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
 text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                  type="button"
-                  disabled={currentPlayer.x !== x || currentPlayer.y !== y}
-                  on:click={() => buyItem(item.id)}
-                >
-                  BUY 1
-                </button>
-              </div>
-            {/each}
-          </div>
-        {/if}
+                    type="button"
+                    disabled={currentPlayer.x !== x || currentPlayer.y !== y}
+                    on:click={() => buyItem(item.id)}
+                  >
+                    BUY 1
+                  </button>
+                </div>
+              {/each}
+            </div>
+          {/if}
+        </div>
       </div>
     </Modal>
   {/if}

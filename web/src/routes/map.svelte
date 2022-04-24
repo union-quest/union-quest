@@ -9,7 +9,7 @@
   import Tile from '$lib/components/Tile.svelte';
   import JourneyInfo from '$lib/components/JourneyInfo.svelte';
 
-  async function start() {
+  async function join() {
     await flow.execute((contracts) => contracts.UnionQuestCore.start());
   }
 
@@ -36,7 +36,12 @@
     {:else if !$villages.data || !$players.data || !$items.data}
       <div>Null!</div>
     {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
-      <button on:click={() => start()}>START</button>
+      <button
+        class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+        type="button"
+        on:click={() => join()}>Press me to join the game!</button
+      >
     {:else}
       <div class="flex flex-col">
         <div class="flex justify-center">
