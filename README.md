@@ -4,7 +4,9 @@
 
 ![UnionQuest](https://raw.githubusercontent.com/union-quest/union-quest/main/web/static/images/Logo/UnionQuestTwitterBanner.png)
 
-## a new fully on-chain MMORPG based around credit, built atop of Union, hosted on IPFS & utilising a subgraph for data.
+## A new fully on-chain MMORPG based around credit, built atop of Union, hosted on IPFS & utilising a subgraph for data.
+
+
 
 In-game stats
 Users' credit scores can be translated to in-game stats. This creates a symbiotic relationship between Union⇔UnionQuest:
