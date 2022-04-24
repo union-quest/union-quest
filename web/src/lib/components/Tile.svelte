@@ -121,27 +121,27 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
                       BEGIN JOURNEY
                     </button>
                   </div>
-                {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
-                  <div>
-                    <div>You are travelling here!</div>
-                  </div>
                 {:else}
-                  <div>You are already travelling to another tile.</div>
+                  <div>You are already busy.</div>
                 {/if}
               </div>
               {#if village}
                 <div class="p-1 border-2 border-dashed">
                   <div class="text-lg">Employment</div>
-                  <div>Work at this town to gain vouches.</div>
-                  <button
-                    on:click={beginWork}
-                    disabled={currentPlayer.x !== x || currentPlayer.y !== y}
-                    class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+                  {#if currentPlayer && !currentPlayer.arrivalTime && !currentPlayer.workTime}
+                    <div>Work at this town to gain vouches.</div>
+                    <button
+                      on:click={beginWork}
+                      disabled={currentPlayer.x !== x || currentPlayer.y !== y}
+                      class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
   text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                    type="button"
-                  >
-                    WORK
-                  </button>
+                      type="button"
+                    >
+                      WORK
+                    </button>
+                  {:else}
+                    <div>You are already busy.</div>
+                  {/if}
                 </div>
               {/if}
             </div>
