@@ -27,8 +27,8 @@
     return Math.abs(x1 - x0) + Math.abs(y1 - y0);
   }
 
-  async function work() {
-    await flow.execute((contracts) => contracts.UnionQuestCore.work());
+  async function beginWork() {
+    await flow.execute((contracts) => contracts.UnionQuestCore.beginWork());
   }
 
   async function beginMove(x, y) {
@@ -103,7 +103,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
             <div class="rounded-md border-2 p-4">
               <div class="p-1 border-2 border-dashed">
                 <div class="text-lg">Travel</div>
-                {#if currentPlayer && !currentPlayer.arrivalTime}
+                {#if currentPlayer && !currentPlayer.arrivalTime && !currentPlayer.workTime}
                   <div>
                     <div class="p-1">
                       This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} unit(s) from you. It will take
@@ -132,9 +132,9 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
               {#if village}
                 <div class="p-1 border-2 border-dashed">
                   <div class="text-lg">Employment</div>
-                  <div>Work at a village to gain vouches.</div>
+                  <div>Work at this village to gain vouches.</div>
                   <button
-                    on:click={work}
+                    on:click={beginWork}
                     disabled={currentPlayer.x !== x || currentPlayer.y !== y}
                     class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
   text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"

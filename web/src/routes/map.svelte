@@ -45,15 +45,6 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
     {:else}
       <div class="flex flex-col">
         <div class="flex justify-center">
-          {#if $wallet.address}
-            <JourneyInfo
-              currentPlayer={$players.data.find((p) =>
-                $wallet.address ? p.id === $wallet.address.toLowerCase() : false
-              )}
-            />
-          {/if}
-        </div>
-        <div class="flex justify-center">
           <div class="grid grid-cols-6 w-fit h-fit">
             {#each [0, 1, 2, 3, 4] as x}
               {#each [0, 1, 2, 3, 4, 5] as y}
@@ -69,6 +60,17 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
                 />
               {/each}
             {/each}
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <div class="border-2 w-fit p-2 m-2">
+            {#if $wallet.address}
+              <JourneyInfo
+                currentPlayer={$players.data.find((p) =>
+                  $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+                )}
+              />
+            {/if}
           </div>
         </div>
       </div>

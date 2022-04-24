@@ -558,6 +558,11 @@
                   "internalType": "uint256",
                   "name": "arrivalTime",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "workTime",
+                  "type": "uint256"
                 }
               ],
               "indexed": false,
@@ -594,6 +599,52 @@
                   "internalType": "uint256",
                   "name": "arrivalTime",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "workTime",
+                  "type": "uint256"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct UnionQuestCore.Player",
+              "name": "_player",
+              "type": "tuple"
+            }
+          ],
+          "name": "BeginWork",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "x",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "y",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "arrivalTime",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "workTime",
+                  "type": "uint256"
                 }
               ],
               "indexed": false,
@@ -603,6 +654,47 @@
             }
           ],
           "name": "ResolveMove",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_address",
+              "type": "address"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "x",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "y",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "arrivalTime",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "workTime",
+                  "type": "uint256"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct UnionQuestCore.Player",
+              "name": "_player",
+              "type": "tuple"
+            }
+          ],
+          "name": "ResolveWork",
           "type": "event"
         },
         {
@@ -704,6 +796,11 @@
                 {
                   "internalType": "uint256",
                   "name": "arrivalTime",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "workTime",
                   "type": "uint256"
                 }
               ],
@@ -924,6 +1021,13 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "beginWork",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -1131,6 +1235,13 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "resolveWork",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "bytes32",
@@ -1275,13 +1386,6 @@
             }
           ],
           "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "work",
-          "outputs": [],
-          "stateMutability": "nonpayable",
           "type": "function"
         }
       ]

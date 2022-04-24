@@ -26,9 +26,11 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         uint256 x;
         uint256 y;
         uint256 arrivalTime;
+        uint256 workTime;
     }
 
     uint256 private constant DISTANCE_MULTIPLIER = 15;
+    uint256 private constant WORK_LENGTH = 60;
 
     address marketRegistry;
     address unionToken;
@@ -44,6 +46,8 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
     event Start(address _address, Player _player);
     event BeginMove(address _address, Player _player);
     event ResolveMove(address _address, Player _player);
+    event BeginWork(address _address, Player _player);
+    event ResolveWork(address _address, Player _player);
 
     constructor(
         address _marketRegistry,
@@ -108,13 +112,28 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         emit ResolveMove(msg.sender, player);
     }
 
-    function work() external {
+    function beginWork() external {
         Player storage player = players[msg.sender];
+        require(player.workTime == 0, "Player is already working.");
         require(player.arrivalTime == 0, "Player is moving.");
         require(address(villages[player.x][player.y].member) != address(0), "Player is not in village.");
 
+        player.workTime = block.timestamp + WORK_LENGTH;
+
+        emit BeginWork(msg.sender, player);
+    }
+
+    function resolveWork() external {
+        Player storage player = players[msg.sender];
+        require(player.workTime != 0, "Player must be working.");
+        require(block.timestamp > player.workTime, "Player work has not completed yet.");
+
+        player.workTime = 0;
+
         vouches[player.x][player.y] += 1 ether;
         villages[player.x][player.y].member.updateTrust(msg.sender, vouches[player.x][player.y]);
+
+        emit ResolveWork(msg.sender, player);
     }
 
     function buyItem(

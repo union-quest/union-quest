@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { AddItemType, AddVillage, BeginMove, ResolveMove } from '../generated/UnionQuestCore/UnionQuestCoreContract';
+import { AddItemType, AddVillage, BeginMove, ResolveMove, BeginWork, ResolveWork } from '../generated/UnionQuestCore/UnionQuestCoreContract';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
 import { Player, Village, ItemType, Trust } from '../generated/schema';
 import { BigInt } from '@graphprotocol/graph-ts';
@@ -76,6 +76,22 @@ export function handleResolveMove(event: ResolveMove): void {
   entity.x = event.params._player.x.toI32();
   entity.y = event.params._player.y.toI32();
   entity.arrivalTime = null;
+
+  entity.save();
+}
+
+export function handleBeginWork(event: BeginWork): void {
+  let entity = getOrCreatePlayer(event.params._address.toHexString());
+
+  entity.workTime = event.params._player.workTime.toI32();
+
+  entity.save();
+}
+
+export function handleResolveWork(event: ResolveWork): void {
+  let entity = getOrCreatePlayer(event.params._address.toHexString());
+
+  entity.workTime = null;
 
   entity.save();
 }

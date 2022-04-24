@@ -5,6 +5,7 @@ type Player @entity {
   xDestination: Int
   yDestination: Int
   arrivalTime: Int
+  workTime: Int
 }
 
 type Village @entity {
