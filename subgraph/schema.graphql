@@ -27,7 +27,7 @@ type ItemType @entity {
 
 type Trust @entity {
   id: ID!
-  staker: Player!
-  borrower: Player!
+  staker: Bytes!
+  borrower: Bytes!
   trustAmount: BigInt!
 }

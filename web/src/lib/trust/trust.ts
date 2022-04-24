@@ -8,12 +8,11 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
-import type { Player } from '$lib/player/player';
 
 export type Trust = {
   id: string;
-  staker: Player;
-  borrower: Player;
+  staker: string;
+  borrower: string;
   trustAmount: number;
 }[]
 
@@ -53,14 +52,10 @@ class TrustsStore implements QueryStore<Trust> {
       endpoint,
       `
     query getTrust($staker: String){
-      trusts(orderBy: trustAmount, where: {staker: $staker}) {
+      trusts(orderBy: trustAmount, orderDirection:desc, where: {staker: $staker}) {
         id
-        staker {
-          id
-        }
-        borrower{
-          id
-        }
+        staker
+        borrower
         trustAmount
       }
     }`,

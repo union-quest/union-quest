@@ -132,7 +132,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
               {#if village}
                 <div class="p-1 border-2 border-dashed">
                   <div class="text-lg">Employment</div>
-                  <div>Work at this village to gain vouches.</div>
+                  <div>Work at this town to gain vouches.</div>
                   <button
                     on:click={beginWork}
                     disabled={currentPlayer.x !== x || currentPlayer.y !== y}
@@ -172,9 +172,9 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
               {#each $trusts.data as trust}
                 <li>
                   <div class="flex border-2 border-dashed">
-                    <Blockie address={trust.borrower.id} class="m-1 h-6 w-6" />
+                    <Blockie address={trust.borrower} class="m-1 h-6 w-6" />
                     <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
-                      {trust.borrower.id.slice(0, 4)}...{trust.borrower.id.slice(-4)}
+                      {trust.borrower.slice(0, 4)}...{trust.borrower.slice(-4)}
                     </a>
                     : {Math.round(trust.trustAmount / 10 ** 18)}<DaiSymbol />
                   </div>

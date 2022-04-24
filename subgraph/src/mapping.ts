@@ -122,8 +122,8 @@ export function handleAddVillage(event: AddVillage): void {
 export function handleUpdateTrust(event: LogUpdateTrust): void {
   let trust = getOrCreateTrust(event.params.staker.toHexString() + "_" + event.params.borrower.toHexString());
 
-  trust.staker = event.params.staker.toHexString();
-  trust.borrower = event.params.borrower.toHexString();
+  trust.staker = event.params.staker;
+  trust.borrower = event.params.borrower;
   trust.trustAmount = event.params.trustAmount;
 
   trust.save();
