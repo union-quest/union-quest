@@ -51,7 +51,7 @@
         >
           Check out the Github
         </NavButton>
-        <button on:click={mintTokens}>Mint 100 free DAI</button>
+        <button on:click={mintTokens}>Approve DAI transfers</button>
       </div>
     </div>
   </div>

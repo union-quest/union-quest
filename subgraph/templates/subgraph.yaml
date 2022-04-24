@@ -51,23 +51,3 @@ dataSources:
         - event: LogUpdateTrust(indexed address,indexed address,uint256)
           handler: handleUpdateTrust
       file: ./src/mapping.ts
-  - kind: ethereum/contract
-    name: DAI
-    network: {{chainName}}
-    source:
-      address: '{{contracts.DAI.address}}'
-      abi: DAIContract
-      startBlock: {{contracts.DAI.receipt.blockNumber}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - User
-      abis:
-        - name: DAIContract
-          file: ./abis/DAI.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-      file: ./src/mapping.ts

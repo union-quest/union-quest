@@ -40,13 +40,6 @@
       <button on:click={() => start()}>START</button>
     {:else}
       <div class="flex flex-col justify-center">
-        <div class="flex">
-          Balance: {Math.round(
-            $players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false)).balance /
-              10 ** 18
-          )}
-          <DaiSymbol />
-        </div>
         {#if $wallet.address}
           <JourneyInfo
             currentPlayer={$players.data.find((p) =>

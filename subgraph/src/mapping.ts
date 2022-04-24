@@ -1,12 +1,8 @@
 /* eslint-disable prefer-const */
 import { AddItemType, AddVillage, BeginMove, ResolveMove } from '../generated/UnionQuestCore/UnionQuestCoreContract';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Transfer } from '../generated/DAI/DAIContract';
 import { Player, Village, ItemType, Trust } from '../generated/schema';
-import { Bytes, BigInt } from '@graphprotocol/graph-ts';
-
-let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
-let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
+import { BigInt } from '@graphprotocol/graph-ts';
 
 export function getOrCreatePlayer(
   id: string
@@ -16,7 +12,6 @@ export function getOrCreatePlayer(
     entity = new Player(id);
     entity.x = 0;
     entity.y = 0;
-    entity.balance = BigInt.fromString("0");
   }
 
   return entity;
@@ -121,18 +116,4 @@ export function handleUpdateTrust(event: LogUpdateTrust): void {
   staker.save();
   borrower.save();
   trust.save();
-}
-
-export function handleTransfer(event: Transfer): void {
-  if (event.params.from != ZERO_ADDRESS) {
-    let from = getOrCreatePlayer(event.params.from.toHexString());
-    from.balance = from.balance.minus(BigInt.fromString(event.params.value.toString()));
-    from.save()
-  }
-
-  if (event.params.to != ZERO_ADDRESS) {
-    let to = getOrCreatePlayer(event.params.to.toHexString());
-    to.balance = to.balance.plus(BigInt.fromString(event.params.value.toString()));
-    to.save()
-  }
 }

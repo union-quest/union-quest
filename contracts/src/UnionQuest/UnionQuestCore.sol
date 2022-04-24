@@ -130,8 +130,8 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         uint256 total = itemTypes[id].buyPrice * amount;
 
         // Transfer DAI to village and stake in Union
-        ERC20(underlyingToken).transferFrom(msg.sender, address(this), total);
-        UnionQuestVillage(villages[player.x][player.y].member).stake(total);
+        ERC20(underlyingToken).transferFrom(msg.sender, address(villages[player.x][player.y].member), total);
+        villages[player.x][player.y].member.stake(total);
 
         // Mint the user their item
         _mint(msg.sender, id, amount, data);
