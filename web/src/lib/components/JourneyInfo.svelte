@@ -39,7 +39,7 @@
   });
 </script>
 
-<div class="flex flex-col justify-center text-center">
+<div class="flex flex-col justify-center text-center dark:text-white">
   <div class="text-xl text-center">Player Status:</div>
   {#if currentPlayer.arrivalTime}
     <div>
