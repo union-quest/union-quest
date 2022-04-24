@@ -2,6 +2,10 @@
 
 # Union Quest
 
+![UnionQuest](https://raw.githubusercontent.com/union-quest/union-quest/main/web/static/images/Logo/UnionQuestTwitterBanner.png)
+
+
+
 This is a template to build a decentralised applicaiton using ethereum, hardhat, svelte and thegraph
 
 to make an app out of it, execute the following
