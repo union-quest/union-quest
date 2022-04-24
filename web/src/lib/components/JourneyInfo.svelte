@@ -35,7 +35,7 @@
   });
 </script>
 
-<div class="flex flex-col justify-center">
+<div class="flex flex-col justify-center text-center">
   <div class="text-xl text-center">Journey Status:</div>
   {#if !currentPlayer.arrivalTime}
     <div>

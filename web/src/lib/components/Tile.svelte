@@ -6,10 +6,8 @@
   import type {Items} from '$lib/item/items';
   import {getTrusts} from '$lib/trust/trust';
   import Modal from '$lib/components/styled/Modal.svelte';
-  import {onMount} from 'svelte';
   import DaiSymbol from './DaiSymbol.svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
-  import NavLink from './styled/navigation/NavLink.svelte';
   import NavButton from './styled/navigation/NavButton.svelte';
 
   export let x: number;
@@ -22,14 +20,15 @@
   const DISTANCE_MULTIPLIER = 2;
 
   let showModal = false;
+  let tab = 0;
   let trusts = getTrusts(village ? village.member : '');
 
   function distance(x0, y0, x1, y1) {
     return Math.abs(x1 - x0) + Math.abs(y1 - y0);
   }
 
-  async function fight() {
-    await flow.execute((contracts) => contracts.UnionQuestCore.fight());
+  async function work() {
+    await flow.execute((contracts) => contracts.UnionQuestCore.work());
   }
 
   async function beginMove(x, y) {
@@ -50,7 +49,43 @@
       closeButton={true}
     >
       <div class="flex flex-col">
-        <div class="m-2 rounded-md border-4 p-4">
+        <div>
+          <button
+            class="flex-shrink-0 bg-gray-500 hover:bg-gray-600 {tab === 0
+              ? 'border-yellow-500'
+              : 'border-gray-500'}  hover:border-gray-600 text-sm border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+            type="button"
+            on:click={() => (tab = 0)}>Overview</button
+          >
+          <button
+            class="flex-shrink-0 bg-gray-500 hover:bg-gray-600 {tab === 1
+              ? 'border-yellow-500'
+              : 'border-gray-500'} hover:border-gray-600 text-sm border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+            type="button"
+            on:click={() => (tab = 1)}>Residents</button
+          >
+          {#if village}
+            <button
+              class="flex-shrink-0 bg-gray-500 hover:bg-gray-600 {tab === 2
+                ? 'border-yellow-500'
+                : 'border-gray-500'} hover:border-gray-600 text-sm border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+              type="button"
+              on:click={() => (tab = 2)}>Vouches</button
+            >
+            <button
+              class="flex-shrink-0 bg-gray-500 hover:bg-gray-600 {tab === 3
+                ? 'border-yellow-500'
+                : 'border-gray-500'} hover:border-gray-600 text-sm border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+              type="button"
+              on:click={() => (tab = 3)}>Shop</button
+            >
+          {/if}
+        </div>
+        {#if tab === 0}
           <div class="text-xl">Overview</div>
           {#if village}
             <div>
@@ -64,16 +99,59 @@
           {:else}
             <div>An empty field!</div>
           {/if}
-        </div>
-        <div class="m-2 rounded-md border-4 p-4 ">
-          <div class="text-xl">Players</div>
+          <div class="rounded-md border-2 p-4">
+            <div class="p-1 border-2 border-dashed">
+              <div class="text-lg">Travel</div>
+              {#if currentPlayer && !currentPlayer.arrivalTime}
+                <div>
+                  <div class="p-1">
+                    This tile is {distance(x, y, currentPlayer.x, currentPlayer.y)} unit(s) from you. It will take
+                    <span class="font-bold"
+                      >{DISTANCE_MULTIPLIER * distance(x, y, currentPlayer.x, currentPlayer.y)} seconds</span
+                    >
+                    to walk there.
+                  </div>
+                  <button
+                    on:click={() => beginMove(x, y)}
+                    class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                    type="button"
+                  >
+                    BEGIN JOURNEY
+                  </button>
+                </div>
+              {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
+                <div>
+                  <div>You are travelling here!</div>
+                </div>
+              {:else}
+                <div>You are already travelling to another tile.</div>
+              {/if}
+            </div>
+            <div class="p-1 border-2 border-dashed">
+              <div class="text-lg">Employment</div>
+              <div>Work at a village to gain vouches.</div>
+              <button
+                on:click={work}
+                disabled={currentPlayer.x !== x || currentPlayer.y !== y}
+                class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+  text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                type="button"
+              >
+                WORK
+              </button>
+            </div>
+          </div>
+        {/if}
+        {#if tab === 1}
+          <div class="text-xl">Residents</div>
           <div class="italic">
             There are {players.filter((p) => p.x === x && p.y === y).length} player(s) in this tile.
           </div>
-          <ul class="list-disc">
+          <ul class="list-none">
             {#each players.filter((p) => p.x === x && p.y === y) as player}
               <li>
-                <div class="flex">
+                <div class="flex border-2 border-dashed">
                   <Blockie address={player.id} class="m-1 h-6 w-6" />
                   <a href={`https://kovan.union.finance/profile/${player.id}`}>
                     {player.id.slice(0, 4)}...{player.id.slice(-4)}
@@ -82,114 +160,54 @@
               </li>
             {/each}
           </ul>
-        </div>
-        {#if village}
-          <div class="m-2 rounded-md border-4 p-4 ">
-            <div class="text-xl">Vouch Leaderboard</div>
-            <ul class="list-disc">
-              {#each $trusts.data as trust}
-                <li>
-                  <div class="flex">
-                    <Blockie address={trust.borrower.id} class="m-1 h-6 w-6" />
-                    <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
-                      {trust.borrower.id.slice(0, 4)}...{trust.borrower.id.slice(-4)}
-                    </a>
-                    <div class="flex">: {Math.round(trust.trustAmount / 10 ** 18)}<DaiSymbol /></div>
-                  </div>
-                </li>
-              {/each}
-            </ul>
+        {/if}
+
+        {#if tab === 2}
+          <div class="text-xl">Vouch Leaderboard</div>
+          <ul class="list-none">
+            {#if $trusts.data.length === 0}No players have gained this town's trust yet.{/if}
+            {#each $trusts.data as trust}
+              <li>
+                <div class="flex border-2 border-dashed">
+                  <Blockie address={trust.borrower.id} class="m-1 h-6 w-6" />
+                  <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
+                    {trust.borrower.id.slice(0, 4)}...{trust.borrower.id.slice(-4)}
+                  </a>
+                  : {Math.round(trust.trustAmount / 10 ** 18)}<DaiSymbol />
+                </div>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+
+        {#if tab === 3}
+          <div class="text-lg">Shop</div>
+          <div class="flex">
+            {#each items as item}
+              <div class="border-2 border-dashed w-48">
+                <div>
+                  {item.name}
+                </div>
+                <div class="italic">
+                  {item.description}
+                </div>
+                <div class="flex">
+                  Price: {item.buyPrice / 10 ** 18}
+                  <DaiSymbol />
+                </div>
+                <button
+                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                  type="button"
+                  disabled={currentPlayer.x !== x || currentPlayer.y !== y}
+                  on:click={() => buyItem(item.id)}
+                >
+                  BUY 1
+                </button>
+              </div>
+            {/each}
           </div>
         {/if}
-        <div class="m-2 rounded-md border-4 p-4">
-          <div class="text-xl">Actions</div>
-          <div class="rounded-md border-2 p-4">
-            <div class="text-lg">Movement</div>
-            {#if currentPlayer && !currentPlayer.arrivalTime}
-              <div>
-                Distance:
-                <span class="italic">
-                  |{x} - {currentPlayer.x}| + |{y} - {currentPlayer.y}|
-                </span>
-                =
-                <span class="font-medium">
-                  {distance(x, y, currentPlayer.x, currentPlayer.y)} unit(s).
-                </span>
-              </div>
-              <div>
-                Your speed:
-                <span class="font-medium">
-                  {DISTANCE_MULTIPLIER} units/second.
-                </span>
-              </div>
-              <div>
-                Travel time:
-                <span class="italic">
-                  {distance(x, y, currentPlayer.x, currentPlayer.y)} * {DISTANCE_MULTIPLIER}
-                </span>
-                =
-                <span class="font-bold">
-                  {DISTANCE_MULTIPLIER * distance(x, y, currentPlayer.x, currentPlayer.y)}
-                  seconds
-                </span>
-                <button
-                  on:click={() => beginMove(x, y)}
-                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-      text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                  type="button"
-                >
-                  MOVE HERE
-                </button>
-
-                <button
-                  on:click={fight}
-                  disabled={currentPlayer.x !== x || currentPlayer.y !== y}
-                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-      text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                  type="button"
-                >
-                  FIGHT
-                </button>
-              </div>
-            {:else if currentPlayer.arrivalTime && currentPlayer.xDestination === x && currentPlayer.yDestination === y}
-              <div>
-                <div>You are travelling here!</div>
-              </div>
-            {:else}
-              <div>You are already travelling to another tile.</div>
-            {/if}
-          </div>
-          {#if village}
-            <div class="rounded-md border-2 p-4">
-              <div class="text-lg">Shop</div>
-              <div class="flex">
-                {#each items as item}
-                  <div class="border-2 border-dashed w-48">
-                    <div>
-                      {item.name}
-                    </div>
-                    <div class="italic">
-                      {item.description}
-                    </div>
-                    <div class="flex">
-                      Price: {item.buyPrice / 10 ** 18}
-                      <DaiSymbol />
-                    </div>
-                    <button
-                      class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                      type="button"
-                      disabled={currentPlayer.x !== x || currentPlayer.y !== y}
-                      on:click={() => buyItem(item.id)}
-                    >
-                      BUY 1
-                    </button>
-                  </div>
-                {/each}
-              </div>
-            </div>
-          {/if}
-        </div>
       </div>
     </Modal>
   {/if}

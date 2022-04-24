@@ -108,7 +108,7 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         emit ResolveMove(msg.sender, player);
     }
 
-    function fight() external {
+    function work() external {
         Player storage player = players[msg.sender];
         require(player.arrivalTime == 0, "Player is moving.");
         require(address(villages[player.x][player.y].member) != address(0), "Player is not in village.");
