@@ -5,10 +5,11 @@
   import {combine} from 'union-quest-common';
   import {players} from '$lib/player/players';
   import {villages} from '$lib/village/villages';
+  import {items} from '$lib/item/items';
   import Tile from '$lib/components/Tile.svelte';
-  import DaiSymbol from '$lib/components/DaiSymbol.svelte';
+  import JourneyInfo from '$lib/components/JourneyInfo.svelte';
 
-  async function start() {
+  async function join() {
     await flow.execute((contracts) => contracts.UnionQuestCore.start());
   }
 
@@ -31,33 +32,45 @@
     {:else if $villages.error}
       <div>Error: {$villages.error}</div>
     {:else if $villages.step === 'LOADING'}
-      <div>Loading Messages...</div>
-    {:else if !$villages.data || !$players.data}
-      <div>loading map...</div>
+      <div>Loading Map...</div>
+    {:else if !$villages.data || !$players.data || !$items.data}
+      <div>Null!</div>
     {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
-      <button on:click={() => start()}>START</button>
+      <button
+        class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+        type="button"
+        on:click={() => join()}>Press me to join the game!</button
+      >
     {:else}
-      <div>
-        <div class="flex">
-          Balance: {$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))
-            .balance}
-          <DaiSymbol />
-        </div>
+      <div class="flex flex-col">
         <div class="flex justify-center">
           <div class="grid grid-cols-6 w-fit h-fit">
-            {#each [0, 1, 2, 3, 4, 5] as x}
+            {#each [0, 1, 2, 3, 4] as x}
               {#each [0, 1, 2, 3, 4, 5] as y}
                 <Tile
                   {x}
                   {y}
                   village={$villages.data.find((v) => v.x === x && v.y === y)}
-                  players={$players.data.filter((p) => p.x === x && p.y === y)}
+                  players={$players.data}
+                  items={$items.data}
                   currentPlayer={$players.data.find((p) =>
                     $wallet.address ? p.id === $wallet.address.toLowerCase() : false
                   )}
                 />
               {/each}
             {/each}
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <div class="border-2 w-fit p-2 m-2">
+            {#if $wallet.address}
+              <JourneyInfo
+                currentPlayer={$players.data.find((p) =>
+                  $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+                )}
+              />
+            {/if}
           </div>
         </div>
       </div>

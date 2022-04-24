@@ -1,11 +1,8 @@
 /* eslint-disable prefer-const */
-import { AddVillage, BeginMove, ResolveMove } from '../generated/UnionQuestCore/UnionQuestCoreContract';
-import { Transfer } from '../generated/DAI/DAIContract';
-import { Player, Village } from '../generated/schema';
-import { Bytes } from '@graphprotocol/graph-ts';
-
-let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
-let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
+import { AddItemType, AddVillage, BeginMove, ResolveMove, BeginWork, ResolveWork } from '../generated/UnionQuestCore/UnionQuestCoreContract';
+import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
+import { Player, Village, ItemType, Trust } from '../generated/schema';
+import { BigInt } from '@graphprotocol/graph-ts';
 
 export function getOrCreatePlayer(
   id: string
@@ -15,10 +12,20 @@ export function getOrCreatePlayer(
     entity = new Player(id);
     entity.x = 0;
     entity.y = 0;
-    entity.balance = 0;
   }
 
   return entity;
+}
+
+export function getOrCreateItemType(
+  id: string
+): ItemType {
+  let itemType = ItemType.load(id);
+  if (!itemType) {
+    itemType = new ItemType(id);
+  }
+
+  return itemType;
 }
 
 export function getOrCreateVillage(
@@ -31,6 +38,17 @@ export function getOrCreateVillage(
     entity.y = 0;
     entity.name = "";
     entity.description = "";
+  }
+
+  return entity;
+}
+
+export function getOrCreateTrust(
+  id: string
+): Trust {
+  let entity = Trust.load(id);
+  if (!entity) {
+    entity = new Trust(id);
   }
 
   return entity;
@@ -62,6 +80,33 @@ export function handleResolveMove(event: ResolveMove): void {
   entity.save();
 }
 
+export function handleBeginWork(event: BeginWork): void {
+  let entity = getOrCreatePlayer(event.params._address.toHexString());
+
+  entity.workTime = event.params._player.workTime.toI32();
+
+  entity.save();
+}
+
+export function handleResolveWork(event: ResolveWork): void {
+  let entity = getOrCreatePlayer(event.params._address.toHexString());
+
+  entity.workTime = null;
+
+  entity.save();
+}
+
+export function handleAddItemType(event: AddItemType): void {
+  let entity = getOrCreateItemType(event.params._index.toString());
+
+  entity.name = event.params._itemType.name;
+  entity.description = event.params._itemType.description;
+  entity.buyPrice = BigInt.fromString(event.params._itemType.buyPrice.toString());
+  entity.sellPrice = BigInt.fromString(event.params._itemType.sellPrice.toString());
+
+  entity.save();
+}
+
 export function handleAddVillage(event: AddVillage): void {
   let entity = getOrCreateVillage(event.params._x.toString() + "_" + event.params._y.toString());
 
@@ -69,20 +114,17 @@ export function handleAddVillage(event: AddVillage): void {
   entity.y = event.params._y.toI32();
   entity.name = event.params._village.name;
   entity.description = event.params._village.description;
+  entity.member = event.params._village.member.toHexString();
 
   entity.save();
 }
 
-export function handleTransfer(event: Transfer): void {
-  if (event.params.from != ZERO_ADDRESS) {
-    let from = getOrCreatePlayer(event.params.from.toHexString());
-    from.balance = from.balance - event.params.value.toI32();
-    from.save()
-  }
+export function handleUpdateTrust(event: LogUpdateTrust): void {
+  let trust = getOrCreateTrust(event.params.staker.toHexString() + "_" + event.params.borrower.toHexString());
 
-  if (event.params.to != ZERO_ADDRESS) {
-    let to = getOrCreatePlayer(event.params.to.toHexString());
-    to.balance = to.balance + event.params.value.toI32();
-    to.save()
-  }
+  trust.staker = event.params.staker;
+  trust.borrower = event.params.borrower;
+  trust.trustAmount = event.params.trustAmount;
+
+  trust.save();
 }

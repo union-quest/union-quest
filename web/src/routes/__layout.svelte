@@ -7,8 +7,10 @@
   import NoInstallPrompt from '$lib/components/generic/NoInstallPrompt.svelte';
   import NewVersionNotification from '$lib/components/styled/NewVersionNotification.svelte';
   import DarkSwitch from '$lib/components/styled/DarkSwitch.svelte';
+  import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
 
   import {appDescription, url as appUrl} from '../application.json';
+  import {wallet} from '$lib/blockchain/wallet';
 
   const title = 'Union Quest, Template for Decentralised Applications.';
   const description = appDescription;
@@ -42,7 +44,10 @@
   ]}
 />
 
-<div class="absolute top-0 right-0 m-2">
+<div class="absolute top-0 right-0 m-2 flex">
+  {#if $wallet.address}
+    <Blockie address={$wallet.address} class="mr-2 h-8 w-8" />
+  {/if}
   <DarkSwitch />
 </div>
 

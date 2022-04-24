@@ -20,22 +20,28 @@ dataSources:
         - name: UnionQuestCoreContract
           file: ./abis/UnionQuestCore.json
       eventHandlers:
+        - event: AddItemType(uint256,(string,string,uint256,uint256))
+          handler: handleAddItemType
         - event: AddVillage(uint256,uint256,(string,string,address))
           handler: handleAddVillage
-        - event: Start(address,(uint256,uint256,uint256))
+        - event: Start(address,(uint256,uint256,uint256,uint256))
           handler: handleStart
-        - event: BeginMove(address,(uint256,uint256,uint256))
+        - event: BeginMove(address,(uint256,uint256,uint256,uint256))
           handler: handleBeginMove
-        - event: ResolveMove(address,(uint256,uint256,uint256))
+        - event: ResolveMove(address,(uint256,uint256,uint256,uint256))
           handler: handleResolveMove
+        - event: BeginWork(address,(uint256,uint256,uint256,uint256))
+          handler: handleBeginWork
+        - event: ResolveWork(address,(uint256,uint256,uint256,uint256))
+          handler: handleResolveWork
       file: ./src/mapping.ts
   - kind: ethereum/contract
-    name: DAI
+    name: UserManager
     network: {{chainName}}
     source:
-      address: '{{contracts.DAI.address}}'
-      abi: DAIContract
-      startBlock: {{contracts.DAI.receipt.blockNumber}}
+      address: '{{contracts.UserManager.address}}'
+      abi: UserManagerContract
+      startBlock: {{contracts.UserManager.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -43,9 +49,9 @@ dataSources:
       entities:
         - User
       abis:
-        - name: DAIContract
-          file: ./abis/DAI.json
+        - name: UserManagerContract
+          file: ./abis/UserManager.json
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
+        - event: LogUpdateTrust(indexed address,indexed address,uint256)
+          handler: handleUpdateTrust
       file: ./src/mapping.ts

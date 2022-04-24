@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <link rel="shortcut icon" href="../pwa/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../pwa/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../pwa/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="../pwa/favicon-48x48.png">
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000000">
+    <meta name="application-name" content="Union Quest">
+    <link rel="apple-touch-icon" sizes="57x57" href="../pwa/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../pwa/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../pwa/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../pwa/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../pwa/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../pwa/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../pwa/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../pwa/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="../pwa/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../pwa/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="1024x1024" href="../pwa/apple-touch-icon-1024x1024.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Union Quest">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-640x1136.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-750x1334.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-828x1792.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-1125x2436.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-1242x2208.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-1242x2688.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-1536x2048.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-1668x2224.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-1668x2388.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-2048x2732.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="../pwa/apple-touch-startup-image-1620x2160.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-1136x640.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-1334x750.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-1792x828.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2436x1125.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2208x1242.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2688x1242.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2048x1536.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2224x1668.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2388x1668.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2732x2048.png">
+    <link rel="apple-touch-startup-image" media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="../pwa/apple-touch-startup-image-2160x1620.png">
+    <link rel="icon" type="image/png" sizes="228x228" href="../pwa/coast-228x228.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="../pwa/mstile-144x144.png">
+    <meta name="msapplication-config" content="../pwa/browserconfig.xml">
+    <link rel="yandex-tableau-widget" href="../pwa/yandex-browser-manifest.json">
+    <!--SCRIPTS-->
+
+    <!-- inject named-logs-console -->
+    <!-- prettier-ignore -->
+    
+    <script>
+      window.BASE = (() => {
+        const normalised = (location.pathname.endsWith("/") ? location.pathname.substr(0, location.pathname.length -1) : location.pathname).substr(1);
+        const split = normalised.split('/');
+        const sliced = 1 ? split.slice(0, -1) : split;
+        const str = (sliced.length > 0 && sliced[0] !== "") ? "/" + sliced.join('/') : "";
+        return str;
+      })();
+    </script>
+
+    <script>
+      // ensure we save href as they are loaded, so they do not change on page navigation
+      document.querySelectorAll("link[href]").forEach((v) => v.href = v.href);
+    </script>
+
+      <script>
+        (function () {
+          if (!!/\?_d_eruda/.test(window.location) || !!/&_d_eruda/.test(window.location)) {
+            var src = '../scripts/eruda.js';
+            window._debug = true;
+            document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+            document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
+          }
+        })();
+      </script>
+  <script>
+      "use strict";var noop=function(){},W="undefined"!=typeof window?window:globalThis,oldConsole=W.console,disabledRegexps=[],enabledRegexps=[];function bindCall(e,l,s,a){return l.enabled&&(l.level>=a||logs.level>=a)?s<=a||logs.traceLevel<=a?oldConsole.trace.bind(oldConsole):e.bind(oldConsole):noop}var loggers={},logs=function(e){var l=loggers[e];if(l)return l;var s=logs.level,a=logs.traceLevel;return l=loggers[e]={get assert(){return bindCall(oldConsole.assert,l,a,1)},get error(){return bindCall(oldConsole.error,l,a,1)},get warn(){return bindCall(oldConsole.warn,l,a,2)},get info(){return bindCall(oldConsole.info,l,a,3)},get log(){return bindCall(oldConsole.log,l,a,4)},get debug(){return bindCall(oldConsole.debug,l,a,5)},get trace(){return bindCall(oldConsole.trace,l,a,6)},get dir(){return bindCall(oldConsole.dir,l,a,5)},get table(){return bindCall(oldConsole.table||oldConsole.debug,l,a,5)},get level(){return s},set level(e){s=e},get traceLevel(){return a},set traceLevel(e){a=e},enabled:enabled(e,{disabledRegexps:disabledRegexps,enabledRegexps:enabledRegexps})}},logLevels={error:1,warn:2,info:3,log:4,debug:5,trace:6};function enabled(e,l){var s,a,r=l.disabledRegexps,o=l.enabledRegexps;if("*"===e[e.length-1])return!0;for(s=0,a=r.length;s<a;s++)if(r[s].test(e))return!1;for(s=0,a=o.length;s<a;s++)if(o[s].test(e))return!0;return!1}function processNamespaces(e,l,s){for(var a=l.disabledRegexps,r=l.enabledRegexps,o=("string"==typeof e?e:"").split(/[\s,]+/),n=o.length,t=0;t<n;t++)o[t]&&("-"===(e=o[t].replace(/\*/g,".*?"))[0]?a.push(new RegExp("^"+e.substr(1)+"$")):r.push(new RegExp("^"+e+"$")));for(var g=0,d=Object.keys(loggers);g<d.length;g++){var i=d[g];s(i,enabled(i,{disabledRegexps:a,enabledRegexps:r}))}}logs.level=2,logs.traceLevel=6,logs.setTraceLevelFor=function(e,l){processNamespaces(e||"*",{disabledRegexps:[],enabledRegexps:[]},(function(e,s){s&&(loggers[e].traceLevel=l)}))},logs.disable=function(){disabledRegexps.splice(0,disabledRegexps.length),enabledRegexps.splice(0,enabledRegexps.length);for(var e=0,l=Object.keys(loggers);e<l.length;e++){var s=l[e];loggers[s].enabled=!1}try{localStorage.removeItem("debug")}catch(e){}},logs.enable=function(e){disabledRegexps.splice(0,disabledRegexps.length),enabledRegexps.splice(0,enabledRegexps.length),processNamespaces(e=""===e?"*":e||"*",{disabledRegexps:disabledRegexps,enabledRegexps:enabledRegexps},(function(e,l){return loggers[e].enabled=l}));try{localStorage.setItem("debug",e)}catch(e){}};try{var str=localStorage.getItem("debug");str&&""!==str&&logs.enable(str)}catch(e){}for(var vars=W.location?W.location.search.slice(1).split("&"):[],_i=0,vars_1=vars;_i<vars_1.length;_i++){var variable=vars_1[_i];if(variable.startsWith("debug="))""===(val=variable.slice(6))?logs.disable():logs.enable(val);else if(variable.startsWith("log=")){var val=variable.slice(4);logs.level=logLevels[val]||parseInt(val)||logs.level}else if(variable.startsWith("trace=")){val=variable.slice(6);logs.traceLevel=logLevels[val]||parseInt(val)||logs.level}}window._logFactory=logs;
+    </script>
+    <script>
+      // darkMode
+      if (
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+    <title>Union Quest, Template for Decentralised Applications.</title><meta name="title" content="Union Quest, Template for Decentralised Applications." data-svelte="svelte-mell9j"><meta name="description" content="A Production Ready Template for Decentralised Applications." data-svelte="svelte-mell9j"><meta property="og:type" content="website" data-svelte="svelte-mell9j"><meta property="og:url" content="https://union-quest.eth.limo/" data-svelte="svelte-mell9j"><meta property="og:title" content="Union Quest, Template for Decentralised Applications." data-svelte="svelte-mell9j"><meta property="og:description" content="A Production Ready Template for Decentralised Applications." data-svelte="svelte-mell9j"><meta property="og:image" content="https://union-quest.eth.limo/preview.png" data-svelte="svelte-mell9j"><meta property="twitter:card" content="summary_large_image" data-svelte="svelte-mell9j"><meta property="twitter:url" content="https://union-quest.eth.limo/" data-svelte="svelte-mell9j"><meta property="twitter:title" content="Union Quest, Template for Decentralised Applications." data-svelte="svelte-mell9j"><meta property="twitter:description" content="A Production Ready Template for Decentralised Applications." data-svelte="svelte-mell9j"><meta property="twitter:image" content="https://union-quest.eth.limo/preview.png" data-svelte="svelte-mell9j">
+
+		
+
+		<link rel="stylesheet" href="../_app/assets/start-f6bd5930.css">
+		<link rel="stylesheet" href="../_app/assets/pages/__layout.svelte-e09ff497.css">
+		<link rel="stylesheet" href="../_app/assets/CanvasBlockie-021ba57e.css">
+		<link rel="stylesheet" href="../_app/assets/pages/map.svelte-9c32b72f.css">
+		<link rel="modulepreload" href="../_app/start-4d399b92.js">
+		<link rel="modulepreload" href="../_app/chunks/vendor-986b52e5.js">
+		<link rel="modulepreload" href="../_app/chunks/paths-28a87002.js">
+		<link rel="modulepreload" href="../_app/pages/__layout.svelte-fb2bee25.js">
+		<link rel="modulepreload" href="../_app/chunks/url-f7426fdb.js">
+		<link rel="modulepreload" href="../_app/chunks/wallet-a0e0bbbf.js">
+		<link rel="modulepreload" href="../_app/chunks/CanvasBlockie-26496520.js">
+		<link rel="modulepreload" href="../_app/pages/map.svelte-bfb8ce84.js">
+		<link rel="modulepreload" href="../_app/chunks/NavButton-db9aa491.js">
+
+		<script type="module">
+			import { start } from "../_app/start-4d399b92.js";
+			start({
+				target: document.querySelector("#svelte"),
+				paths: {"base": window.BASE,"assets":""},
+				session: {},
+				route: true,
+				spa: false,
+				trailing_slash: "ignore",
+				hydrate: {
+					status: 200,
+					error: null,
+					nodes: [
+						import("../_app/pages/__layout.svelte-fb2bee25.js"),
+						import("../_app/pages/map.svelte-bfb8ce84.js")
+					],
+					url: new URL("sveltekit://prerender/map/"),
+					params: {}
+				}
+			});
+		</script><script>
+			if ('serviceWorker' in navigator) {
+				//navigator.serviceWorker.register('/service-worker.js');
+			}
+		</script>
+  </head>
+  <body class="bg-white dark:bg-black">
+    <div id="svelte">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ul class="flex m-1 border-b border-yellow-600"><li class="-mb-px mr-1"><a class="bg-white dark:bg-black inline-block py-2 px-4 border-yellow-800 text-yellow-800 font-semibold" href="../">Home
+      
+    </a></li><li class="-mb-px mr-1"><span class="bg-white dark:bg-black inline-block border-l border-t border-r rounded-t py-2 px-4 border-yellow-600 text-yellow-600 font-semibold" href="../map/">Map
+      
+    </span></li></ul>
+
+
+
+<div class="absolute top-0 right-0 m-2 flex">
+  <div class="dark:text-white"><button><svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></button></div></div>
+
+<symbol id="icon-spinner6" viewBox="0 0 32 32" class="svelte-8b44jz"><path d="M12 4c0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4s-4-1.791-4-4zM24.719 16c0 0 0 0 0 0 0-1.812 1.469-3.281 3.281-3.281s3.281 1.469 3.281 3.281c0 0 0 0 0 0 0 1.812-1.469 3.281-3.281 3.281s-3.281-1.469-3.281-3.281zM21.513 24.485c0-1.641 1.331-2.972 2.972-2.972s2.972 1.331 2.972 2.972c0 1.641-1.331 2.972-2.972 2.972s-2.972-1.331-2.972-2.972zM13.308 28c0-1.487 1.205-2.692 2.692-2.692s2.692 1.205 2.692 2.692c0 1.487-1.205 2.692-2.692 2.692s-2.692-1.205-2.692-2.692zM5.077 24.485c0-1.346 1.092-2.438 2.438-2.438s2.438 1.092 2.438 2.438c0 1.346-1.092 2.438-2.438 2.438s-2.438-1.092-2.438-2.438zM1.792 16c0-1.22 0.989-2.208 2.208-2.208s2.208 0.989 2.208 2.208c0 1.22-0.989 2.208-2.208 2.208s-2.208-0.989-2.208-2.208zM5.515 7.515c0 0 0 0 0 0 0-1.105 0.895-2 2-2s2 0.895 2 2c0 0 0 0 0 0 0 1.105-0.895 2-2 2s-2-0.895-2-2zM28.108 7.515c0 2.001-1.622 3.623-3.623 3.623s-3.623-1.622-3.623-3.623c0-2.001 1.622-3.623 3.623-3.623s3.623 1.622 3.623 3.623z" class="svelte-8b44jz"></path></symbol>
+<section class="py-8 px-4 svelte-8b44jz"><div class="svelte-8b44jz">Null!</div></section>
+
+
+  
+
+
+<div class="z-50 fixed inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end"></div>
+
+</div>
+  </body>
+</html>

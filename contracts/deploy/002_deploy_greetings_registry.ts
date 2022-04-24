@@ -10,6 +10,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
     log: true,
     autoMine: true,
+    skipIfAlreadyDeployed: false
   });
 
   const userManager = await deploy('UserManager', {
@@ -17,6 +18,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
     log: true,
     autoMine: true,
+    skipIfAlreadyDeployed: false
   });
 
   const market = await deploy('MarketRegistry', {
@@ -24,22 +26,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [userManager.address],
     log: true,
     autoMine: true,
+    skipIfAlreadyDeployed: false
   });
 
-  const core = await deploy('UnionQuestCore', {
+  await deploy('UnionQuestCore', {
     from: deployer,
     args: [market.address, "0x08AF898e65493D8212c8981FAdF60Ff023A91150", dai.address],
     log: true,
     autoMine: true,
+    skipIfAlreadyDeployed: false
   });
 
-  await execute('DAI', { from: deployer, log: true }, 'mint', deployer, 10000000);
-  await execute('DAI', { from: deployer, log: true }, 'approve', core.address, 10000000);
-  await execute('UnionQuestCore', { from: deployer, log: true }, 'addItemTypes', [["Sword", "Stabby!", 2, 1]]);
-  await execute('UnionQuestCore', { from: deployer, log: true }, 'createVillage', 1, 2, "Crediton", "Crediton is a small town with an economy dependant on industry.");
+  await execute('UnionQuestCore', { from: deployer, log: true }, 'addItemTypes', [["Sword", "It stabs.", "3000000000000000000", "1000000000000000000"], ["Ring of trust", "A holy artifact.", "20000000000000000000", "3000000000000000"]]);
+  await execute('UnionQuestCore', { from: deployer, log: true }, 'createVillage', 1, 2, "Crediton", "Crediton is a small town with an economy dependent on industry.");
   await execute('UnionQuestCore', { from: deployer, log: true }, 'createVillage', 3, 5, "Loansworth", "A large village, the economy of Loansworth depends on farming.");
-
-  // await execute('UnionQuestCore', { from: deployer, log: true }, 'move', 0, 2);
-  // await execute('UnionQuestCore', { from: deployer, log: true }, 'buyItem', 0, 2, "0x");
 };
 export default func;

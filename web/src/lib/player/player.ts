@@ -16,7 +16,7 @@ export type Player = {
   xDestination: number;
   yDestination: number;
   arrivalTime: number;
-  balance: number;
+  workTime: number;
 }
 
 // TODO web3w needs to export the type
@@ -60,7 +60,7 @@ class UserStore implements QueryStore<Player> {
         x
         y
         arrivalTime
-        balance
+        workTime
       }
     }`,
       chainTempo,

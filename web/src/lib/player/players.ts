@@ -55,7 +55,7 @@ class UserStore implements QueryStore<Players> {
         xDestination
         yDestination
         arrivalTime
-        balance
+        workTime
       }
     }`,
       chainTempo,

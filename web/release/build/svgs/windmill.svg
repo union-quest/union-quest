@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 3">
+    <rect fill="burlywood" x="0.25" y="0.3" width="1.5" height="2.5" />
+    <rect fill="sienna" x="0.7" y="2.1" width="0.6" height="0.7" />
+    <g transform="translate(1 0.7)">
+        <path stroke="brown" d="M0 0.8 V -0.8" fill="transparent" stroke-width="0.4">
+            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 0 0" to="360 0 0"
+                dur="4s" repeatCount="indefinite" />
+        </path>
+        <path stroke="brown" d="M0.8 0 H -0.8" fill="transparent" stroke-width="0.4">
+            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 0 0" to="360 0 0"
+                dur="4s" repeatCount="indefinite" />
+        </path>
+    </g>
+</svg>
