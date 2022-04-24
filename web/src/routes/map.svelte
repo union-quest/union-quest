@@ -35,13 +35,6 @@
       <div>Loading Map...</div>
     {:else if !$villages.data || !$players.data || !$items.data}
       <div>Null!</div>
-    {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
-      <button
-        class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
-text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-        type="button"
-        on:click={() => join()}>Press me to join the game!</button
-      >
     {:else}
       <div class="flex flex-col">
         <div class="flex justify-center">
@@ -64,12 +57,19 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
         </div>
         <div class="flex justify-center">
           <div class="border-2 w-fit p-2 m-2">
-            {#if $wallet.address}
+            {#if $wallet.address && $players.data.find((p) => $wallet.address && p.id === $wallet.address.toLowerCase())}
               <JourneyInfo
                 currentPlayer={$players.data.find((p) =>
                   $wallet.address ? p.id === $wallet.address.toLowerCase() : false
                 )}
               />
+            {:else if $wallet.address}
+              <button
+                class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
+        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                type="button"
+                on:click={() => join()}>Press me to join the game!</button
+              >
             {/if}
           </div>
         </div>
