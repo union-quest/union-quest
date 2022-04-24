@@ -35,47 +35,56 @@
   });
 </script>
 
-<div>
+<div class="flex flex-col justify-center">
+  <div class="text-xl text-center">Journey Status:</div>
   {#if !currentPlayer.arrivalTime}
     <div>
       You are currently at tile ({currentPlayer.x}, {currentPlayer.y}).
     </div>
   {:else}
     <div>
-      <div>Current journey.</div>
-      <div class="flex">
-        ({currentPlayer.x}, {currentPlayer.y})
-        <div class="w-48 bg-gray-200 rounded-full">
-          <div
-            class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-l-full"
-            style="width: {currentPlayer.arrivalTime > currentTimestamp / 1000
-              ? (100 *
-                  (distanceBetween - (currentPlayer.arrivalTime - currentTimestamp / 1000) / DISTANCE_MULTIPLIER)) /
-                distanceBetween
-              : 100}%"
-          >
-            {currentPlayer.arrivalTime > currentTimestamp / 1000
-              ? Math.round(
-                  (100 *
+      <div>
+        You are travelling from ({currentPlayer.x}, {currentPlayer.y}) to ({currentPlayer.xDestination}, {currentPlayer.yDestination}).
+      </div>
+      <div class="flex flex-col m-2 p-2 border-2">
+        <div class="flex">
+          <div class="m-1">
+            ({currentPlayer.x}, {currentPlayer.y})
+          </div>
+          <div class="w-48 bg-gray-200 rounded-full">
+            <div
+              class="bg-blue-600 h-full font-medium text-blue-100 text-center p-0.5 leading-none rounded-l-full"
+              style="width: {currentPlayer.arrivalTime > currentTimestamp / 1000
+                ? (100 *
                     (distanceBetween - (currentPlayer.arrivalTime - currentTimestamp / 1000) / DISTANCE_MULTIPLIER)) /
-                    distanceBetween
-                )
-              : 100}%
+                  distanceBetween
+                : 100}%"
+            >
+              {currentPlayer.arrivalTime > currentTimestamp / 1000
+                ? Math.round(
+                    (100 *
+                      (distanceBetween - (currentPlayer.arrivalTime - currentTimestamp / 1000) / DISTANCE_MULTIPLIER)) /
+                      distanceBetween
+                  )
+                : 100}%
+            </div>
+          </div>
+          <div class="m-1">
+            ({currentPlayer.xDestination}, {currentPlayer.yDestination})
           </div>
         </div>
-        ({currentPlayer.xDestination}, {currentPlayer.yDestination})
+        <button
+          class="flex-shrink-0 bg-green-500 hover:bg-green-600 border-green-500 hover:border-green-600 text-sm border-4
+text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed m-2"
+          type="button"
+          disabled={currentPlayer.arrivalTime > currentTimestamp / 1000}
+          on:click={resolveMove}
+        >
+          RESOLVE JOURNEY {currentPlayer.arrivalTime > currentTimestamp / 1000
+            ? `(${Math.round(currentPlayer.arrivalTime - currentTimestamp / 1000)}s)`
+            : ''}
+        </button>
       </div>
-      <button
-        class="flex-shrink-0 bg-green-500 hover:bg-green-600 border-green-500 hover:border-green-600 text-sm border-4
-text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-        type="button"
-        disabled={currentPlayer.arrivalTime > currentTimestamp / 1000}
-        on:click={resolveMove}
-      >
-        RESOLVE JOURNEY {currentPlayer.arrivalTime > currentTimestamp / 1000
-          ? `(${Math.round(currentPlayer.arrivalTime - currentTimestamp / 1000)}s)`
-          : ''}
-      </button>
     </div>
   {/if}
 </div>

@@ -38,14 +38,16 @@
     {:else if !$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
       <button on:click={() => start()}>START</button>
     {:else}
-      <div class="flex flex-col justify-center">
-        {#if $wallet.address}
-          <JourneyInfo
-            currentPlayer={$players.data.find((p) =>
-              $wallet.address ? p.id === $wallet.address.toLowerCase() : false
-            )}
-          />
-        {/if}
+      <div class="flex flex-col">
+        <div class="flex justify-center">
+          {#if $wallet.address}
+            <JourneyInfo
+              currentPlayer={$players.data.find((p) =>
+                $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+              )}
+            />
+          {/if}
+        </div>
         <div class="flex justify-center">
           <div class="grid grid-cols-6 w-fit h-fit">
             {#each [0, 1, 2, 3, 4, 5] as x}
