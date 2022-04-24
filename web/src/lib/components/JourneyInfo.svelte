@@ -5,7 +5,7 @@
   import {onMount} from 'svelte';
   export let currentPlayer: Player | null;
 
-  const DISTANCE_MULTIPLIER = 2;
+  const DISTANCE_MULTIPLIER = 15;
 
   function manhattanDistance(x0, y0, x1, y1) {
     return Math.abs(x1 - x0) + Math.abs(y1 - y0);

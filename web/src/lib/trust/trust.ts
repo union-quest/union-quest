@@ -53,7 +53,7 @@ class TrustsStore implements QueryStore<Trust> {
       endpoint,
       `
     query getTrust($staker: String){
-      trusts(where: {staker: $staker}) {
+      trusts(orderBy: trustAmount, where: {staker: $staker}) {
         id
         staker {
           id

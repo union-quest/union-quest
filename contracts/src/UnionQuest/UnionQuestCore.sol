@@ -28,7 +28,7 @@ contract UnionQuestCore is ERC1155, ERC1155Burnable, AccessControl {
         uint256 arrivalTime;
     }
 
-    uint256 private constant DISTANCE_MULTIPLIER = 2;
+    uint256 private constant DISTANCE_MULTIPLIER = 15;
 
     address marketRegistry;
     address unionToken;

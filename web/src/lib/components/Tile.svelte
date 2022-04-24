@@ -17,7 +17,7 @@
   export let items: Items;
   export let currentPlayer: Player | null;
 
-  const DISTANCE_MULTIPLIER = 2;
+  const DISTANCE_MULTIPLIER = 15;
 
   let showModal = false;
   let tab = 0;
@@ -184,7 +184,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
           <div class="text-lg">Shop</div>
           <div class="flex">
             {#each items as item}
-              <div class="border-2 border-dashed w-48">
+              <div class="border-2 border-dashed w-48 p-2">
                 <div>
                   {item.name}
                 </div>
