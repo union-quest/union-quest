@@ -100,8 +100,8 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
             {:else}
               <div>An empty field!</div>
             {/if}
-            <div class="rounded-md border-2 p-4">
-              <div class="p-1 border-2 border-dashed">
+            <div class="rounded-md border-2 m-1">
+              <div class="p-2 border-2 border-dashed">
                 <div class="text-lg">Travel</div>
                 {#if currentPlayer && !currentPlayer.arrivalTime && !currentPlayer.workTime}
                   <div>
@@ -126,7 +126,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
                 {/if}
               </div>
               {#if village}
-                <div class="p-1 border-2 border-dashed">
+                <div class="p-2 border-2 border-dashed">
                   <div class="text-lg">Employment</div>
                   {#if currentPlayer && !currentPlayer.arrivalTime && !currentPlayer.workTime}
                     <div>Work at this town to gain vouches.</div>
