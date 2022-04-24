@@ -55,7 +55,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
         </div>
         <div class="flex justify-center">
           <div class="grid grid-cols-6 w-fit h-fit">
-            {#each [0, 1, 2, 3, 4, 5] as x}
+            {#each [0, 1, 2, 3, 4] as x}
               {#each [0, 1, 2, 3, 4, 5] as y}
                 <Tile
                   {x}
