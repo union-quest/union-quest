@@ -9,6 +9,8 @@
   import {onMount} from 'svelte';
   import DaiSymbol from './DaiSymbol.svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
+  import NavLink from './styled/navigation/NavLink.svelte';
+  import NavButton from './styled/navigation/NavButton.svelte';
 
   export let x: number;
   export let y: number;
@@ -53,6 +55,11 @@
           {#if village}
             <div>
               {village.description}
+              <div class="w-fit mt-1">
+                <NavButton blank={true} href={`https://kovan.union.finance/profile/${village.member}`}>
+                  View on Union
+                </NavButton>
+              </div>
             </div>
           {:else}
             <div>An empty field!</div>
@@ -78,7 +85,7 @@
         </div>
         {#if village}
           <div class="m-2 rounded-md border-4 p-4 ">
-            <div class="text-xl">Reputation Leaderboard</div>
+            <div class="text-xl">Vouch Leaderboard</div>
             <ul class="list-disc">
               {#each $trusts.data as trust}
                 <li>
@@ -87,13 +94,10 @@
                     <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
                       {trust.borrower.id.slice(0, 4)}...{trust.borrower.id.slice(-4)}
                     </a>
-                    <div class="flex">: {trust.trustAmount}<DaiSymbol /></div>
+                    <div class="flex">: {Math.round(trust.trustAmount / 10 ** 18)}<DaiSymbol /></div>
                   </div>
                 </li>
               {/each}
-              <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${village.member}`}>
-                View this village on Union
-              </a>
             </ul>
           </div>
         {/if}
