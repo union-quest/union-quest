@@ -1,0 +1,28 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="100" height="100" fill="white"/>
+<path d="M51 51H44" stroke="black"/>
+<path d="M50.5 47V44" stroke="black"/>
+<path d="M51 51H57" stroke="black"/>
+<path d="M50.5 47V54V57.5" stroke="black"/>
+<rect x="46.5" y="27.5" width="8" height="16" fill="white" stroke="black"/>
+<rect x="46.5" y="57.5" width="8" height="16" fill="white" stroke="black"/>
+<rect x="73.5" y="47.5" width="8" height="16" transform="rotate(90 73.5 47.5)" fill="white" stroke="black"/>
+<rect x="43.5" y="46.5" width="8" height="16" transform="rotate(90 43.5 46.5)" fill="white" stroke="black"/>
+<path d="M48.5 30H52" stroke="black"/>
+<path d="M48.5 33H52" stroke="black"/>
+<path d="M48.5 36H52" stroke="black"/>
+<path d="M48.5 39H52" stroke="black"/>
+<path d="M70 50L70 53.5" stroke="black"/>
+<path d="M67 50L67 53.5" stroke="black"/>
+<path d="M64 50L64 53.5" stroke="black"/>
+<path d="M61 50L61 53.5" stroke="black"/>
+<path d="M39 49L39 52.5" stroke="black"/>
+<path d="M36 49L36 52.5" stroke="black"/>
+<path d="M33 49L33 52.5" stroke="black"/>
+<path d="M30 49L30 52.5" stroke="black"/>
+<path d="M48.5 62H52" stroke="black"/>
+<path d="M48.5 65H52" stroke="black"/>
+<path d="M48.5 68H52" stroke="black"/>
+<path d="M48.5 71H52" stroke="black"/>
+<circle cx="50.5" cy="51" r="2" fill="black"/>
+</svg>
