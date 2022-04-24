@@ -173,7 +173,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
                 <li>
                   <div class="flex border-2 border-dashed">
                     <Blockie address={trust.borrower} class="m-1 h-6 w-6" />
-                    <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower.id}`}>
+                    <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${trust.borrower}`}>
                       {trust.borrower.slice(0, 4)}...{trust.borrower.slice(-4)}
                     </a>
                     : {Math.round(trust.trustAmount / 10 ** 18)}<DaiSymbol />
