@@ -1,28 +1,17 @@
 type Player @entity {
   id: ID!
-  x: Int!
-  y: Int!
-  xDestination: Int
-  yDestination: Int
-  arrivalTime: Int
-  workTime: Int
+  startX: BigInt!
+  startY: BigInt!
+  endX: BigInt!
+  endY: BigInt!
+  startTimestamp: BigInt!
 }
 
-type Village @entity {
+type Tile @entity {
   id: ID!
-  x: Int!
-  y: Int!
-  name: String!
-  description: String!
-  member: String!
-}
-
-type ItemType @entity {
-  id: ID!
-  name: String!
-  description: String!
-  buyPrice: BigInt!
-  sellPrice: BigInt!
+  x: BigInt!
+  y: BigInt!
+  resourceId: BigInt!
 }
 
 type Trust @entity {

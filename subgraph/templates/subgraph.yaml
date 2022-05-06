@@ -4,36 +4,28 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: UnionQuestCore
+    name: UnionQuest
     network: {{chainName}}
     source:
-      address: '{{contracts.UnionQuestCore.address}}'
-      abi: UnionQuestCoreContract
-      startBlock: {{contracts.UnionQuestCore.receipt.blockNumber}}
+      address: '{{contracts.UnionQuest.address}}'
+      abi: UnionQuest
+      startBlock: {{contracts.UnionQuest.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - MessageEntry
+        - User
       abis:
-        - name: UnionQuestCoreContract
-          file: ./abis/UnionQuestCore.json
+        - name: UnionQuest
+          file: ./abis/UnionQuest.json
       eventHandlers:
-        - event: AddItemType(uint256,(string,string,uint256,uint256))
-          handler: handleAddItemType
-        - event: AddVillage(uint256,uint256,(string,string,address))
-          handler: handleAddVillage
-        - event: Start(address,(uint256,uint256,uint256,uint256))
-          handler: handleStart
-        - event: BeginMove(address,(uint256,uint256,uint256,uint256))
-          handler: handleBeginMove
-        - event: ResolveMove(address,(uint256,uint256,uint256,uint256))
-          handler: handleResolveMove
-        - event: BeginWork(address,(uint256,uint256,uint256,uint256))
-          handler: handleBeginWork
-        - event: ResolveWork(address,(uint256,uint256,uint256,uint256))
-          handler: handleResolveWork
+        - event: Move(address,int256,int256,int256,int256)
+          handler: handleMove
+        - event: SetResource(uint256,int256,int256)
+          handler: handleSetResource
+        - event: SetSkill(address,uint256,uint256)
+          handler: handleSetSkill
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: UserManager

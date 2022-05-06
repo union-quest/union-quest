@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
-import { AddItemType, AddVillage, BeginMove, ResolveMove, BeginWork, ResolveWork } from '../generated/UnionQuestCore/UnionQuestCoreContract';
+import { Move, SetResource, SetSkill } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Player, Village, ItemType, Trust } from '../generated/schema';
+import { Player, Tile, Trust } from '../generated/schema';
 import { BigInt } from '@graphprotocol/graph-ts';
 
 export function getOrCreatePlayer(
@@ -10,34 +10,25 @@ export function getOrCreatePlayer(
   let entity = Player.load(id);
   if (!entity) {
     entity = new Player(id);
-    entity.x = 0;
-    entity.y = 0;
+    entity.startX = BigInt.fromString("0");
+    entity.startY = BigInt.fromString("0");
+    entity.endX = BigInt.fromString("0");
+    entity.endY = BigInt.fromString("0");
+    entity.startTimestamp = BigInt.fromString("0");
   }
 
   return entity;
 }
 
-export function getOrCreateItemType(
+export function getOrCreateTile(
   id: string
-): ItemType {
-  let itemType = ItemType.load(id);
-  if (!itemType) {
-    itemType = new ItemType(id);
-  }
-
-  return itemType;
-}
-
-export function getOrCreateVillage(
-  id: string
-): Village {
-  let entity = Village.load(id);
+): Tile {
+  let entity = Tile.load(id);
   if (!entity) {
-    entity = new Village(id);
-    entity.x = 0;
-    entity.y = 0;
-    entity.name = "";
-    entity.description = "";
+    entity = new Tile(id);
+    entity.x = BigInt.fromString("0");
+    entity.y = BigInt.fromString("0");
+    entity.resourceId = BigInt.fromString("0");
   }
 
   return entity;
@@ -54,69 +45,30 @@ export function getOrCreateTrust(
   return entity;
 }
 
-export function handleStart(event: BeginMove): void {
-  let entity = getOrCreatePlayer(event.params._address.toHexString());
+export function handleMove(event: Move): void {
+  let entity = getOrCreatePlayer(event.params.account.toHexString());
+
+  entity.startX = event.params.startX;
+  entity.startY = event.params.startY;
+  entity.endX = event.params.endX;
+  entity.endY = event.params.endY;
+  entity.startTimestamp = event.block.timestamp;
 
   entity.save();
 }
 
-export function handleBeginMove(event: BeginMove): void {
-  let entity = getOrCreatePlayer(event.params._address.toHexString());
+export function handleSetResource(event: SetResource): void {
+  let entity = getOrCreateTile(event.params.x.toString() + "_" + event.params.y.toString());
 
-  entity.xDestination = event.params._player.x.toI32();
-  entity.yDestination = event.params._player.y.toI32();
-  entity.arrivalTime = event.params._player.arrivalTime.toI32();
-
-  entity.save();
-}
-
-export function handleResolveMove(event: ResolveMove): void {
-  let entity = getOrCreatePlayer(event.params._address.toHexString());
-
-  entity.x = event.params._player.x.toI32();
-  entity.y = event.params._player.y.toI32();
-  entity.arrivalTime = null;
+  entity.x = event.params.x;
+  entity.y = event.params.y;
+  entity.resourceId = event.params.resourceId;
 
   entity.save();
 }
 
-export function handleBeginWork(event: BeginWork): void {
-  let entity = getOrCreatePlayer(event.params._address.toHexString());
+export function handleSetSkill(event: SetSkill): void {
 
-  entity.workTime = event.params._player.workTime.toI32();
-
-  entity.save();
-}
-
-export function handleResolveWork(event: ResolveWork): void {
-  let entity = getOrCreatePlayer(event.params._address.toHexString());
-
-  entity.workTime = null;
-
-  entity.save();
-}
-
-export function handleAddItemType(event: AddItemType): void {
-  let entity = getOrCreateItemType(event.params._index.toString());
-
-  entity.name = event.params._itemType.name;
-  entity.description = event.params._itemType.description;
-  entity.buyPrice = BigInt.fromString(event.params._itemType.buyPrice.toString());
-  entity.sellPrice = BigInt.fromString(event.params._itemType.sellPrice.toString());
-
-  entity.save();
-}
-
-export function handleAddVillage(event: AddVillage): void {
-  let entity = getOrCreateVillage(event.params._x.toString() + "_" + event.params._y.toString());
-
-  entity.x = event.params._x.toI32();
-  entity.y = event.params._y.toI32();
-  entity.name = event.params._village.name;
-  entity.description = event.params._village.description;
-  entity.member = event.params._village.member.toHexString();
-
-  entity.save();
 }
 
 export function handleUpdateTrust(event: LogUpdateTrust): void {
