@@ -9,16 +9,14 @@ import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 
-export type Village = {
+export type Tile = {
   id: string;
-  x: number;
-  y: number;
-  name: string;
-  description: string;
-  member: string;
+  x: string;
+  y: string;
+  resourceId: string;
 }
 
-export type Villages = Village[]
+export type Tiles = Tile[]
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
@@ -48,29 +46,27 @@ type TransactionRecord = {
   events?: unknown[]; // TODO
 };
 
-class UserStore implements QueryStore<Villages> {
-  private queryStore: QueryStore<Villages>;
-  private store: Readable<QueryState<Villages>>;
+class TileStore implements QueryStore<Tiles> {
+  private queryStore: QueryStore<Tiles>;
+  private store: Readable<QueryState<Tiles>>;
   constructor(endpoint: EndPoint, private transactions: TransactionStore) {
     this.queryStore = new HookedQueryStore(
       endpoint,
       `
     query {
-      villages{
+      tiles{
         id
         x
         y
-        name
-        description
-        member
+        resourceId
       }
     }`,
       chainTempo,
-      { path: 'villages' }
+      { path: 'tiles' }
     );
     this.store = derived([this.queryStore, this.transactions], (values) => this.update(values));
   }
-  private update([$query]: [QueryState<Villages>, TransactionRecord[]]): QueryState<Villages> {
+  private update([$query]: [QueryState<Tiles>, TransactionRecord[]]): QueryState<Tiles> {
     if (!$query.data) {
       return $query;
     } else {
@@ -88,11 +84,11 @@ class UserStore implements QueryStore<Villages> {
   }
 
   subscribe(
-    run: Subscriber<QueryState<Villages>>,
-    invalidate?: Invalidator<QueryState<Villages>> | undefined
+    run: Subscriber<QueryState<Tiles>>,
+    invalidate?: Invalidator<QueryState<Tiles>> | undefined
   ): Unsubscriber {
     return this.store.subscribe(run, invalidate);
   }
 }
 
-export const villages = new UserStore(SUBGRAPH_ENDPOINT, transactions);
+export const tiles = new TileStore(SUBGRAPH_ENDPOINT, transactions);

@@ -50,12 +50,11 @@ class UserStore implements QueryStore<Players> {
     query {
       players {
         id
-        x
-        y
-        xDestination
-        yDestination
-        arrivalTime
-        workTime
+        startX
+        startY
+        endX
+        endY
+        startTimestamp
       }
     }`,
       chainTempo,

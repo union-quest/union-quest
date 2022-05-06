@@ -67,16 +67,18 @@ export function handleSetResource(event: SetResource): void {
   entity.save();
 }
 
-export function handleSetSkill(event: SetSkill): void {
-
-}
+export function handleSetSkill(event: SetSkill): void { }
 
 export function handleUpdateTrust(event: LogUpdateTrust): void {
   let trust = getOrCreateTrust(event.params.staker.toHexString() + "_" + event.params.borrower.toHexString());
+  let staker = getOrCreatePlayer(event.params.staker.toHexString());
+  let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
 
-  trust.staker = event.params.staker;
-  trust.borrower = event.params.borrower;
+  trust.staker = event.params.staker.toHexString();
+  trust.borrower = event.params.borrower.toHexString();
   trust.trustAmount = event.params.trustAmount;
 
   trust.save();
+  staker.save();
+  borrower.save();
 }

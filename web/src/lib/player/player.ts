@@ -11,12 +11,11 @@ import { chainTempo } from '$lib/blockchain/chainTempo';
 
 export type Player = {
   id: string;
-  x: number;
-  y: number;
-  xDestination: number;
-  yDestination: number;
-  arrivalTime: number;
-  workTime: number;
+  startX: string;
+  startY: string;
+  endX: string;
+  endY: string;
+  startTimestamp: string;
 }
 
 // TODO web3w needs to export the type
@@ -57,10 +56,11 @@ class UserStore implements QueryStore<Player> {
     query getPlayer($id: ID!){
       player(id: $id) {
         id
-        x
-        y
-        arrivalTime
-        workTime
+        startX
+        startY
+        endX
+        endY
+        startTimestamp
       }
     }`,
       chainTempo,

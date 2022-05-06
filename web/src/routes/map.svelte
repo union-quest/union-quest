@@ -1,23 +1,14 @@
 <script lang="ts">
   import WalletAccess from '$lib/blockchain/WalletAccess.svelte';
   import {wallet, flow} from '$lib/blockchain/wallet';
-  import {onMount} from 'svelte';
-  import {combine} from 'union-quest-common';
   import {players} from '$lib/player/players';
-  import {villages} from '$lib/village/villages';
-  import {items} from '$lib/item/items';
+  import {tiles} from '$lib/tile/tiles';
   import Tile from '$lib/components/Tile.svelte';
   import JourneyInfo from '$lib/components/JourneyInfo.svelte';
 
   async function join() {
-    await flow.execute((contracts) => contracts.UnionQuestCore.start());
+    await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
   }
-
-  onMount(() => {
-    console.log('mount demo', {
-      combine: combine(wallet.address || '0x0000000000000000000000000000000000000000', 'hi').toString(),
-    });
-  });
 </script>
 
 <symbol id="icon-spinner6" viewBox="0 0 32 32">
@@ -27,14 +18,14 @@
 </symbol>
 <WalletAccess>
   <section class="py-8 px-4">
-    {#if !$villages.step}
+    {#if !$tiles.step}
       <div>Messages not loaded</div>
-    {:else if $villages.error}
-      <div>Error: {$villages.error}</div>
-    {:else if $villages.step === 'LOADING'}
+    {:else if $tiles.error}
+      <div>Error: {$tiles.error}</div>
+    {:else if $tiles.step === 'LOADING'}
       <div>Loading Map...</div>
-    {:else if !$villages.data || !$players.data || !$items.data}
-      <div>Null!</div>
+    {:else if !$tiles.data || !$players.data}
+      <div>Something failed to load!</div>
     {:else}
       <div class="flex flex-col">
         <div class="flex justify-center">
@@ -44,9 +35,8 @@
                 <Tile
                   {x}
                   {y}
-                  village={$villages.data.find((v) => v.x === x && v.y === y)}
+                  tile={$tiles.data.find((v) => v.x === x.toString() && v.y === y.toString())}
                   players={$players.data}
-                  items={$items.data}
                   currentPlayer={$players.data.find((p) =>
                     $wallet.address ? p.id === $wallet.address.toLowerCase() : false
                   )}

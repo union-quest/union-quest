@@ -16,7 +16,7 @@ type Tile @entity {
 
 type Trust @entity {
   id: ID!
-  staker: Bytes!
-  borrower: Bytes!
+  staker: Player!
+  borrower: Player!
   trustAmount: BigInt!
 }
