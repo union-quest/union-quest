@@ -135,9 +135,9 @@ export const getPosition = (player: Player, currentTimestamp: number): [number, 
       parseInt(player.startTile.x) + (vX * distanceTravelled) / distanceNeeded,
       parseInt(player.startTile.y) + (vY * distanceTravelled) / distanceNeeded,
     ];
-  } else {
-    return [parseInt(player.endTile.x), parseInt(player.endTile.y)];
   }
+
+  return [parseInt(player.endTile.x), parseInt(player.endTile.y)];
 }
 
 export const getSkill = (player: Player, currentTimestamp: number, resourceId: number): number => {
@@ -155,12 +155,14 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
     return savedBalance +
       (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
-  } else {
-    return savedBalance;
   }
+
+  return savedBalance;
 }
 
 export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: number): number => {
+  const savedBalance = resourceId === 1 ? parseInt(player.wood) : parseInt(player.stone);
+
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
   const distanceNeeded = distance(
     parseInt(player.startTile.x),
@@ -169,14 +171,12 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
     parseInt(player.endTile.y)
   );
 
-  const savedBalance = resourceId === 1 ? parseInt(player.wood) : parseInt(player.stone);
-
   if (distanceTravelled >= distanceNeeded && resourceId.toString() === player.endTile.resourceId) {
     const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
 
     return savedBalance + ((2 * resourceId === 1 ? parseInt(player.woodSkill) : parseInt(player.stoneSkill) + skillIncrease + 1) * skillIncrease) / 2;
-  } else {
-    return savedBalance;
   }
+
+  return savedBalance;
 }
