@@ -87,22 +87,31 @@
         {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y)}
           <div>
             {#if currentPlayer.endTile.resourceId === '1'}
-              Woodcutting at
+              Woodcutting
             {:else if currentPlayer.endTile.resourceId === '2'}
-              Mining at
+              Mining
             {:else}
-              Standing at
+              Standing
             {/if}
-            tile ({currentPlayer.endTile.x}, {currentPlayer.endTile.y}).
+            at tile ({currentPlayer.endTile.x}, {currentPlayer.endTile.y}).
           </div>
+          {#if currentPlayer.endTile.resourceId === '1'}
+            <div>🪨 Woodcutting skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}</div>
+            <div>While here, your woodcutting skill increases at a rate of 1 point every 10 seconds.</div>
+            <div>You are currently gathering X wood per second.</div>
+          {/if}
+          {#if currentPlayer.endTile.resourceId === '2'}
+            <div>🪨 Mining skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}</div>
+            <div>While here, your mining skill increases at a rate of 1 point every 10 seconds.</div>
+            <div>You are currently gathering X stone per second.</div>
+          {/if}
         {:else}
           <div>
+            Walking to
             {#if currentPlayer.endTile.resourceId === '1'}
-              Walking to chop wood at
+              chop wood at
             {:else if currentPlayer.endTile.resourceId === '2'}
-              Walking to mine stone at
-            {:else}
-              Walking to
+              mine stone at
             {/if}
             tile ({currentPlayer.endTile.x}, {currentPlayer.endTile.y}).
           </div>
@@ -145,7 +154,7 @@
               {roundGood(
                 (getSkill(currentPlayer, currentTimestamp / 1000, 1) +
                   getSkill(currentPlayer, currentTimestamp / 1000, 2)) /
-                  10 ** 18
+                  10 ** 2
               )}
               <DaiSymbol />
             </div>
