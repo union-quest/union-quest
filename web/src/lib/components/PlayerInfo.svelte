@@ -26,7 +26,9 @@
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
 
-      [currentX, currentY] = getPosition(currentPlayer, currentTimestamp / 1000);
+      if (currentPlayer) {
+        [currentX, currentY] = getPosition(currentPlayer, currentTimestamp / 1000);
+      }
     }, 100);
 
     return () => {
@@ -154,15 +156,9 @@
           <div class="flex">
             <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
               ⛏️ {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
-              {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y) && currentPlayer.endTile.resourceId === '2'}
-                <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
-              {/if}
             </div>
             <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
               🪓 {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
-              {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y) && currentPlayer.endTile.resourceId === '1'}
-                <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
-              {/if}
             </div>
           </div>
           <div class="border-2 rounded-lg border-gray-600 m-1 text-center">

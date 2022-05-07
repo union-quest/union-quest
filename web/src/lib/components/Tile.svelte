@@ -33,7 +33,9 @@
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
 
-      [currentX, currentY] = getPosition(currentPlayer, currentTimestamp / 1000);
+      if (currentPlayer) {
+        [currentX, currentY] = getPosition(currentPlayer, currentTimestamp / 1000);
+      }
       playersOnTile = players.filter(
         (p) =>
           Math.round(getPosition(p, currentTimestamp / 1000)[0]) === x &&
@@ -131,7 +133,7 @@
                 <li>
                   <div class="flex border-2 border-dashed">
                     <Blockie address={player.id} class="m-1 h-6 w-6" />
-                    <a href={`https://kovan.union.finance/profile/${player.id}`}>
+                    <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${player.id}`}>
                       {player.id.slice(0, 4)}...{player.id.slice(-4)}
                     </a>
                   </div>
