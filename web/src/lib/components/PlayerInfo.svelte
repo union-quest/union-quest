@@ -97,13 +97,24 @@
           </div>
           {#if currentPlayer.endTile.resourceId === '1'}
             <div>
-              Woodcutting skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))} (+0.1 point/s)
+              Woodcutting skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
+              <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
+            </div>
+            <div>
+              🪵 Wood: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 1))}
+              <div class="inline text-sm text-green-700">
+                (+{Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))} units/s)
+              </div>
             </div>
           {/if}
           {#if currentPlayer.endTile.resourceId === '2'}
             <div>
               Mining skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
               <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
+            </div>
+            🪨 Stone: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 2))}
+            <div class="inline text-sm text-green-700">
+              (+{Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))} units/s)
             </div>
           {/if}
         {:else}
@@ -121,21 +132,25 @@
     {:else if tab === 1}
       <div>
         <div class="text-xl">Skills</div>
-        <div class="text-left">
-          <div>
-            🪵 Woodcutting: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
-            {#if currentPlayer.endTile.resourceId === '1'}<div class="inline text-sm text-green-700">
-                (+0.1 point/s)
-              </div>{/if}
+        <div class="text-left text-lg">
+          <div class="flex">
+            <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
+              ⛏️ {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
+              {#if currentPlayer.endTile.resourceId === '2'}<div class="inline text-sm text-green-700">
+                  (+0.1 point/s)
+                </div>{/if}
+            </div>
+            <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
+              🪓 {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
+              {#if currentPlayer.endTile.resourceId === '1'}<div class="inline text-sm text-green-700">
+                  (+0.1 point/s)
+                </div>
+              {/if}
+            </div>
           </div>
-          <div>
-            🪨 Mining: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
-            {#if currentPlayer.endTile.resourceId === '2'}<div class="inline text-sm text-green-700">
-                (+0.1 point/s)
-              </div>{/if}
-          </div>
-          <div>
-            Total level: {Math.round(
+          <div class="border-2 rounded-lg border-gray-600 m-1 text-center">
+            <div class="inline font-medium">Total level:</div>
+            {Math.round(
               getSkill(currentPlayer, currentTimestamp / 1000, 1) + getSkill(currentPlayer, currentTimestamp / 1000, 2)
             )}
           </div>
@@ -145,10 +160,10 @@
       <div>
         <div class="text-xl">Inventory</div>
         <div>
-          🪵 Wood: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 1))}
+          🪨 Stone: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 2))}
         </div>
         <div>
-          🪨 Stone: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 2))}
+          🪵 Wood: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 1))}
         </div>
       </div>
     {:else}
