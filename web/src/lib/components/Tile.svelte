@@ -120,7 +120,7 @@
             {/if}
           {:else if tab === 2}
             <div class="text-xl">Shop</div>
-            <div>Coming soon!</div>
+            <div>This tile doesn't have a shop.</div>
           {:else}
             <div class="text-xl">Residents</div>
             <div class="italic">
