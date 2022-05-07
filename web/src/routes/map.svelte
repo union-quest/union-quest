@@ -4,7 +4,7 @@
   import {players} from '$lib/player/players';
   import {tiles} from '$lib/tile/tiles';
   import Tile from '$lib/components/Tile.svelte';
-  import JourneyInfo from '$lib/components/JourneyInfo.svelte';
+  import PlayerInfo from '$lib/components/PlayerInfo.svelte';
 
   async function join() {
     await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
@@ -48,7 +48,7 @@
         <div class="flex justify-center">
           <div class="border-2 w-fit p-2 m-2">
             {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
-              <JourneyInfo
+              <PlayerInfo
                 currentPlayer={$players.data.find((p) =>
                   $wallet.address ? p.id === $wallet.address.toLowerCase() : false
                 )}

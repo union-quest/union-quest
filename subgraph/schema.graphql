@@ -1,17 +1,17 @@
-type Player @entity {
-  id: ID!
-  startX: BigInt!
-  startY: BigInt!
-  endX: BigInt!
-  endY: BigInt!
-  startTimestamp: BigInt!
-}
-
 type Tile @entity {
   id: ID!
   x: BigInt!
   y: BigInt!
   resourceId: BigInt!
+}
+
+type Player @entity {
+  id: ID!
+  startTile: Tile!
+  endTile: Tile!
+  startTimestamp: BigInt!
+  woodSkill: BigInt!
+  stoneSkill: BigInt!
 }
 
 type Trust @entity {

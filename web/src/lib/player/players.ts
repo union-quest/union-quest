@@ -50,11 +50,18 @@ class UserStore implements QueryStore<Players> {
     query {
       players {
         id
-        startX
-        startY
-        endX
-        endY
+        startTile {
+          x
+          y
+        }
+        endTile {
+          x
+          y
+          resourceId
+        }
         startTimestamp
+        woodSkill
+        stoneSkill
       }
     }`,
       chainTempo,

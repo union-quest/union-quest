@@ -1,6 +1,6 @@
 <script lang="ts">
   import {flow} from '$lib/blockchain/wallet';
-  import type {Player} from '$lib/player/player';
+  import {distance, getPosition, Player} from '$lib/player/player';
   import type {Players} from '$lib/player/players';
   import type {Tile} from '$lib/tile/tiles';
   import Modal from '$lib/components/styled/Modal.svelte';
@@ -18,12 +18,6 @@
   let showModal = false;
   let tab = 0;
 
-  function distance(x0: number, y0: number, x1: number, y1: number) {
-    const xDiff = x1 - x0;
-    const yDiff = y1 - y0;
-    return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-  }
-
   const roundGood = (n: number) => Math.round(n * 10) / 10;
 
   async function move(x, y) {
@@ -33,28 +27,18 @@
   let currentTimestamp = Date.now();
   let currentX = 0;
   let currentY = 0;
+  let playersOnTile = [];
 
   onMount(() => {
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
 
-      const distanceNeeded = distance(
-        parseInt(currentPlayer.startX),
-        parseInt(currentPlayer.startY),
-        parseInt(currentPlayer.endX),
-        parseInt(currentPlayer.endY)
+      [currentX, currentY] = getPosition(currentPlayer, currentTimestamp / 1000);
+      playersOnTile = players.filter(
+        (p) =>
+          Math.round(getPosition(p, currentTimestamp / 1000)[0]) === x &&
+          Math.round(getPosition(p, currentTimestamp / 1000)[1]) === y
       );
-      const distanceTravelled = (currentTimestamp / 1000 - parseInt(currentPlayer.startTimestamp)) / SPEED_DIVISOR;
-
-      if (distanceTravelled < distanceNeeded) {
-        const angle = Math.atan2(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY));
-
-        currentX = Math.round(distanceTravelled * Math.sin(angle));
-        currentY = Math.round(distanceTravelled * Math.cos(angle));
-      } else {
-        currentX = parseInt(currentPlayer.endX);
-        currentY = parseInt(currentPlayer.endY);
-      }
     }, 100);
 
     return () => {
@@ -102,14 +86,15 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
                   <div class="p-1">
                     <div>
                       This tile is {roundGood(
-                        distance(x, y, parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
+                        distance(x, y, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
                       )} unit(s) from you.
                     </div>
                     <div>
                       It will take
-                      <span class="font-bold"
-                        >{roundGood(
-                          SPEED_DIVISOR * distance(x, y, parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
+                      <span class="font-bold">
+                        {roundGood(
+                          SPEED_DIVISOR *
+                            distance(x, y, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
                         )} seconds</span
                       >
                       to walk here.
@@ -132,11 +117,10 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
           {#if tab === 1}
             <div class="text-xl">Residents</div>
             <div class="italic">
-              There are {players.filter((p) => p.endX === x.toString() && p.endX === y.toString()).length} player(s) at this
-              tile.
+              There are {playersOnTile.length} player(s) at this tile.
             </div>
             <ul class="list-none">
-              {#each players.filter((p) => p.endX === x.toString() && p.endX === y.toString()) as player}
+              {#each playersOnTile as player}
                 <li>
                   <div class="flex border-2 border-dashed">
                     <Blockie address={player.id} class="m-1 h-6 w-6" />
@@ -154,27 +138,18 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
   {/if}
   <div
     on:click={() => (showModal = true)}
-    class="border-4 hover:border-green-500 {currentPlayer && Math.round(currentX) === x && Math.round(currentY) === y
+    class="border-4 hover:border-gray-400 {currentPlayer && Math.round(currentX) === x && Math.round(currentY) === y
       ? 'border-yellow-500 hover:border-yellow-500'
-      : currentPlayer && parseInt(currentPlayer.endX) === x && parseInt(currentPlayer.endY) === y
+      : currentPlayer && parseInt(currentPlayer.endTile.x) === x && parseInt(currentPlayer.endTile.y) === y
       ? 'border-red-500 hover:border-red-500'
-      : 'border-black-500'}"
+      : 'border-gray-200'}"
   >
     <div class="absolute grid grid-cols-3">
-      {#each players
-        .filter((player) => player.endX === x.toString() && player.endY === y.toString())
-        .slice(0, 9) as player}
+      {#each playersOnTile.slice(0, 9) as player}
         <Blockie address={player.id} class="m-1 h-6 w-6" />
       {/each}
     </div>
-    <div class="absolute grid grid-cols-3">
-      {#each players
-        .filter((player) => player.endX === x.toString() && player.endY === y.toString())
-        .slice(0, 9) as player}
-        <Blockie address={player.id} class="m-1 h-6 w-6" />
-      {/each}
-    </div>
-    <div class="flex w-24 h-24 text-4xl justify-center">
+    <div class="flex w-24 h-24 text-5xl justify-center items-center">
       {#if tile && tile.resourceId === '1'}
         🌲
       {:else if tile && tile.resourceId === '2'}

@@ -10,11 +10,13 @@ export function getOrCreatePlayer(
   let entity = Player.load(id);
   if (!entity) {
     entity = new Player(id);
-    entity.startX = BigInt.fromString("0");
-    entity.startY = BigInt.fromString("0");
-    entity.endX = BigInt.fromString("0");
-    entity.endY = BigInt.fromString("0");
+    let tile = getOrCreateTile("0_0");
+    tile.save();
+    entity.startTile = "0_0";
+    entity.endTile = "0_0";
     entity.startTimestamp = BigInt.fromString("0");
+    entity.woodSkill = BigInt.fromString("0");
+    entity.stoneSkill = BigInt.fromString("0");
   }
 
   return entity;
@@ -47,14 +49,16 @@ export function getOrCreateTrust(
 
 export function handleMove(event: Move): void {
   let entity = getOrCreatePlayer(event.params.account.toHexString());
+  let startTile = getOrCreateTile(event.params.startX.toString() + "_" + event.params.startY.toString());
+  let endTile = getOrCreateTile(event.params.endX.toString() + "_" + event.params.endY.toString());
 
-  entity.startX = event.params.startX;
-  entity.startY = event.params.startY;
-  entity.endX = event.params.endX;
-  entity.endY = event.params.endY;
+  entity.startTile = event.params.startX.toString() + "_" + event.params.startY.toString();
+  entity.endTile = event.params.endX.toString() + "_" + event.params.endY.toString();
   entity.startTimestamp = event.block.timestamp;
 
   entity.save();
+  startTile.save();
+  endTile.save();
 }
 
 export function handleSetResource(event: SetResource): void {
@@ -67,7 +71,17 @@ export function handleSetResource(event: SetResource): void {
   entity.save();
 }
 
-export function handleSetSkill(event: SetSkill): void { }
+export function handleSetSkill(event: SetSkill): void {
+  let entity = getOrCreatePlayer(event.params.account.toHexString());
+
+  if (event.params.skill.equals(BigInt.fromString("1"))) {
+    entity.woodSkill = event.params.amount;
+  } else {
+    entity.stoneSkill = event.params.amount;
+  }
+
+  entity.save();
+}
 
 export function handleUpdateTrust(event: LogUpdateTrust): void {
   let trust = getOrCreateTrust(event.params.staker.toHexString() + "_" + event.params.borrower.toHexString());

@@ -8,14 +8,15 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
+import type { Tile } from '$lib/tile/tiles';
 
 export type Player = {
   id: string;
-  startX: string;
-  startY: string;
-  endX: string;
-  endY: string;
+  startTile: Tile;
+  endTile: Tile;
   startTimestamp: string;
+  woodSkill: string;
+  stoneSkill: string;
 }
 
 // TODO web3w needs to export the type
@@ -56,11 +57,17 @@ class UserStore implements QueryStore<Player> {
     query getPlayer($id: ID!){
       player(id: $id) {
         id
-        startX
-        startY
-        endX
-        endY
+        startTile {
+          x
+          y
+        }
+        endTile {
+          x
+          y
+        }
         startTimestamp
+        woodSkill
+        stoneSkill
       }
     }`,
       chainTempo,
@@ -94,3 +101,56 @@ class UserStore implements QueryStore<Player> {
 }
 
 export const getPlayer = (id: string) => new UserStore(SUBGRAPH_ENDPOINT, transactions, id);
+
+/* Helpers */
+
+const SPEED_DIVISOR = 10;
+const SKILL_INCREASE_DIVISOR = 10;
+
+export const distance = (x0: number, y0: number, x1: number, y1: number) => {
+  const xDiff = x1 - x0;
+  const yDiff = y1 - y0;
+  return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+}
+
+export const getPosition = (player: Player, currentTimestamp: number): [number, number] => {
+  const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / 10;
+  const distanceNeeded = distance(
+    parseInt(player.startTile.x),
+    parseInt(player.startTile.y),
+    parseInt(player.endTile.x),
+    parseInt(player.endTile.y)
+  );
+
+  if (distanceTravelled < distanceNeeded) {
+    const vX = parseInt(player.endTile.x) - parseInt(player.startTile.x);
+    const vY = parseInt(player.endTile.y) - parseInt(player.startTile.y);
+
+    return [
+      parseInt(player.startTile.x) + (vX * distanceTravelled) / distanceNeeded,
+      parseInt(player.startTile.y) + (vY * distanceTravelled) / distanceNeeded,
+    ];
+  } else {
+    return [parseInt(player.endTile.x), parseInt(player.endTile.y)];
+  }
+}
+
+export const getSkill = (player: Player, currentTimestamp: number, resourceId: number): number => {
+  const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
+  const distanceNeeded = distance(
+    parseInt(player.startTile.x),
+    parseInt(player.startTile.y),
+    parseInt(player.endTile.x),
+    parseInt(player.endTile.y)
+  );
+
+  const savedBalance = parseInt(resourceId === 1 ? player.woodSkill : player.stoneSkill);
+
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === player.endTile.resourceId) {
+    return savedBalance +
+      (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
+      SKILL_INCREASE_DIVISOR;
+  } else {
+    return savedBalance;
+  }
+}
