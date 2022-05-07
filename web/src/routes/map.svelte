@@ -45,7 +45,7 @@
             {/each}
           </div>
         </div>
-        <div class="fixed bottom-0 right-0 border-4 border-double border-gray-700 bg-gray-300">
+        <div class="fixed bottom-0 right-0 border-8 border-double border-gray-700 bg-gray-300 p-1">
           {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
             <PlayerInfo
               currentPlayer={$players.data.find((p) =>
