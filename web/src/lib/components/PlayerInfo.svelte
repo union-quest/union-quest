@@ -98,7 +98,7 @@
                   Mining
                 {/if}
               </div>
-              {#if currentPlayer.endTile.resourceId !== '0'}
+              <div class="text-left">
                 <div>
                   {currentPlayer.endTile.resourceId === '1' ? '🪓' : '⛏️'}
                   {Math.round(
@@ -121,21 +121,23 @@
                     )} units/s)
                   </div>
                 </div>
-              {/if}
+              </div>
             </div>
           {/if}
         {:else}
           <div class="border-2 border-gray-600">
             <div>Walking</div>
-            <div>
-              Walking to: ({currentPlayer.endTile.x}, {currentPlayer.endTile.y})
-            </div>
-            <div>👟0.1</div>
-            <div>
-              Distance: {roundBest(
-                distance(currentX, currentY, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
-              )} tiles
-              <div class="inline text-sm text-green-700">(-0.1 tiles/s)</div>
+            <div class="text-left">
+              <div>
+                Walking to: ({currentPlayer.endTile.x}, {currentPlayer.endTile.y})
+              </div>
+              <div>👟0.1</div>
+              <div>
+                Distance: {roundBest(
+                  distance(currentX, currentY, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+                )} tiles
+                <div class="inline text-sm text-green-700">(-0.1 tiles/s)</div>
+              </div>
             </div>
           </div>
         {/if}
