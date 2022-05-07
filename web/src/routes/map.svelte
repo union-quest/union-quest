@@ -57,7 +57,7 @@
               class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
         text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
               type="button"
-              on:click={() => join()}>Press me to join the game!</button
+              on:click={() => join()}>Click here to join the game!</button
             >
           {/if}
         </div>

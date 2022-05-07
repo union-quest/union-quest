@@ -22,6 +22,8 @@ dataSources:
       eventHandlers:
         - event: Move(address,int256,int256,int256,int256)
           handler: handleMove
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
         - event: SetResource(uint256,int256,int256)
           handler: handleSetResource
         - event: SetSkill(address,uint256,uint256)

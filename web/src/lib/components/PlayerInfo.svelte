@@ -1,6 +1,6 @@
 <script lang="ts">
   import {chain, flow, wallet} from '$lib/blockchain/wallet';
-  import {getPosition, getSkill, Player} from '$lib/player/player';
+  import {getBalanceStreamed, getPosition, getSkill, Player} from '$lib/player/player';
   import {onMount} from 'svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
@@ -96,14 +96,15 @@
             at tile ({currentPlayer.endTile.x}, {currentPlayer.endTile.y}).
           </div>
           {#if currentPlayer.endTile.resourceId === '1'}
-            <div>🪨 Woodcutting skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}</div>
-            <div>While here, your woodcutting skill increases at a rate of 1 point every 10 seconds.</div>
-            <div>You are currently gathering X wood per second.</div>
+            <div>
+              Woodcutting skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))} (+0.1 point/s)
+            </div>
           {/if}
           {#if currentPlayer.endTile.resourceId === '2'}
-            <div>🪨 Mining skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}</div>
-            <div>While here, your mining skill increases at a rate of 1 point every 10 seconds.</div>
-            <div>You are currently gathering X stone per second.</div>
+            <div>
+              Mining skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
+              <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
+            </div>
           {/if}
         {:else}
           <div>
@@ -123,16 +124,32 @@
         <div class="text-left">
           <div>
             🪵 Woodcutting: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
+            {#if currentPlayer.endTile.resourceId === '1'}<div class="inline text-sm text-green-700">
+                (+0.1 point/s)
+              </div>{/if}
           </div>
           <div>
             🪨 Mining: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
+            {#if currentPlayer.endTile.resourceId === '2'}<div class="inline text-sm text-green-700">
+                (+0.1 point/s)
+              </div>{/if}
+          </div>
+          <div>
+            Total level: {Math.round(
+              getSkill(currentPlayer, currentTimestamp / 1000, 1) + getSkill(currentPlayer, currentTimestamp / 1000, 2)
+            )}
           </div>
         </div>
       </div>
     {:else if tab === 2}
       <div>
         <div class="text-xl">Inventory</div>
-        <div>Coming soon!</div>
+        <div>
+          🪵 Wood: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 1))}
+        </div>
+        <div>
+          🪨 Stone: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 2))}
+        </div>
       </div>
     {:else}
       <div>

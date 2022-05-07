@@ -10,6 +10,8 @@ type Player @entity {
   startTile: Tile!
   endTile: Tile!
   startTimestamp: BigInt!
+  wood: BigInt!
+  stone: BigInt!
   woodSkill: BigInt!
   stoneSkill: BigInt!
   vouch: BigInt!

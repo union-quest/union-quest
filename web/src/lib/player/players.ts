@@ -60,6 +60,8 @@ class UserStore implements QueryStore<Players> {
           resourceId
         }
         startTimestamp
+        wood
+        stone
         woodSkill
         stoneSkill
         vouch

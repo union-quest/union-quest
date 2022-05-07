@@ -15,6 +15,8 @@ export type Player = {
   startTile: Tile;
   endTile: Tile;
   startTimestamp: string;
+  wood: string;
+  stone: string;
   woodSkill: string;
   stoneSkill: string;
   vouch: string;
@@ -67,6 +69,8 @@ class UserStore implements QueryStore<Player> {
           y
         }
         startTimestamp
+        wood
+        stone
         woodSkill
         stoneSkill
       }
@@ -151,6 +155,27 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
     return savedBalance +
       (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
+  } else {
+    return savedBalance;
+  }
+}
+
+export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: number): number => {
+  const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
+  const distanceNeeded = distance(
+    parseInt(player.startTile.x),
+    parseInt(player.startTile.y),
+    parseInt(player.endTile.x),
+    parseInt(player.endTile.y)
+  );
+
+  const savedBalance = resourceId === 1 ? parseInt(player.wood) : parseInt(player.stone);
+
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === player.endTile.resourceId) {
+    const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
+      SKILL_INCREASE_DIVISOR;
+
+    return savedBalance + ((2 * resourceId === 1 ? parseInt(player.woodSkill) : parseInt(player.stoneSkill) + skillIncrease + 1) * skillIncrease) / 2;
   } else {
     return savedBalance;
   }
