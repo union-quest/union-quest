@@ -10,7 +10,7 @@ export function getOrCreatePlayer(
   let entity = Player.load(id);
   if (!entity) {
     entity = new Player(id);
-    let tile = getOrCreateTile("0_0");
+    let tile = getOrCreateTile(BigInt.fromString("0"), BigInt.fromString("0"));
     tile.save();
     entity.startTile = "0_0";
     entity.endTile = "0_0";
@@ -23,13 +23,13 @@ export function getOrCreatePlayer(
 }
 
 export function getOrCreateTile(
-  id: string
+  x: BigInt, y: BigInt
 ): Tile {
-  let entity = Tile.load(id);
+  let entity = Tile.load(x.toString() + "_" + y.toString());
   if (!entity) {
-    entity = new Tile(id);
-    entity.x = BigInt.fromString("0");
-    entity.y = BigInt.fromString("0");
+    entity = new Tile(x.toString() + "_" + y.toString());
+    entity.x = x;
+    entity.y = y;
     entity.resourceId = BigInt.fromString("0");
   }
 
@@ -38,8 +38,8 @@ export function getOrCreateTile(
 
 export function handleMove(event: Move): void {
   let entity = getOrCreatePlayer(event.params.account.toHexString());
-  let startTile = getOrCreateTile(event.params.startX.toString() + "_" + event.params.startY.toString());
-  let endTile = getOrCreateTile(event.params.endX.toString() + "_" + event.params.endY.toString());
+  let startTile = getOrCreateTile(event.params.startX, event.params.startY);
+  let endTile = getOrCreateTile(event.params.endX, event.params.endY);
 
   entity.startTile = event.params.startX.toString() + "_" + event.params.startY.toString();
   entity.endTile = event.params.endX.toString() + "_" + event.params.endY.toString();
@@ -51,7 +51,7 @@ export function handleMove(event: Move): void {
 }
 
 export function handleSetResource(event: SetResource): void {
-  let entity = getOrCreateTile(event.params.x.toString() + "_" + event.params.y.toString());
+  let entity = getOrCreateTile(event.params.x, event.params.y);
 
   entity.x = event.params.x;
   entity.y = event.params.y;
@@ -75,7 +75,7 @@ export function handleSetSkill(event: SetSkill): void {
 export function handleUpdateTrust(event: LogUpdateTrust): void {
   let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
 
-  // check that staker event.params.staker.toHexString();
+  // check staker event.params.staker.toHexString() === UnionQuest contract;
   borrower.vouch = event.params.trustAmount;
 
   borrower.save();

@@ -99,9 +99,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     skipIfAlreadyDeployed: false
   });
 
-  await execute("UnionQuest", { from: deployer, log: true }, "setResource", 1, 2, 1);
-  await execute("UnionQuest", { from: deployer, log: true }, "setResource", 2, 2, 1);
-  await execute("UnionQuest", { from: deployer, log: true }, "setResource", 4, 4, 2);
+  await execute("UnionQuest", { from: deployer, log: true }, "setResources", [[1, 2, 1], [2, 2, 1], [7, 5, 1], [4, 4, 2], [4, 5, 2], [5, 5, 2], [5, 6, 2], [5, 7, 2]]);
   await execute("UserManager", { from: deployer, log: true }, "addMember", unionQuest.address);
 };
 export default func;

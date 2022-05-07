@@ -8,6 +8,13 @@ import "@unioncredit/v1-sdk/contracts/UnionVoucher.sol";
 contract UnionQuest is ERC1155, Ownable, UnionVoucher {
     uint256 constant SPEED_DIVISOR = 10;
     uint256 constant SKILL_INCREASE_DIVISOR = 10;
+    uint256 constant TRUST_MODIFIER = 10000000000000000;
+
+    struct Tile {
+        int256 x;
+        int256 y;
+        uint256 resourceId;
+    }
 
     struct Player {
         int256 startX;
@@ -41,18 +48,18 @@ contract UnionQuest is ERC1155, Ownable, UnionVoucher {
         _unstake(amount);
     }
 
-    function updateTrust(address borrower_) external {
-        _updateTrust(borrower_, getTotalSkill(borrower_));
+    function setResources(Tile[] calldata tiles) external onlyOwner {
+        for (uint256 i; i < tiles.length; i++) {
+            Tile calldata tile = tiles[i];
+
+            resource[tile.x][tile.y] = tile.resourceId;
+
+            emit SetResource(tile.resourceId, tile.x, tile.y);
+        }
     }
 
-    function setResource(
-        int256 x,
-        int256 y,
-        uint256 resourceId
-    ) external onlyOwner {
-        resource[x][y] = resourceId;
-
-        emit SetResource(resourceId, x, y);
+    function updateTrust(address borrower_) external {
+        _updateTrust(borrower_, getTotalSkill(borrower_) * TRUST_MODIFIER);
     }
 
     function move(int256 x, int256 y) external {

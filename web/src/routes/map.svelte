@@ -27,23 +27,25 @@
     {:else if !$tiles.data || !$players.data}
       <div>Something failed to load!</div>
     {:else}
-      <div class="flex flex-row justify-evenly">
-        <div class="grid grid-cols-10 w-fit h-fit">
-          {#each [0, 1, 2, 3, 4, 5] as x}
-            {#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as y}
-              <Tile
-                {x}
-                {y}
-                tile={$tiles.data.find((v) => v.x === x.toString() && v.y === y.toString())}
-                players={$players.data}
-                currentPlayer={$players.data.find((p) =>
-                  $wallet.address ? p.id === $wallet.address.toLowerCase() : false
-                )}
-              />
+      <div class="relative">
+        <div class="flex justify-center">
+          <div class="grid grid-cols-12 w-fit h-fit">
+            {#each [0, 1, 2, 3, 4, 5, 6] as x}
+              {#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as y}
+                <Tile
+                  {x}
+                  {y}
+                  tile={$tiles.data.find((v) => v.x === x.toString() && v.y === y.toString())}
+                  players={$players.data}
+                  currentPlayer={$players.data.find((p) =>
+                    $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+                  )}
+                />
+              {/each}
             {/each}
-          {/each}
+          </div>
         </div>
-        <div class="border-2">
+        <div class="fixed bottom-0 right-0 border-2">
           {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
             <PlayerInfo
               currentPlayer={$players.data.find((p) =>

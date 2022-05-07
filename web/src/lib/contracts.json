@@ -6414,22 +6414,29 @@
         {
           "inputs": [
             {
-              "internalType": "int256",
-              "name": "x",
-              "type": "int256"
-            },
-            {
-              "internalType": "int256",
-              "name": "y",
-              "type": "int256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "resourceId",
-              "type": "uint256"
+              "components": [
+                {
+                  "internalType": "int256",
+                  "name": "x",
+                  "type": "int256"
+                },
+                {
+                  "internalType": "int256",
+                  "name": "y",
+                  "type": "int256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "resourceId",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct UnionQuest.Tile[]",
+              "name": "tiles",
+              "type": "tuple[]"
             }
           ],
-          "name": "setResource",
+          "name": "setResources",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
