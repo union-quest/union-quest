@@ -28,9 +28,9 @@
       <div>Something failed to load!</div>
     {:else}
       <div class="flex flex-row justify-evenly">
-        <div class="grid grid-cols-7 w-fit h-fit">
+        <div class="grid grid-cols-10 w-fit h-fit">
           {#each [0, 1, 2, 3, 4, 5] as x}
-            {#each [0, 1, 2, 3, 4, 5, 6] as y}
+            {#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as y}
               <Tile
                 {x}
                 {y}
