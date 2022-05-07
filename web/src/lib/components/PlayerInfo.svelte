@@ -66,20 +66,25 @@
   <div class="flex text-2xl justify-start">
     <button
       class="w-8 border-2 border-gray-700 {tab === 0 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 0)}>🎮</button
+      on:click={() => (tab = 0)}
     >
+      🎮
+    </button>
     <button
       class="w-8 border-2 border-gray-700 {tab === 1 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 1)}>📊</button
-    >
+      on:click={() => (tab = 1)}
+      >📊
+    </button>
     <button
       class="w-8 border-2 border-gray-700 {tab === 2 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 2)}>🎒</button
-    >
+      on:click={() => (tab = 2)}
+      >🎒
+    </button>
     <button
       class="w-8 border-2 border-gray-700 {tab === 3 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 3)}>🏦</button
-    >
+      on:click={() => (tab = 3)}
+      >🏦
+    </button>
   </div>
   <div class="border-2 border-gray-700 p-2">
     {#if tab === 0}

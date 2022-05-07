@@ -50,71 +50,78 @@
 <div>
   {#if showModal}
     <Modal title={`Tile (${x},${y})`} on:close={() => (showModal = false)} closeButton={true}>
-      <div class="flex flex-col h-96">
-        <div>
+      <div class="flex flex-col border-2 border-gray-400 h-64 text-center">
+        <div class="flex text-4xl justify-start">
           <button
-            class="flex-shrink-0 bg-gray-500 hover:bg-gray-600 {tab === 0
-              ? 'border-yellow-500'
-              : 'border-gray-500'}  hover:border-gray-600 text-sm border-4
-text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-            type="button"
-            on:click={() => (tab = 0)}>Overview</button
+            class="w-12 border-2 border-gray-700 {tab === 0 ? 'bg-red-700' : 'bg-neutral-400'}"
+            on:click={() => (tab = 0)}
           >
+            🧭
+          </button>
           <button
-            class="flex-shrink-0 bg-gray-500 hover:bg-gray-600 {tab === 1
-              ? 'border-yellow-500'
-              : 'border-gray-500'} hover:border-gray-600 text-sm border-4
-text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-            type="button"
-            on:click={() => (tab = 1)}>Residents</button
+            class="w-12 border-2 border-gray-700 {tab === 1 ? 'bg-red-700' : 'bg-neutral-400'}"
+            on:click={() => (tab = 1)}
           >
+            📜
+          </button>
+          <button
+            class="w-12 border-2 border-gray-700 {tab === 2 ? 'bg-red-700' : 'bg-neutral-400'}"
+            on:click={() => (tab = 2)}
+          >
+            🏪
+          </button>
+          <button
+            class="w-12 border-2 border-gray-700 {tab === 3 ? 'bg-red-700' : 'bg-neutral-400'}"
+            on:click={() => (tab = 3)}
+          >
+            👪
+          </button>
         </div>
-        <div class="p-2">
+        <div class="p-2 border-2 border-gray-400">
           {#if tab === 0}
-            <div class="text-xl">Overview</div>
-            {#if tile && tile.resourceId === '1'}
-              A forest.
-            {:else if tile && tile.resourceId === '2'}
-              A mine.
-            {:else}
-              An empty desert.
-            {/if}
-            <div class="rounded-md border-2 m-1">
-              <div class="p-2 border-2 border-dashed">
-                <div class="text-lg">Travel</div>
-                {#if currentPlayer}
-                  <div class="p-1">
-                    <div>
-                      This tile is {roundGood(
+            <div class="text-xl">Travel</div>
+            {#if currentPlayer}
+              <div class="p-1">
+                <div>
+                  This tile is {roundGood(
+                    distance(x, y, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+                  )} unit(s) from you.
+                </div>
+                <div>
+                  It will take
+                  <span class="font-bold">
+                    {roundGood(
+                      SPEED_DIVISOR *
                         distance(x, y, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
-                      )} unit(s) from you.
-                    </div>
-                    <div>
-                      It will take
-                      <span class="font-bold">
-                        {roundGood(
-                          SPEED_DIVISOR *
-                            distance(x, y, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
-                        )} seconds</span
-                      >
-                      to walk here.
-                    </div>
-                    <button
-                      on:click={() => move(x, y)}
-                      class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                      type="button"
-                    >
-                      BEGIN JOURNEY
-                    </button>
-                  </div>
-                {:else}
-                  <div>You are already busy.</div>
-                {/if}
+                    )} seconds</span
+                  >
+                  to walk here.
+                </div>
+                <button
+                  on:click={() => move(x, y)}
+                  class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
+  text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+                  type="button"
+                >
+                  BEGIN JOURNEY
+                </button>
               </div>
-            </div>
-          {/if}
-          {#if tab === 1}
+            {:else}
+              <div>You are already busy.</div>
+            {/if}
+          {:else if tab === 1}
+            <div class="text-xl">Lore</div>
+            {#if tile && tile.resourceId === '1'}
+              This tile is a forest.
+            {:else if tile && tile.resourceId === '2'}
+              This tile is a mine.
+            {:else}
+              This tile is an empty desert.
+            {/if}
+          {:else if tab === 2}
+            <div class="text-xl">Shop</div>
+            <div>Coming soon!</div>
+          {:else}
             <div class="text-xl">Residents</div>
             <div class="italic">
               There are {playersOnTile.length} player(s) at this tile.
