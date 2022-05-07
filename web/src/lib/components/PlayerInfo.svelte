@@ -1,6 +1,6 @@
 <script lang="ts">
   import {chain, flow, wallet} from '$lib/blockchain/wallet';
-  import {getBalanceStreamed, getPosition, getSkill, Player} from '$lib/player/player';
+  import {distance, getBalanceStreamed, getPosition, getSkill, Player} from '$lib/player/player';
   import {onMount} from 'svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
@@ -15,6 +15,7 @@
   let currentX = 0;
   let currentY = 0;
 
+  const roundBest = (n: number) => Math.round(n * 10) / 10;
   const roundGood = (n: number) => Math.round(n * 100) / 100;
 
   async function updateTrust() {
@@ -84,44 +85,58 @@
     {#if tab === 0}
       <div>
         <div class="text-xl">Status</div>
+        <div>Location: ({Math.round(currentX)}, {Math.round(currentY)})</div>
         {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y)}
-          <div>
-            {#if currentPlayer.endTile.resourceId === '1'}
-              Woodcutting
-            {:else if currentPlayer.endTile.resourceId === '2'}
-              Mining
-            {:else}
-              Standing
-            {/if}
-            at tile ({currentPlayer.endTile.x}, {currentPlayer.endTile.y}).
-          </div>
-          {#if currentPlayer.endTile.resourceId !== '0'}
-            <div>
-              {currentPlayer.endTile.resourceId ? '🪓' : '⛏️'}
-              {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId)))}
-              <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
-            </div>
-            <div>
-              {currentPlayer.endTile.resourceId ? '🪵' : '🪨'}
-              {Math.round(
-                getBalanceStreamed(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId))
-              )}
-              <div class="inline text-sm text-green-700">
-                (+{Math.round(
-                  getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId))
-                )} units/s)
+          {#if currentPlayer.endTile.resourceId === '0'}
+            <div class="border-2 border-gray-600">There's nothing to do here!</div>
+          {:else}
+            <div class="border-2 border-gray-600">
+              <div>
+                {#if currentPlayer.endTile.resourceId === '1'}
+                  Woodcutting
+                {:else}
+                  Mining
+                {/if}
               </div>
+              {#if currentPlayer.endTile.resourceId !== '0'}
+                <div>
+                  {currentPlayer.endTile.resourceId === '1' ? '🪓' : '⛏️'}
+                  {Math.round(
+                    getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId))
+                  )}
+                  <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
+                </div>
+                <div>
+                  {currentPlayer.endTile.resourceId === '1' ? '🪵' : '🪨'}
+                  {Math.round(
+                    getBalanceStreamed(
+                      currentPlayer,
+                      currentTimestamp / 1000,
+                      parseInt(currentPlayer.endTile.resourceId)
+                    )
+                  )}
+                  <div class="inline text-sm text-green-700">
+                    (+{Math.round(
+                      getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId))
+                    )} units/s)
+                  </div>
+                </div>
+              {/if}
             </div>
           {/if}
         {:else}
-          <div>
-            Walking to
-            {#if currentPlayer.endTile.resourceId === '1'}
-              chop wood at
-            {:else if currentPlayer.endTile.resourceId === '2'}
-              mine stone at
-            {/if}
-            tile ({currentPlayer.endTile.x}, {currentPlayer.endTile.y}).
+          <div class="border-2 border-gray-600">
+            <div>Walking</div>
+            <div>
+              Walking to: ({currentPlayer.endTile.x}, {currentPlayer.endTile.y})
+            </div>
+            <div>👟0.1</div>
+            <div>
+              Distance: {roundBest(
+                distance(currentX, currentY, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+              )} tiles
+              <div class="inline text-sm text-green-700">(-0.1 tiles/s)</div>
+            </div>
           </div>
         {/if}
       </div>
