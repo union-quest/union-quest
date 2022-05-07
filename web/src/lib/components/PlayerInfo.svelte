@@ -53,7 +53,7 @@
           target="_blank"
           href={`https://kovan.union.finance/profile/${chain.contracts.UnionQuest.address}`}
         >
-          View the bank on union.finance
+          View the Bank on union.finance
         </a>
       </div></Modal
     >
@@ -95,26 +95,22 @@
             {/if}
             at tile ({currentPlayer.endTile.x}, {currentPlayer.endTile.y}).
           </div>
-          {#if currentPlayer.endTile.resourceId === '1'}
+          {#if currentPlayer.endTile.resourceId !== '0'}
             <div>
-              Woodcutting skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
+              {currentPlayer.endTile.resourceId ? '🪓' : '⛏️'}
+              {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId)))}
               <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
             </div>
             <div>
-              🪵 Wood: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 1))}
+              {currentPlayer.endTile.resourceId ? '🪵' : '🪨'}
+              {Math.round(
+                getBalanceStreamed(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId))
+              )}
               <div class="inline text-sm text-green-700">
-                (+{Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))} units/s)
+                (+{Math.round(
+                  getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId))
+                )} units/s)
               </div>
-            </div>
-          {/if}
-          {#if currentPlayer.endTile.resourceId === '2'}
-            <div>
-              Mining skill: {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
-              <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
-            </div>
-            🪨 Stone: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 2))}
-            <div class="inline text-sm text-green-700">
-              (+{Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))} units/s)
             </div>
           {/if}
         {:else}
@@ -136,15 +132,14 @@
           <div class="flex">
             <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
               ⛏️ {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
-              {#if currentPlayer.endTile.resourceId === '2'}<div class="inline text-sm text-green-700">
-                  (+0.1 point/s)
-                </div>{/if}
+              {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y) && currentPlayer.endTile.resourceId === '2'}
+                <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
+              {/if}
             </div>
             <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
               🪓 {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
-              {#if currentPlayer.endTile.resourceId === '1'}<div class="inline text-sm text-green-700">
-                  (+0.1 point/s)
-                </div>
+              {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y) && currentPlayer.endTile.resourceId === '1'}
+                <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
               {/if}
             </div>
           </div>
