@@ -153,7 +153,7 @@ text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disab
       {#if tile && tile.resourceId === '1'}
         🌲
       {:else if tile && tile.resourceId === '2'}
-        🪨
+        ⛰️
       {:else}
         🏜️
       {/if}

@@ -62,6 +62,7 @@ class UserStore implements QueryStore<Players> {
         startTimestamp
         woodSkill
         stoneSkill
+        vouch
       }
     }`,
       chainTempo,

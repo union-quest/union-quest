@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { Move, SetResource, SetSkill } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Player, Tile, Trust } from '../generated/schema';
+import { Player, Tile } from '../generated/schema';
 import { BigInt } from '@graphprotocol/graph-ts';
 
 export function getOrCreatePlayer(
@@ -31,17 +31,6 @@ export function getOrCreateTile(
     entity.x = BigInt.fromString("0");
     entity.y = BigInt.fromString("0");
     entity.resourceId = BigInt.fromString("0");
-  }
-
-  return entity;
-}
-
-export function getOrCreateTrust(
-  id: string
-): Trust {
-  let entity = Trust.load(id);
-  if (!entity) {
-    entity = new Trust(id);
   }
 
   return entity;
@@ -84,15 +73,10 @@ export function handleSetSkill(event: SetSkill): void {
 }
 
 export function handleUpdateTrust(event: LogUpdateTrust): void {
-  let trust = getOrCreateTrust(event.params.staker.toHexString() + "_" + event.params.borrower.toHexString());
-  let staker = getOrCreatePlayer(event.params.staker.toHexString());
   let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
 
-  trust.staker = event.params.staker.toHexString();
-  trust.borrower = event.params.borrower.toHexString();
-  trust.trustAmount = event.params.trustAmount;
+  // check that staker event.params.staker.toHexString();
+  borrower.vouch = event.params.trustAmount;
 
-  trust.save();
-  staker.save();
   borrower.save();
 }

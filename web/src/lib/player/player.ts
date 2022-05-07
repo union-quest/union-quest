@@ -17,6 +17,7 @@ export type Player = {
   startTimestamp: string;
   woodSkill: string;
   stoneSkill: string;
+  vouch: string;
 }
 
 // TODO web3w needs to export the type

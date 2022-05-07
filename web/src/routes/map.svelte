@@ -27,41 +27,37 @@
     {:else if !$tiles.data || !$players.data}
       <div>Something failed to load!</div>
     {:else}
-      <div class="flex flex-col">
-        <div class="flex justify-center">
-          <div class="grid grid-cols-6 w-fit h-fit">
-            {#each [0, 1, 2, 3, 4] as x}
-              {#each [0, 1, 2, 3, 4, 5] as y}
-                <Tile
-                  {x}
-                  {y}
-                  tile={$tiles.data.find((v) => v.x === x.toString() && v.y === y.toString())}
-                  players={$players.data}
-                  currentPlayer={$players.data.find((p) =>
-                    $wallet.address ? p.id === $wallet.address.toLowerCase() : false
-                  )}
-                />
-              {/each}
-            {/each}
-          </div>
-        </div>
-        <div class="flex justify-center">
-          <div class="border-2 w-fit p-2 m-2">
-            {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
-              <PlayerInfo
+      <div class="flex flex-row justify-evenly">
+        <div class="grid grid-cols-7 w-fit h-fit">
+          {#each [0, 1, 2, 3, 4, 5] as x}
+            {#each [0, 1, 2, 3, 4, 5, 6] as y}
+              <Tile
+                {x}
+                {y}
+                tile={$tiles.data.find((v) => v.x === x.toString() && v.y === y.toString())}
+                players={$players.data}
                 currentPlayer={$players.data.find((p) =>
                   $wallet.address ? p.id === $wallet.address.toLowerCase() : false
                 )}
               />
-            {:else}
-              <button
-                class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
+            {/each}
+          {/each}
+        </div>
+        <div class="border-2">
+          {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
+            <PlayerInfo
+              currentPlayer={$players.data.find((p) =>
+                $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+              )}
+            />
+          {:else}
+            <button
+              class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
         text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-                type="button"
-                on:click={() => join()}>Press me to join the game!</button
-              >
-            {/if}
-          </div>
+              type="button"
+              on:click={() => join()}>Press me to join the game!</button
+            >
+          {/if}
         </div>
       </div>
     {/if}
