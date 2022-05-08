@@ -2,7 +2,10 @@
 import { Move, SetResource, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
 import { Balance, Player, Item, Tile } from '../generated/schema';
-import { BigInt } from '@graphprotocol/graph-ts';
+import { BigInt, Bytes } from '@graphprotocol/graph-ts';
+
+let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
+let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
 
 export function getOrCreatePlayer(
   id: string
@@ -109,14 +112,28 @@ export function handleSetSkill(event: SetSkill): void {
 }
 
 export function handleTransferSingle(event: TransferSingle): void {
-  let entity = getOrCreateBalance(event.params.id.toString(), event.params.to.toHexString())
   let item = getOrCreateItem(event.params.id.toString());
 
-  entity.item = event.params.id.toString();
-  entity.player = event.params.to.toHexString();
-  entity.value = entity.value.plus(event.params.value);
+  if (event.params.from != ZERO_ADDRESS) {
+    let fromBalance = getOrCreateBalance(event.params.id.toString(), event.params.from.toHexString());
 
-  entity.save();
+    fromBalance.item = event.params.id.toString();
+    fromBalance.player = event.params.from.toHexString();
+    fromBalance.value = fromBalance.value.minus(event.params.value);
+
+    fromBalance.save();
+  }
+
+  if (event.params.to != ZERO_ADDRESS) {
+    let toBalance = getOrCreateBalance(event.params.id.toString(), event.params.to.toHexString());
+
+    toBalance.item = event.params.id.toString();
+    toBalance.player = event.params.to.toHexString();
+    toBalance.value = toBalance.value.plus(event.params.value);
+
+    toBalance.save();
+  }
+
   item.save();
 }
 
