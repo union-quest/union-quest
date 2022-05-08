@@ -148,7 +148,7 @@
   <div
     on:click={() => (showModal = true)}
     class="border-4 hover:border-gray-400 {currentPlayer && Math.round(currentX) === x && Math.round(currentY) === y
-      ? 'border-yellow-500 hover:border-yellow-500'
+      ? 'border-blue-500 hover:border-blue-500'
       : currentPlayer && parseInt(currentPlayer.endTile.x) === x && parseInt(currentPlayer.endTile.y) === y
       ? 'border-red-500 hover:border-red-500'
       : 'border-gray-200'}"

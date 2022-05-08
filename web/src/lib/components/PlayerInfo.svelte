@@ -123,7 +123,7 @@
                     )
                   )}
                   <div class="inline text-sm text-green-700">
-                    (+{Math.round(
+                    (+{roundBest(
                       getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId)) / 10
                     )} units/s)
                   </div>
