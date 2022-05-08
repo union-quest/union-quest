@@ -5,14 +5,20 @@ type Tile @entity {
   resourceId: BigInt!
 }
 
+type Balance @entity {
+  id: ID!
+  item: BigInt!
+  player: Player!
+  value: BigInt!
+}
+
 type Player @entity {
   id: ID!
   startTile: Tile!
   endTile: Tile!
   startTimestamp: BigInt!
-  wood: BigInt!
-  stone: BigInt!
   woodSkill: BigInt!
   stoneSkill: BigInt!
   vouch: BigInt!
+  balances: [Balance!]! @derivedFrom(field: "player")
 }

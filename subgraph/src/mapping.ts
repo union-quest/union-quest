@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { Move, SetResource, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Player, Tile } from '../generated/schema';
+import { Balance, Player, Tile } from '../generated/schema';
 import { BigInt } from '@graphprotocol/graph-ts';
 
 export function getOrCreatePlayer(
@@ -15,8 +15,6 @@ export function getOrCreatePlayer(
     entity.startTile = "0_0";
     entity.endTile = "0_0";
     entity.startTimestamp = BigInt.fromString("0");
-    entity.wood = BigInt.fromString("0");
-    entity.stone = BigInt.fromString("0");
     entity.woodSkill = BigInt.fromString("0");
     entity.stoneSkill = BigInt.fromString("0");
   }
@@ -33,6 +31,18 @@ export function getOrCreateTile(
     entity.x = x;
     entity.y = y;
     entity.resourceId = BigInt.fromString("0");
+  }
+
+  return entity;
+}
+
+export function getOrCreateBalance(
+  id: string
+): Balance {
+  let entity = Balance.load(id);
+  if (!entity) {
+    entity = new Balance(id);
+    entity.value = BigInt.fromString("0");
   }
 
   return entity;
@@ -75,15 +85,15 @@ export function handleSetSkill(event: SetSkill): void {
 }
 
 export function handleTransferSingle(event: TransferSingle): void {
-  let entity = getOrCreatePlayer(event.params.to.toHexString());
+  let entity = getOrCreateBalance(event.params.id.toString() + "_" + event.params.to.toHexString())
+  let player = getOrCreatePlayer(event.params.to.toHexString())
 
-  if (event.params.id.equals(BigInt.fromString("1"))) {
-    entity.wood = entity.wood.plus(event.params.value);
-  } else {
-    entity.stone = entity.stone.plus(event.params.value);
-  }
+  entity.item = event.params.id;
+  entity.player = event.params.to.toHexString();
+  entity.value = entity.value.plus(event.params.value);
 
   entity.save();
+  player.save()
 }
 
 export function handleUpdateTrust(event: LogUpdateTrust): void {
@@ -96,5 +106,5 @@ export function handleUpdateTrust(event: LogUpdateTrust): void {
 }
 
 // TODO: check trust
-// Add item balances then refactor inventory UI
+// refactor inventory UI
 // Add shops

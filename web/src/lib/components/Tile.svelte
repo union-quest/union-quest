@@ -1,6 +1,6 @@
 <script lang="ts">
   import {flow} from '$lib/blockchain/wallet';
-  import {distance, getPosition, Player} from '$lib/player/player';
+  import {distance, getPosition, getSkill, Player} from '$lib/player/player';
   import type {Players} from '$lib/player/players';
   import type {Tile} from '$lib/tile/tiles';
   import Modal from '$lib/components/styled/Modal.svelte';
@@ -99,10 +99,30 @@
                   >
                   to walk here.
                 </div>
+
+                <div>
+                  {#if !tile || tile.resourceId === '0'}
+                    There are no resources on this tile.
+                  {:else}
+                    Once you arrive, you will start gathering
+                    <span class="inline font-bold">
+                      {#if tile.resourceId === '1'}
+                        🪵 wood
+                      {:else}
+                        🪨 stone
+                      {/if}
+                    </span>
+                    at a rate of
+                    <div class="inline font-bold">
+                      {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, parseInt(tile.resourceId)) / 10)}
+                    </div>
+                    units/s.
+                  {/if}
+                </div>
                 <button
                   on:click={() => move(x, y)}
                   class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-sm border-4
-  text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+  text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed m-1"
                   type="button"
                 >
                   BEGIN JOURNEY

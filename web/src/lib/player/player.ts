@@ -15,11 +15,10 @@ export type Player = {
   startTile: Tile;
   endTile: Tile;
   startTimestamp: string;
-  wood: string;
-  stone: string;
   woodSkill: string;
   stoneSkill: string;
   vouch: string;
+  balances: { id: string; player: string, item: string, value: string }[];
 }
 
 // TODO web3w needs to export the type
@@ -60,19 +59,6 @@ class UserStore implements QueryStore<Player> {
     query getPlayer($id: ID!){
       player(id: $id) {
         id
-        startTile {
-          x
-          y
-        }
-        endTile {
-          x
-          y
-        }
-        startTimestamp
-        wood
-        stone
-        woodSkill
-        stoneSkill
       }
     }`,
       chainTempo,
@@ -161,7 +147,8 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
 }
 
 export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: number): number => {
-  const savedBalance = resourceId === 1 ? parseInt(player.wood) : parseInt(player.stone);
+  const balanceObject = player.balances.find(b => b.id === resourceId.toString());
+  const savedBalance = balanceObject ? parseInt(balanceObject.value) : 0;
   const savedSkill = resourceId === 1 ? parseInt(player.woodSkill) : parseInt(player.stoneSkill);
 
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
