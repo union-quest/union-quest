@@ -25,8 +25,16 @@
     await flow.execute((contracts) => contracts.UnionQuest.move(x, y));
   }
 
-  async function burn(id: string, amount: string) {
-    await flow.execute((contracts) => contracts.UnionQuest.burn($wallet.address, id, amount, []));
+  async function transfer(id: string, amount: string) {
+    await flow.execute((contracts) =>
+      contracts.UnionQuest.safeTransferFrom(
+        $wallet.address,
+        '0xb19BC46C52A1352A071fe2389503B6FE1ABD50Ff',
+        id,
+        amount,
+        []
+      )
+    );
   }
 
   async function mint(id: string, amount: string) {
@@ -172,7 +180,16 @@
                 <div class="text-xl">Your inventory</div>
                 {#each currentPlayer.balances as balance}
                   {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
-                    <div on:click={() => burn(balance.item.id, balance.value)}>
+                    <div on:click={() => transfer(balance.item.id, '20')}>TWENTY</div>
+                    <div
+                      on:click={() =>
+                        transfer(
+                          balance.item.id,
+                          Math.floor(
+                            getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
+                          ).toString()
+                        )}
+                    >
                       {balance.item.symbol}{balance.item.name}: {Math.round(
                         getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
                       )}
