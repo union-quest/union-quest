@@ -8,12 +8,13 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
+import type { Item } from '$lib/player/player';
 
 export type Tile = {
   id: string;
   x: string;
   y: string;
-  resourceId: string;
+  item?: Item;
 }
 
 export type Tiles = Tile[]
@@ -58,7 +59,11 @@ class TileStore implements QueryStore<Tiles> {
         id
         x
         y
-        resourceId
+        item {
+          id
+          name
+          symbol
+        }
       }
     }`,
       chainTempo,

@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { Move, SetResource, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Balance, Player, Tile } from '../generated/schema';
+import { Balance, Player, Item, Tile } from '../generated/schema';
 import { BigInt } from '@graphprotocol/graph-ts';
 
 export function getOrCreatePlayer(
@@ -12,6 +12,8 @@ export function getOrCreatePlayer(
     entity = new Player(id);
     let tile = getOrCreateTile(BigInt.fromString("0"), BigInt.fromString("0"));
     tile.save();
+    getOrCreateBalance("1", id).save();
+    getOrCreateBalance("2", id).save();
     entity.startTile = "0_0";
     entity.endTile = "0_0";
     entity.startTimestamp = BigInt.fromString("0");
@@ -30,19 +32,39 @@ export function getOrCreateTile(
     entity = new Tile(x.toString() + "_" + y.toString());
     entity.x = x;
     entity.y = y;
-    entity.resourceId = BigInt.fromString("0");
+  }
+
+  return entity;
+}
+
+
+export function getOrCreateItem(
+  id: string
+): Item {
+  let entity = Item.load(id);
+  if (!entity) {
+    entity = new Item(id);
+    if (id == "1") {
+      entity.name = "Wood";
+      entity.symbol = "🪵";
+    } else {
+      entity.name = "Stone";
+      entity.symbol = "🪨";
+    }
   }
 
   return entity;
 }
 
 export function getOrCreateBalance(
-  id: string
+  itemId: string, playerId: string
 ): Balance {
-  let entity = Balance.load(id);
+  let entity = Balance.load(itemId + "_" + playerId);
   if (!entity) {
-    entity = new Balance(id);
+    entity = new Balance(itemId + "_" + playerId);
     entity.value = BigInt.fromString("0");
+    entity.item = itemId;
+    entity.player = playerId;
   }
 
   return entity;
@@ -64,12 +86,14 @@ export function handleMove(event: Move): void {
 
 export function handleSetResource(event: SetResource): void {
   let entity = getOrCreateTile(event.params.x, event.params.y);
+  let item = getOrCreateItem(event.params.resourceId.toString());
 
   entity.x = event.params.x;
   entity.y = event.params.y;
-  entity.resourceId = event.params.resourceId;
+  entity.item = event.params.resourceId.toString();
 
   entity.save();
+  item.save();
 }
 
 export function handleSetSkill(event: SetSkill): void {
@@ -85,15 +109,15 @@ export function handleSetSkill(event: SetSkill): void {
 }
 
 export function handleTransferSingle(event: TransferSingle): void {
-  let entity = getOrCreateBalance(event.params.id.toString() + "_" + event.params.to.toHexString())
-  let player = getOrCreatePlayer(event.params.to.toHexString())
+  let entity = getOrCreateBalance(event.params.id.toString(), event.params.to.toHexString())
+  let item = getOrCreateItem(event.params.id.toString());
 
-  entity.item = event.params.id;
+  entity.item = event.params.id.toString();
   entity.player = event.params.to.toHexString();
   entity.value = entity.value.plus(event.params.value);
 
   entity.save();
-  player.save()
+  item.save();
 }
 
 export function handleUpdateTrust(event: LogUpdateTrust): void {

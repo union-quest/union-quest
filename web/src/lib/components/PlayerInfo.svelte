@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {chain, flow, wallet} from '$lib/blockchain/wallet';
+  import {balance, chain, flow, wallet} from '$lib/blockchain/wallet';
   import {distance, getBalanceStreamed, getPosition, getSkill, Player} from '$lib/player/player';
   import {onMount} from 'svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
@@ -94,12 +94,12 @@
         <div class="text-xl">Status</div>
         <div>Location: ({Math.round(currentX)}, {Math.round(currentY)})</div>
         {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y)}
-          {#if currentPlayer.endTile.resourceId === '0'}
+          {#if !currentPlayer.endTile.item}
             <div class="border-2 border-gray-600">There's nothing to do here!</div>
           {:else}
             <div class="border-2 border-gray-600">
               <div>
-                {#if currentPlayer.endTile.resourceId === '1'}
+                {#if currentPlayer.endTile.item.id === '1'}
                   Woodcutting
                 {:else}
                   Mining
@@ -107,24 +107,20 @@
               </div>
               <div class="text-left">
                 <div>
-                  {currentPlayer.endTile.resourceId === '1' ? '🪓' : '⛏️'}
+                  {currentPlayer.endTile.item.id === '1' ? '🪓' : '⛏️'}
                   {Math.round(
-                    getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId))
+                    getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.item.id))
                   )}
                   <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
                 </div>
                 <div>
-                  {currentPlayer.endTile.resourceId === '1' ? '🪵' : '🪨'}
+                  {currentPlayer.endTile.item.symbol}
                   {Math.round(
-                    getBalanceStreamed(
-                      currentPlayer,
-                      currentTimestamp / 1000,
-                      parseInt(currentPlayer.endTile.resourceId)
-                    )
+                    getBalanceStreamed(currentPlayer, currentTimestamp / 1000, currentPlayer.endTile.item.id)
                   )}
                   <div class="inline text-sm text-green-700">
                     (+{roundBest(
-                      getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.resourceId)) / 10
+                      getSkill(currentPlayer, currentTimestamp / 1000, parseInt(currentPlayer.endTile.item.id)) / 10
                     )} units/s)
                   </div>
                 </div>
@@ -172,12 +168,15 @@
     {:else if tab === 2}
       <div>
         <div class="text-xl">Inventory</div>
-        <div>
-          🪨 Stone: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 2))}
-        </div>
-        <div>
-          🪵 Wood: {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, 1))}
-        </div>
+        {#each currentPlayer.balances as balance}
+          {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id) > 0}
+            <div>
+              {balance.item.symbol}{balance.item.name}: {Math.round(
+                getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
+              )}
+            </div>
+          {/if}
+        {/each}
       </div>
     {:else}
       <div>

@@ -10,6 +10,8 @@ import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Tile } from '$lib/tile/tiles';
 
+export type Item = { id: string, name: string, symbol: string }
+
 export type Player = {
   id: string;
   startTile: Tile;
@@ -18,7 +20,7 @@ export type Player = {
   woodSkill: string;
   stoneSkill: string;
   vouch: string;
-  balances: { id: string; player: string, item: string, value: string }[];
+  balances: { id: string; player: string, item?: Item, value: string }[];
 }
 
 // TODO web3w needs to export the type
@@ -137,7 +139,7 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
 
   const savedSkill = parseInt(resourceId === 1 ? player.woodSkill : player.stoneSkill);
 
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === player.endTile.resourceId) {
+  if (distanceTravelled >= distanceNeeded && player.endTile.item && resourceId.toString() === player.endTile.item.id) {
     return savedSkill +
       (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
@@ -146,10 +148,11 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
   return savedSkill;
 }
 
-export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: number): number => {
-  const balanceObject = player.balances.find(b => b.id === resourceId.toString());
+export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: string): number => {
+  const balanceObject = player.balances.find(b => b.item.id === resourceId.toString());
+
   const savedBalance = balanceObject ? parseInt(balanceObject.value) : 0;
-  const savedSkill = resourceId === 1 ? parseInt(player.woodSkill) : parseInt(player.stoneSkill);
+  const savedSkill = resourceId === "1" ? parseInt(player.woodSkill) : parseInt(player.stoneSkill);
 
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
   const distanceNeeded = distance(
@@ -159,7 +162,7 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
     parseInt(player.endTile.y)
   );
 
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === player.endTile.resourceId) {
+  if (distanceTravelled >= distanceNeeded && player.endTile.item && resourceId.toString() === player.endTile.item.id) {
     const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
 

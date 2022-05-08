@@ -1,13 +1,19 @@
+type Item @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+}
+
 type Tile @entity {
   id: ID!
   x: BigInt!
   y: BigInt!
-  resourceId: BigInt!
+  item: Item
 }
 
 type Balance @entity {
   id: ID!
-  item: BigInt!
+  item: Item!
   player: Player!
   value: BigInt!
 }

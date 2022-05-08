@@ -27,7 +27,7 @@
   let currentTimestamp = Date.now();
   let currentX = 0;
   let currentY = 0;
-  let playersOnTile = [];
+  let residents = [];
 
   onMount(() => {
     const interval = setInterval(() => {
@@ -36,7 +36,7 @@
       if (currentPlayer) {
         [currentX, currentY] = getPosition(currentPlayer, currentTimestamp / 1000);
       }
-      playersOnTile = players.filter(
+      residents = players.filter(
         (p) =>
           Math.round(getPosition(p, currentTimestamp / 1000)[0]) === x &&
           Math.round(getPosition(p, currentTimestamp / 1000)[1]) === y
@@ -101,22 +101,18 @@
                 </div>
 
                 <div>
-                  {#if !tile || tile.resourceId === '0'}
-                    There are no resources on this tile.
-                  {:else}
+                  {#if tile && tile.item}
                     Once you arrive, you will start gathering
                     <span class="inline font-bold">
-                      {#if tile.resourceId === '1'}
-                        🪵 wood
-                      {:else}
-                        🪨 stone
-                      {/if}
+                      {tile.item.symbol}{tile.item.name}
                     </span>
                     at a rate of
                     <div class="inline font-bold">
-                      {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, parseInt(tile.resourceId)) / 10)}
+                      {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, parseInt(tile.item.id)) / 10)}
                     </div>
                     units/s.
+                  {:else}
+                    There are no resources on this tile.
                   {/if}
                 </div>
                 <button
@@ -129,13 +125,13 @@
                 </button>
               </div>
             {:else}
-              <div>You are already busy.</div>
+              <div>You need to join the game first!</div>
             {/if}
           {:else if tab === 1}
             <div class="text-xl">Lore</div>
-            {#if tile && tile.resourceId === '1'}
+            {#if tile && tile.item && tile.item.id === '1'}
               This tile is a forest.
-            {:else if tile && tile.resourceId === '2'}
+            {:else if tile && tile.item && tile.item.id === '2'}
               This tile is a mine.
             {:else}
               This tile is an empty desert.
@@ -146,10 +142,10 @@
           {:else}
             <div class="text-xl">Residents</div>
             <div class="italic">
-              There are {playersOnTile.length} player(s) at this tile.
+              There are {residents.length} player(s) at this tile.
             </div>
             <ul class="list-none">
-              {#each playersOnTile as player}
+              {#each residents as player}
                 <li>
                   <div class="flex border-2 border-dashed">
                     <Blockie address={player.id} class="m-1 h-6 w-6" />
@@ -174,14 +170,14 @@
       : 'border-gray-200'}"
   >
     <div class="absolute grid grid-cols-3">
-      {#each playersOnTile.slice(0, 9) as player}
+      {#each residents.slice(0, 9) as player}
         <Blockie address={player.id} class="m-1 h-6 w-6" />
       {/each}
     </div>
     <div class="flex w-24 h-24 text-5xl justify-center items-center">
-      {#if tile && tile.resourceId === '1'}
+      {#if tile && tile.item && tile.item.id === '1'}
         🌲
-      {:else if tile && tile.resourceId === '2'}
+      {:else if tile && tile.item && tile.item.id === '2'}
         ⛰️
       {:else}
         🏜️
