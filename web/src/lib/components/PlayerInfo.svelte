@@ -169,7 +169,7 @@
       <div>
         <div class="text-xl">Inventory</div>
         {#each currentPlayer.balances as balance}
-          {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id) > 0}
+          {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
             <div>
               {balance.item.symbol}{balance.item.name}: {Math.round(
                 getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
