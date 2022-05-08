@@ -30,14 +30,10 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         uint256 startTimestamp;
     }
 
+    mapping(int256 => mapping(int256 => uint256)) private resource;
     mapping(address => Player) private players;
     mapping(address => mapping(uint256 => uint256)) private skills;
-    mapping(int256 => mapping(int256 => uint256)) private resource;
-
-    // Mapping from token ID to account balances
     mapping(uint256 => mapping(address => uint256)) private _balances;
-
-    // Mapping from account to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
     event Move(address account, int256 startX, int256 startY, int256 endX, int256 endY);
@@ -139,8 +135,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
 
         address operator = _msgSender();
 
-        Player storage player = players[from];
-        _move(player.endX, player.endY, from);
+        _settle(from, id);
 
         uint256 fromBalance = _balances[id][from];
 
@@ -167,12 +162,11 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
 
         address operator = _msgSender();
 
-        Player storage player = players[from];
-        _move(player.endX, player.endY, from);
-
         for (uint256 i = 0; i < ids.length; ++i) {
             uint256 id = ids[i];
             uint256 amount = amounts[i];
+
+            _settle(from, id);
 
             uint256 fromBalance = _balances[id][from];
 
@@ -346,6 +340,46 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         player.startTimestamp = block.timestamp;
 
         emit Move(msg.sender, player.startX, player.startY, x, y);
+    }
+
+    function _settle(address account, uint256 id) internal {
+        if (id != 0) {
+            Player storage player = players[account];
+            uint256 tileItem = resource[player.endX][player.endY];
+
+            if (tileItem == id) {
+                int256 vX = player.endX - player.startX;
+                int256 vY = player.endY - player.startY;
+
+                uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
+                uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
+                if (distanceTravelled < distanceNeeded) {
+                    player.startX = player.startX + (vX * int256(distanceTravelled)) / int256(distanceNeeded);
+                    player.startY = player.startY + (vY * int256(distanceTravelled)) / int256(distanceNeeded);
+                } else {
+                    player.startX = player.endX;
+                    player.startY = player.endY;
+
+                    uint256 skillIncrease = (block.timestamp -
+                        (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) / SKILL_INCREASE_DIVISOR;
+
+                    _mint(
+                        account,
+                        tileItem,
+                        skillIncrease * skills[account][tileItem] + (skillIncrease * skillIncrease) / 2,
+                        ""
+                    );
+
+                    skills[account][tileItem] += skillIncrease;
+
+                    emit SetSkill(account, tileItem, skills[account][tileItem]);
+                }
+
+                player.startTimestamp = block.timestamp;
+
+                emit Move(msg.sender, player.startX, player.startY, player.endX, player.endY);
+            }
+        }
     }
 
     function mint(

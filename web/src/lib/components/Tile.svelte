@@ -180,19 +180,13 @@
                 <div class="text-xl">Your inventory</div>
                 {#each currentPlayer.balances as balance}
                   {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
-                    <div on:click={() => transfer(balance.item.id, '20')}>TWENTY</div>
-                    <div
-                      on:click={() =>
-                        transfer(
-                          balance.item.id,
-                          Math.floor(
-                            getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
-                          ).toString()
+                    <div class="flex">
+                      <div>
+                        {balance.item.symbol}{balance.item.name}: {Math.round(
+                          getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
                         )}
-                    >
-                      {balance.item.symbol}{balance.item.name}: {Math.round(
-                        getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
-                      )}
+                      </div>
+                      <div on:click={() => transfer(balance.item.id, '20')}>Transfer 20</div>
                     </div>
                   {/if}
                 {/each}
