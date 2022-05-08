@@ -2,10 +2,11 @@
 pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@unioncredit/v1-sdk/contracts/UnionVoucher.sol";
 
-contract UnionQuest is ERC1155, Ownable, UnionVoucher {
+contract UnionQuest is ERC1155, ERC1155Burnable, Ownable, UnionVoucher {
     uint256 constant SPEED_DIVISOR = 10;
     uint256 constant SKILL_INCREASE_DIVISOR = 10;
     uint256 constant TRUST_MODIFIER = 10000000000000000;
@@ -102,42 +103,22 @@ contract UnionQuest is ERC1155, Ownable, UnionVoucher {
         emit Move(msg.sender, player.startX, player.startY, x, y);
     }
 
-    function getPosition(address account) public view returns (int256, int256) {
-        Player storage player = players[account];
-
-        int256 vX = player.endX - player.startX;
-        int256 vY = player.endY - player.startY;
-
-        int256 distanceNeeded = sqrt(vX * vX + vY * vY);
-        int256 distanceTravelled = int256((block.timestamp - player.startTimestamp) / SPEED_DIVISOR);
-        if (distanceTravelled < distanceNeeded) {
-            return (
-                player.startX + (vX * distanceTravelled) / distanceNeeded,
-                player.startY + (vY * distanceTravelled) / distanceNeeded
-            );
-        }
-
-        return (player.endX, player.endY);
+    function mint(
+        address account,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    ) public {
+        _mint(account, id, amount, data);
     }
 
-    function getSkill(address account, uint256 resourceId) public view returns (uint256 skill) {
-        skill = skills[account][resourceId];
-
-        Player storage player = players[account];
-
-        uint256 tileResource = resource[player.endX][player.endY];
-        if (tileResource != 0 && tileResource == resourceId) {
-            int256 vX = player.endX - player.startX;
-            int256 vY = player.endY - player.startY;
-
-            uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
-            uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
-            if (distanceTravelled >= distanceNeeded) {
-                skill +=
-                    (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
-                    SKILL_INCREASE_DIVISOR;
-            }
-        }
+    function mintBatch(
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) public {
+        _mintBatch(to, ids, amounts, data);
     }
 
     function getTotalSkill(address account) public view returns (uint256 total) {

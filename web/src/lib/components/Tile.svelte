@@ -1,11 +1,12 @@
 <script lang="ts">
-  import {flow} from '$lib/blockchain/wallet';
-  import {distance, getPosition, getSkill, Player} from '$lib/player/player';
+  import {flow, wallet} from '$lib/blockchain/wallet';
+  import {distance, getBalanceStreamed, getPosition, getSkill, Player} from '$lib/player/player';
   import type {Players} from '$lib/player/players';
   import type {Tile} from '$lib/tile/tiles';
   import Modal from '$lib/components/styled/Modal.svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import {onMount} from 'svelte';
+  import {items} from '$lib/item/items';
 
   export let x: number;
   export let y: number;
@@ -22,6 +23,14 @@
 
   async function move(x, y) {
     await flow.execute((contracts) => contracts.UnionQuest.move(x, y));
+  }
+
+  async function burn(id: string, amount: string) {
+    await flow.execute((contracts) => contracts.UnionQuest.burn($wallet.address, id, amount, []));
+  }
+
+  async function mint(id: string, amount: string) {
+    await flow.execute((contracts) => contracts.UnionQuest.mint($wallet.address, id, amount, []));
   }
 
   let currentTimestamp = Date.now();
@@ -138,7 +147,40 @@
             {/if}
           {:else if tab === 2}
             <div class="text-xl">Shop</div>
-            <div>This tile doesn't have a shop.</div>
+            <div>
+              <div>
+                <div class="text-xl">Shop inventory</div>
+                {#if !$items.step}
+                  <div>Messages not loaded</div>
+                {:else if $items.error}
+                  <div>Error: {$items.error}</div>
+                {:else if $items.step === 'LOADING'}
+                  <div>Loading Map...</div>
+                {:else if !$items.data}
+                  <div>Something failed to load!</div>
+                {:else}
+                  {#each $items.data as item}
+                    <div on:click={() => mint(item.id, '100')}>
+                      {item.symbol}{item.name}: {100}
+                    </div>
+                  {/each}
+                {/if}
+              </div>
+            </div>
+            <div>
+              <div>
+                <div class="text-xl">Your inventory</div>
+                {#each currentPlayer.balances as balance}
+                  {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
+                    <div on:click={() => burn(balance.item.id, balance.value)}>
+                      {balance.item.symbol}{balance.item.name}: {Math.round(
+                        getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
+                      )}
+                    </div>
+                  {/if}
+                {/each}
+              </div>
+            </div>
           {:else}
             <div class="text-xl">Residents</div>
             <div class="italic">

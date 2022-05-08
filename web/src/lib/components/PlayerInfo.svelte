@@ -5,6 +5,7 @@
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
   import Modal from './styled/Modal.svelte';
+  import {map} from 'wonka';
 
   export let currentPlayer: Player | null;
 
@@ -88,7 +89,7 @@
       >🏦
     </button>
   </div>
-  <div class="border-2 border-gray-700 p-2">
+  <div class="border-2 border-gray-700 p-2 h-full">
     {#if tab === 0}
       <div>
         <div class="text-xl">Status</div>

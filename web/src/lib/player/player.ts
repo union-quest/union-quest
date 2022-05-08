@@ -10,8 +10,6 @@ import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Tile } from '$lib/tile/tiles';
 
-export type Item = { id: string, name: string, symbol: string }
-
 export type Player = {
   id: string;
   startTile: Tile;
