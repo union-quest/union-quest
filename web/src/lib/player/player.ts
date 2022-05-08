@@ -149,19 +149,20 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
     parseInt(player.endTile.y)
   );
 
-  const savedBalance = parseInt(resourceId === 1 ? player.woodSkill : player.stoneSkill);
+  const savedSkill = parseInt(resourceId === 1 ? player.woodSkill : player.stoneSkill);
 
   if (distanceTravelled >= distanceNeeded && resourceId.toString() === player.endTile.resourceId) {
-    return savedBalance +
+    return savedSkill +
       (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
   }
 
-  return savedBalance;
+  return savedSkill;
 }
 
 export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: number): number => {
   const savedBalance = resourceId === 1 ? parseInt(player.wood) : parseInt(player.stone);
+  const savedSkill = resourceId === 1 ? parseInt(player.woodSkill) : parseInt(player.stoneSkill);
 
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
   const distanceNeeded = distance(
@@ -175,7 +176,7 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
     const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
 
-    return savedBalance + ((2 * resourceId === 1 ? parseInt(player.woodSkill) : parseInt(player.stoneSkill) + skillIncrease + 1) * skillIncrease) / 2;
+    return savedBalance + skillIncrease * savedSkill + (skillIncrease * skillIncrease) / 2;
   }
 
   return savedBalance;

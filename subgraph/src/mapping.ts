@@ -94,3 +94,7 @@ export function handleUpdateTrust(event: LogUpdateTrust): void {
 
   borrower.save();
 }
+
+// TODO: check trust
+// Add item balances then refactor inventory UI
+// Add shops

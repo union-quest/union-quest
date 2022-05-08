@@ -85,7 +85,7 @@ contract UnionQuest is ERC1155, Ownable, UnionVoucher {
                 _mint(
                     msg.sender,
                     tileResource,
-                    ((2 * skills[msg.sender][tileResource] + skillIncrease + 1) * skillIncrease) / 2,
+                    skillIncrease * skills[msg.sender][tileResource] + (skillIncrease * skillIncrease) / 2,
                     ""
                 );
 
@@ -125,15 +125,18 @@ contract UnionQuest is ERC1155, Ownable, UnionVoucher {
 
         Player storage player = players[account];
 
-        int256 vX = player.endX - player.startX;
-        int256 vY = player.endY - player.startY;
+        uint256 tileResource = resource[player.endX][player.endY];
+        if (tileResource != 0 && tileResource == resourceId) {
+            int256 vX = player.endX - player.startX;
+            int256 vY = player.endY - player.startY;
 
-        uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
-        uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
-        if (distanceTravelled >= distanceNeeded && resource[player.endX][player.endY] != 0) {
-            skill +=
-                (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
-                SKILL_INCREASE_DIVISOR;
+            uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
+            uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
+            if (distanceTravelled >= distanceNeeded) {
+                skill +=
+                    (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
+                    SKILL_INCREASE_DIVISOR;
+            }
         }
     }
 
@@ -156,25 +159,25 @@ contract UnionQuest is ERC1155, Ownable, UnionVoucher {
         }
     }
 
-    function getStreamedBalance(address account, uint256 resourceId) public view returns (uint256 balance) {
+    function balanceOfStreamed(address account, uint256 id) external view returns (uint256 balance) {
         Player storage player = players[account];
 
-        balance = balanceOf(account, resourceId);
+        balance = balanceOf(account, id);
 
-        int256 vX = player.endX - player.startX;
-        int256 vY = player.endY - player.startY;
+        uint256 tileResource = resource[player.endX][player.endY];
+        if (tileResource != 0 && tileResource == id) {
+            int256 vX = player.endX - player.startX;
+            int256 vY = player.endY - player.startY;
 
-        uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
-        uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
-        if (
-            distanceTravelled >= distanceNeeded &&
-            resource[player.endX][player.endY] != 0 &&
-            resource[player.endX][player.endY] == resourceId
-        ) {
-            uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
-                SKILL_INCREASE_DIVISOR;
+            uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
+            uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
 
-            balance += ((2 * skills[msg.sender][resourceId] + skillIncrease + 1) * skillIncrease) / 2;
+            if (distanceTravelled >= distanceNeeded) {
+                uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
+                    SKILL_INCREASE_DIVISOR;
+
+                balance += skillIncrease * skills[msg.sender][tileResource] + (skillIncrease * skillIncrease) / 2;
+            }
         }
     }
 

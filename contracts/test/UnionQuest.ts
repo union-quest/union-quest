@@ -33,13 +33,13 @@ const testMove = async (time: number, targetX: number, targetY: number, users: a
 
 // FIXME, this assumes the player is at the tile
 const testGather = async (users: any, time: number, resourceId: number) => {
-  const skill = time / 10;
+  const skill = Math.floor(time / 10);
 
   expect(await users[0].UnionQuest.getSkill(users[0].address, resourceId))
     .to.deep.equal(BigNumber.from(skill));
 
-  expect(await users[0].UnionQuest.getStreamedBalance(users[0].address, resourceId))
-    .to.deep.equal(BigNumber.from((skill * (skill + 1)) / 2));
+  expect(await users[0].UnionQuest.balanceOfStreamed(users[0].address, resourceId))
+    .to.deep.equal(BigNumber.from(Math.floor(((skill * skill) / 2))));
 }
 
 describe('UnionQuest', function () {
@@ -147,8 +147,9 @@ describe('UnionQuest', function () {
     await testMove(80, 7, 4, users);
 
     const TIME_SPENT_MINING = 60;
-    for (let i = 10; i <= TIME_SPENT_MINING; i += 10) {
-      await ethers.provider.send("evm_increaseTime", [10])
+    const INCREMENT = 5;
+    for (let i = 5; i <= TIME_SPENT_MINING; i += INCREMENT) {
+      await ethers.provider.send("evm_increaseTime", [INCREMENT])
       await ethers.provider.send("evm_mine", [])
 
       await testGather(users, i, resourceId);
