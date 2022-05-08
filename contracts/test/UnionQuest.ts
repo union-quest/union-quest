@@ -48,7 +48,7 @@ describe('UnionQuest', function () {
 
     await expect(users[0].UnionQuest.move(2, 5))
       .to.emit(UnionQuest, 'Move')
-      .withArgs(users[0].address, 2, 5);
+      .withArgs(users[0].address, 0, 0, 2, 5);
 
     await testMove(0, 2, 5, users);
 
@@ -76,7 +76,7 @@ describe('UnionQuest', function () {
 
     await expect(users[0].UnionQuest.move(3, 7))
       .to.emit(UnionQuest, 'Move')
-      .withArgs(users[0].address, 3, 7);
+      .withArgs(users[0].address, 0, 0, 3, 7);
 
     await testMove(0, 3, 7, users);
 
@@ -98,7 +98,7 @@ describe('UnionQuest', function () {
 
     await expect(users[0].UnionQuest.move(3, -7))
       .to.emit(UnionQuest, 'Move')
-      .withArgs(users[0].address, 3, -7);
+      .withArgs(users[0].address, 0, 0, 3, -7);
 
     await testMove(0, 3, -7, users);
 
@@ -120,7 +120,7 @@ describe('UnionQuest', function () {
 
     await expect(users[0].UnionQuest.move(-10, -5))
       .to.emit(UnionQuest, 'Move')
-      .withArgs(users[0].address, -10, -5);
+      .withArgs(users[0].address, 0, 0, -10, -5);
 
     await testMove(0, -10, -5, users);
 
@@ -134,7 +134,7 @@ describe('UnionQuest', function () {
     const { users, UnionQuest } = await setup();
 
     const resourceId = 1;
-    await UnionQuest.setResource(7, 4, resourceId);
+    await UnionQuest.setResources([{ x: 7, y: 4, resourceId }]);
     await users[0].UnionQuest.move(7, 4);
 
     await testGather(users, 0, resourceId);
@@ -191,8 +191,8 @@ describe('UnionQuest', function () {
       .to.emit(UserManager, "LogUpdateTrust")
       .withArgs(UnionQuest.address, users[0].address, 0);
 
-    await UnionQuest.setResource(5, 5, 1);
-    await UnionQuest.setResource(8, 3, 2);
+    await UnionQuest.setResources([{ x: 5, y: 5, resourceId: 1 }]);
+    await UnionQuest.setResources([{ x: 8, y: 3, resourceId: 2 }]);
     await users[0].UnionQuest.move(5, 5);
 
     await testGather(users, 0, 1);
@@ -203,7 +203,7 @@ describe('UnionQuest', function () {
 
     await expect(UnionQuest.updateTrust(users[0].address))
       .to.emit(UserManager, "LogUpdateTrust")
-      .withArgs(UnionQuest.address, users[0].address, 3);
+      .withArgs(UnionQuest.address, users[0].address, "30000000000000000");
 
     await users[0].UnionQuest.move(8, 3);
 
@@ -214,6 +214,6 @@ describe('UnionQuest', function () {
 
     await expect(UnionQuest.updateTrust(users[0].address))
       .to.emit(UserManager, "LogUpdateTrust")
-      .withArgs(UnionQuest.address, users[0].address, 10);
+      .withArgs(UnionQuest.address, users[0].address, "100000000000000000");
   });
 });
