@@ -4,6 +4,7 @@ pragma solidity 0.8.4;
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -218,6 +219,24 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         _doSafeBatchTransferAcceptanceCheck(operator, address(0), to, ids, amounts, data);
     }
 
+    function _burn(
+        address from,
+        uint256 id,
+        uint256 amount
+    ) internal virtual {
+        require(from != address(0), "ERC1155: burn from the zero address");
+
+        address operator = _msgSender();
+
+        uint256 fromBalance = _balances[id][from];
+        require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
+        unchecked {
+            _balances[id][from] = fromBalance - amount;
+        }
+
+        emit TransferSingle(operator, from, address(0), id, amount);
+    }
+
     function _setApprovalForAll(
         address owner,
         address operator,
@@ -382,22 +401,22 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         }
     }
 
-    function mint(
+    function buy(
         address account,
         uint256 id,
-        uint256 amount,
-        bytes memory data
+        uint256 amount
     ) public {
-        _mint(account, id, amount, data);
+        IERC20(underlyingToken).transferFrom(msg.sender, address(this), 5);
+        _mint(account, id, amount, "");
     }
 
-    function mintBatch(
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
+    function sell(
+        address account,
+        uint256 id,
+        uint256 amount
     ) public {
-        _mintBatch(to, ids, amounts, data);
+        _burn(account, id, amount);
+        IERC20(underlyingToken).transfer(msg.sender, 5);
     }
 
     function getTotalSkill(address account) public view returns (uint256 total) {

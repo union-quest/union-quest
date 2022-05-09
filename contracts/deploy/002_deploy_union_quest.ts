@@ -5,20 +5,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy, execute } = hre.deployments;
 
-  const dai = await deploy('DAI', {
-    from: deployer,
-    args: [],
-    log: true,
-    autoMine: true,
-    skipIfAlreadyDeployed: false
-  });
-
   const unionToken = await deploy('UnionToken', {
     from: deployer,
     args: ["Union", "UNION", deployer, 1000000000000],
     log: true,
     autoMine: true,
     skipIfAlreadyDeployed: false
+  });
+
+  const dai = await deploy("FaucetERC20", {
+    from: deployer,
+    proxy: {
+      proxyContract: "UUPSProxy",
+      execute: {
+        methodName: "__FaucetERC20_init",
+        args: ["DAI", "DAI"]
+      }
+    },
+    log: true
   });
 
   const marketRegistry = await deploy("MarketRegistry", {

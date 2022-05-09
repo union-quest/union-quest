@@ -168,8 +168,11 @@
                   <div>Something failed to load!</div>
                 {:else}
                   {#each $items.data as item}
-                    <div on:click={() => mint(item.id, '100')}>
-                      {item.symbol}{item.name}: {100}
+                    <div class="flex">
+                      <div>
+                        {item.symbol}{item.name}: {100}
+                      </div>
+                      <div on:click={() => transfer(item.id, '20')}>Buy 20</div>
                     </div>
                   {/each}
                 {/if}
@@ -187,7 +190,7 @@
                             getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
                           )}
                         </div>
-                        <div on:click={() => transfer(balance.item.id, '300')}>Transfer 20</div>
+                        <div on:click={() => transfer(balance.item.id, '20')}>Sell 20</div>
                       </div>
                     {/if}
                   {/each}
