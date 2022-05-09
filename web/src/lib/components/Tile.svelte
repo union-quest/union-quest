@@ -157,7 +157,7 @@
             <div class="text-xl">Shop</div>
             <div>
               <div>
-                <div class="text-xl">Shop inventory</div>
+                <div class="text-lg">Shop inventory</div>
                 {#if !$items.step}
                   <div>Messages not loaded</div>
                 {:else if $items.error}
@@ -175,23 +175,25 @@
                 {/if}
               </div>
             </div>
-            <div>
+            {#if currentPlayer}
               <div>
-                <div class="text-xl">Your inventory</div>
-                {#each currentPlayer.balances as balance}
-                  {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
-                    <div class="flex">
-                      <div>
-                        {balance.item.symbol}{balance.item.name}: {Math.round(
-                          getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
-                        )}
+                <div>
+                  <div class="text-lg">Your inventory</div>
+                  {#each currentPlayer.balances as balance}
+                    {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
+                      <div class="flex">
+                        <div>
+                          {balance.item.symbol}{balance.item.name}: {Math.round(
+                            getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
+                          )}
+                        </div>
+                        <div on:click={() => transfer(balance.item.id, '300')}>Transfer 20</div>
                       </div>
-                      <div on:click={() => transfer(balance.item.id, '20')}>Transfer 20</div>
-                    </div>
-                  {/if}
-                {/each}
+                    {/if}
+                  {/each}
+                </div>
               </div>
-            </div>
+            {/if}
           {:else}
             <div class="text-xl">Residents</div>
             <div class="italic">
