@@ -8,9 +8,10 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
+import type { Item } from '$lib/item/items';
 
-export type Item = { id: string, name: string, symbol: string }
-type Items = Item[];
+export type Recipe = { id: string, inputs: Item[], output: Item }
+type Recipes = Recipe[];
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
@@ -40,26 +41,34 @@ type TransactionRecord = {
   events?: unknown[]; // TODO
 };
 
-class ItemsStore implements QueryStore<Items> {
-  private queryStore: QueryStore<Items>;
-  private store: Readable<QueryState<Items>>;
+class RecipesStore implements QueryStore<Recipes> {
+  private queryStore: QueryStore<Recipes>;
+  private store: Readable<QueryState<Recipes>>;
   constructor(endpoint: EndPoint, private transactions: TransactionStore) {
     this.queryStore = new HookedQueryStore(
       endpoint,
       `
     query {
-      items(where: {id_in: [3, 4]}) {
+      recipes {
         id
-        name
-        symbol
+        inputs {
+          id
+          name
+          symbol
+        }
+        output {
+          id
+          name
+          symbol
+        }
       }
     }`,
       chainTempo,
-      { path: 'items' }
+      { path: 'recipes' }
     );
     this.store = derived([this.queryStore, this.transactions], (values) => this.update(values));
   }
-  private update([$query]: [QueryState<Items>, TransactionRecord[]]): QueryState<Items> {
+  private update([$query]: [QueryState<Recipes>, TransactionRecord[]]): QueryState<Recipes> {
     if (!$query.data) {
       return $query;
     } else {
@@ -77,11 +86,11 @@ class ItemsStore implements QueryStore<Items> {
   }
 
   subscribe(
-    run: Subscriber<QueryState<Items>>,
-    invalidate?: Invalidator<QueryState<Items>> | undefined
+    run: Subscriber<QueryState<Recipes>>,
+    invalidate?: Invalidator<QueryState<Recipes>> | undefined
   ): Unsubscriber {
     return this.store.subscribe(run, invalidate);
   }
 }
 
-export const items = new ItemsStore(SUBGRAPH_ENDPOINT, transactions);
+export const recipes = new RecipesStore(SUBGRAPH_ENDPOINT, transactions);

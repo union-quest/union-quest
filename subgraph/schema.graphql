@@ -4,6 +4,12 @@ type Item @entity {
   symbol: String!
 }
 
+type Recipe @entity {
+  id: ID!
+  inputs: [Item!]!
+  output: Item!
+}
+
 type Tile @entity {
   id: ID!
   x: BigInt!

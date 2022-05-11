@@ -15,7 +15,21 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
 
     uint256 constant SPEED_DIVISOR = 10;
     uint256 constant SKILL_INCREASE_DIVISOR = 10;
-    uint256 constant TRUST_MODIFIER = 10000000000000000;
+    uint256 constant TRUST_MODIFIER = 0.01 ether;
+    uint256 constant ITEM_PRICE = 5 ether;
+    uint256 constant MIN_SKILL = 1;
+    uint256 constant MAX_SKILL = 3;
+    uint256 constant CRAFT_AMOUNT = 100;
+
+    struct ItemType {
+        string name;
+        string symbol;
+    }
+
+    struct Recipe {
+        uint256[] inputs;
+        uint256 output;
+    }
 
     struct Tile {
         int256 x;
@@ -31,13 +45,18 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         uint256 startTimestamp;
     }
 
+    ItemType[] private itemTypes;
+    Recipe[] private recipes;
+
     mapping(int256 => mapping(int256 => uint256)) private resource;
     mapping(address => Player) private players;
     mapping(address => mapping(uint256 => uint256)) private skills;
     mapping(uint256 => mapping(address => uint256)) private _balances;
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    event Move(address account, int256 startX, int256 startY, int256 endX, int256 endY);
+    event AddItemType(uint256 _index, ItemType _itemType);
+    event AddRecipe(uint256 _index, Recipe _recipe);
+    event Move(address account, int256 x, int256 y);
     event SetResource(uint256 resourceId, int256 x, int256 y);
     event SetSkill(address account, uint256 skill, uint256 amount);
 
@@ -66,7 +85,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
                 uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
                     SKILL_INCREASE_DIVISOR;
 
-                balance += skillIncrease * skills[msg.sender][tileItem] + (skillIncrease * skillIncrease) / 2;
+                balance += skillIncrease * skills[_msgSender()][tileItem] + (skillIncrease * skillIncrease) / 2;
             }
         }
     }
@@ -199,33 +218,11 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         _doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
     }
 
-    function _mintBatch(
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) internal virtual {
-        require(to != address(0), "ERC1155: mint to the zero address");
-        require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
-
-        address operator = _msgSender();
-
-        for (uint256 i = 0; i < ids.length; i++) {
-            _balances[ids[i]][to] += amounts[i];
-        }
-
-        emit TransferBatch(operator, address(0), to, ids, amounts);
-
-        _doSafeBatchTransferAcceptanceCheck(operator, address(0), to, ids, amounts, data);
-    }
-
     function _burn(
         address from,
         uint256 id,
         uint256 amount
     ) internal virtual {
-        require(from != address(0), "ERC1155: burn from the zero address");
-
         address operator = _msgSender();
 
         uint256 fromBalance = _balances[id][from];
@@ -291,6 +288,20 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         }
     }
 
+    function addItemTypes(ItemType[] memory _itemTypes) external onlyOwner {
+        for (uint256 i; i < _itemTypes.length; i++) {
+            itemTypes.push(_itemTypes[i]);
+            emit AddItemType(itemTypes.length - 1, _itemTypes[i]);
+        }
+    }
+
+    function addRecipes(Recipe[] memory _recipes) external onlyOwner {
+        for (uint256 i; i < _recipes.length; i++) {
+            recipes.push(_recipes[i]);
+            emit AddRecipe(recipes.length - 1, _recipes[i]);
+        }
+    }
+
     function stake(uint256 amount) external onlyOwner {
         _stake(amount);
     }
@@ -310,11 +321,31 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
     }
 
     function updateTrust(address borrower_) external {
-        _updateTrust(borrower_, getTotalSkill(borrower_) * TRUST_MODIFIER);
+        uint256 totalSkill;
+        for (uint256 i = MIN_SKILL; i < MAX_SKILL; i++) {
+            totalSkill += skills[borrower_][i];
+        }
+
+        Player storage player = players[borrower_];
+        uint256 tileItem = resource[player.endX][player.endY];
+        if (tileItem != 0) {
+            int256 vX = player.endX - player.startX;
+            int256 vY = player.endY - player.startY;
+
+            uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
+            uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
+            if (distanceTravelled >= distanceNeeded) {
+                totalSkill +=
+                    (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
+                    SKILL_INCREASE_DIVISOR;
+            }
+        }
+
+        _updateTrust(borrower_, totalSkill * TRUST_MODIFIER);
     }
 
     function move(int256 x, int256 y) external {
-        _move(x, y, msg.sender);
+        _move(x, y, _msgSender());
     }
 
     function _move(
@@ -358,7 +389,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         player.endY = y;
         player.startTimestamp = block.timestamp;
 
-        emit Move(msg.sender, player.startX, player.startY, x, y);
+        emit Move(_msgSender(), x, y);
     }
 
     function _settle(address account, uint256 id) internal {
@@ -396,46 +427,43 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
 
                 player.startTimestamp = block.timestamp;
 
-                emit Move(msg.sender, player.startX, player.startY, player.endX, player.endY);
+                emit Move(_msgSender(), player.endX, player.endY);
             }
         }
     }
 
     function buy(
-        address account,
+        address to,
         uint256 id,
         uint256 amount
     ) public {
-        IERC20(underlyingToken).transferFrom(msg.sender, address(this), 5);
-        _mint(account, id, amount, "");
+        IERC20(underlyingToken).transferFrom(_msgSender(), address(this), ITEM_PRICE);
+        _mint(to, id, amount, "");
     }
 
     function sell(
-        address account,
+        address from,
         uint256 id,
         uint256 amount
     ) public {
-        _burn(account, id, amount);
-        IERC20(underlyingToken).transfer(msg.sender, 5);
+        require(
+            from == _msgSender() || isApprovedForAll(from, _msgSender()),
+            "ERC1155: caller is not owner nor approved"
+        );
+
+        _burn(from, id, amount);
+        IERC20(underlyingToken).transfer(_msgSender(), ITEM_PRICE);
     }
 
-    function getTotalSkill(address account) public view returns (uint256 total) {
-        Player storage player = players[account];
-        for (uint256 i = 1; i < 3; i++) {
-            total += skills[account][i];
-            if (i == resource[player.endX][player.endY]) {
-                int256 vX = player.endX - player.startX;
-                int256 vY = player.endY - player.startY;
+    function craft(uint256 recipeId) public {
+        Recipe storage recipe = recipes[recipeId];
 
-                uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
-                uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
-                if (distanceTravelled >= distanceNeeded) {
-                    total +=
-                        (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
-                        SKILL_INCREASE_DIVISOR;
-                }
-            }
+        for (uint256 i; i < recipe.inputs.length; i++) {
+            _settle(_msgSender(), recipe.inputs[i]);
+            _burn(_msgSender(), recipe.inputs[i], CRAFT_AMOUNT);
         }
+
+        _mint(_msgSender(), recipe.output, 1, "");
     }
 
     function sqrt(int256 x) private pure returns (int256 y) {

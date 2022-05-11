@@ -1,8 +1,8 @@
 /* eslint-disable prefer-const */
-import { Move, SetResource, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
+import { AddItemType, AddRecipe, Move, SetResource, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Balance, Player, Item, Tile } from '../generated/schema';
-import { BigInt, Bytes } from '@graphprotocol/graph-ts';
+import { Balance, Player, Item, Recipe, Tile } from '../generated/schema';
+import { BigInt, Bytes, } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
@@ -40,20 +40,23 @@ export function getOrCreateTile(
   return entity;
 }
 
-
 export function getOrCreateItem(
   id: string
 ): Item {
   let entity = Item.load(id);
   if (!entity) {
     entity = new Item(id);
-    if (id == "1") {
-      entity.name = "Wood";
-      entity.symbol = "🪵";
-    } else {
-      entity.name = "Stone";
-      entity.symbol = "🪨";
-    }
+  }
+
+  return entity;
+}
+
+export function getOrCreateRecipe(
+  id: string
+): Recipe {
+  let entity = Recipe.load(id);
+  if (!entity) {
+    entity = new Recipe(id);
   }
 
   return entity;
@@ -73,19 +76,24 @@ export function getOrCreateBalance(
   return entity;
 }
 
-export function handleMove(event: Move): void {
-  let entity = getOrCreatePlayer(event.params.account.toHexString());
-  let startTile = getOrCreateTile(event.params.startX, event.params.startY);
-  let endTile = getOrCreateTile(event.params.endX, event.params.endY);
+export function handleAddItemType(event: AddItemType): void {
+  let entity = getOrCreateItem(event.params._index.toString());
 
-  entity.startTile = event.params.startX.toString() + "_" + event.params.startY.toString();
-  entity.endTile = event.params.endX.toString() + "_" + event.params.endY.toString();
-  entity.startTimestamp = event.block.timestamp;
+  entity.name = event.params._itemType.name;
+  entity.symbol = event.params._itemType.symbol;
 
   entity.save();
-  startTile.save();
-  endTile.save();
 }
+
+export function handleAddRecipe(event: AddRecipe): void {
+  let entity = getOrCreateRecipe(event.params._index.toString());
+
+  entity.inputs = [event.params._recipe.inputs[0].toString(), event.params._recipe.inputs[1].toString()]
+  entity.output = event.params._recipe.output.toString();
+
+  entity.save();
+}
+
 
 export function handleSetResource(event: SetResource): void {
   let entity = getOrCreateTile(event.params.x, event.params.y);
@@ -97,6 +105,18 @@ export function handleSetResource(event: SetResource): void {
 
   entity.save();
   item.save();
+}
+
+export function handleMove(event: Move): void {
+  let entity = getOrCreatePlayer(event.params.account.toHexString());
+  let endTile = getOrCreateTile(event.params.x, event.params.y);
+
+  entity.startTile = entity.endTile;
+  entity.endTile = event.params.x.toString() + "_" + event.params.y.toString();
+  entity.startTimestamp = event.block.timestamp;
+
+  entity.save();
+  endTile.save();
 }
 
 export function handleSetSkill(event: SetSkill): void {
@@ -140,12 +160,7 @@ export function handleTransferSingle(event: TransferSingle): void {
 export function handleUpdateTrust(event: LogUpdateTrust): void {
   let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
 
-  // check staker event.params.staker.toHexString() === UnionQuest contract;
   borrower.vouch = event.params.trustAmount;
 
   borrower.save();
 }
-
-// TODO: check trust
-// refactor inventory UI
-// Add shops

@@ -20,7 +20,11 @@ dataSources:
         - name: UnionQuest
           file: ./abis/UnionQuest.json
       eventHandlers:
-        - event: Move(address,int256,int256,int256,int256)
+        - event: AddItemType(uint256,(string,string))
+          handler: handleAddItemType
+        - event: AddRecipe(uint256,(uint256[],uint256))
+          handler: handleAddRecipe
+        - event: Move(address,int256,int256)
           handler: handleMove
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle

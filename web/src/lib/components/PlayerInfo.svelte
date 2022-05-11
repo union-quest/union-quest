@@ -1,13 +1,27 @@
 <script lang="ts">
-  import {balance, chain, flow, wallet} from '$lib/blockchain/wallet';
+  import {chain, flow, wallet} from '$lib/blockchain/wallet';
   import {distance, getBalanceStreamed, getPosition, getSkill, Player} from '$lib/player/player';
   import {onMount} from 'svelte';
+  import {recipes} from '$lib/recipe/recipes';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
   import Modal from './styled/Modal.svelte';
-  import {map} from 'wonka';
 
   export let currentPlayer: Player | null;
+
+  async function craft() {
+    await flow.execute((contracts) => contracts.UnionQuest.craft(0));
+  }
+
+  async function mint() {
+    await flow.execute((contracts) => contracts.FaucetERC20.mint($wallet.address, '10000000000000000000'));
+  }
+
+  async function approve() {
+    await flow.execute((contracts) =>
+      contracts.FaucetERC20.approve(contracts.UnionQuest.address, '100000000000000000')
+    );
+  }
 
   let tab = 0;
   let showModal = false;
@@ -67,27 +81,14 @@
     <Blockie address={$wallet.address} class="m-1 h-6 w-6" />
   </div>
   <div class="flex text-2xl justify-start">
-    <button
-      class="w-8 border-2 border-gray-700 {tab === 0 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 0)}
-    >
-      🎮
-    </button>
-    <button
-      class="w-8 border-2 border-gray-700 {tab === 1 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 1)}
-      >📊
-    </button>
-    <button
-      class="w-8 border-2 border-gray-700 {tab === 2 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 2)}
-      >🎒
-    </button>
-    <button
-      class="w-8 border-2 border-gray-700 {tab === 3 ? 'bg-red-700' : 'bg-neutral-400'}"
-      on:click={() => (tab = 3)}
-      >🏦
-    </button>
+    {#each ['🎮', '📊', '🎒', '🛠️', '🏦', '⚙️'] as icon, i}
+      <button
+        class="w-12 border-2 border-gray-700 {tab === i ? 'bg-red-700' : 'bg-neutral-400'}"
+        on:click={() => (tab = i)}
+      >
+        {icon}
+      </button>
+    {/each}
   </div>
   <div class="border-2 border-gray-700 p-2 h-full">
     {#if tab === 0}
@@ -179,7 +180,7 @@
           {/if}
         {/each}
       </div>
-    {:else}
+    {:else if tab === 4}
       <div>
         <div class="text-xl">
           Vouching rewards
@@ -205,6 +206,66 @@
             </div>
           </div>
           <button class="border-2 bg-yellow-400 border-gray-500 p-1" on:click={updateTrust}>Update</button>
+        </div>
+      </div>
+    {:else if tab === 3}
+      <div>
+        <div class="text-xl">
+          Crafting
+          <button class="border-2 border-gray-700">ℹ️</button>
+        </div>
+
+        {#if !$recipes.step}
+          <div>Messages not loaded</div>
+        {:else if $recipes.error}
+          <div>Error: {$recipes.error}</div>
+        {:else if $recipes.step === 'LOADING'}
+          <div>Loading Map...</div>
+        {:else if !$recipes.data}
+          <div>Something failed to load!</div>
+        {:else}
+          {#each $recipes.data as recipe}
+            <div class="flex flex-row justify-center">
+              <div class="border-2 m-1">
+                🪵 {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '1'))}
+              </div>
+              <div class="border-2 m-1">
+                🪨 {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '2'))}
+              </div>
+            </div>
+            <div class="flex flex-row justify-around">
+              <div>
+                {#each recipe.inputs as input}
+                  <div class="border-2">
+                    <div class="border-2 bg-gray-300">100</div>
+                    <div class="border-2 text-xl">{input.symbol}</div>
+                  </div>
+                {/each}
+              </div>
+              <div>➡️</div>
+              <div>
+                <div class="border-2">
+                  <div class="border-2 text-2xl">{recipe.output.symbol}</div>
+                  <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
+                </div>
+                <button
+                  class="border-2 {getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '1') > 100 &&
+                  getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '2') > 100
+                    ? 'bg-green-400'
+                    : 'bg-red-400'} border-gray-500 p-1 m-2"
+                  on:click={craft}>Craft</button
+                >
+              </div>
+            </div>
+          {/each}
+        {/if}
+      </div>
+    {:else}
+      <div>
+        <div class="text-xl">Settings</div>
+        <div>
+          <div on:click={mint} class="border-2">Mint free testnet DAI</div>
+          <div on:click={approve} class="border-2">Set DAI allowance for shops</div>
         </div>
       </div>
     {/if}

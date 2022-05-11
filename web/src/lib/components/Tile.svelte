@@ -7,6 +7,7 @@
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import {onMount} from 'svelte';
   import {items} from '$lib/item/items';
+  import Shop from './Shop.svelte';
 
   export let x: number;
   export let y: number;
@@ -23,22 +24,6 @@
 
   async function move(x, y) {
     await flow.execute((contracts) => contracts.UnionQuest.move(x, y));
-  }
-
-  async function transfer(id: string, amount: string) {
-    await flow.execute((contracts) =>
-      contracts.UnionQuest.safeTransferFrom(
-        $wallet.address,
-        '0xb19BC46C52A1352A071fe2389503B6FE1ABD50Ff',
-        id,
-        amount,
-        []
-      )
-    );
-  }
-
-  async function mint(id: string, amount: string) {
-    await flow.execute((contracts) => contracts.UnionQuest.mint($wallet.address, id, amount, []));
   }
 
   let currentTimestamp = Date.now();
@@ -71,32 +56,16 @@
     <Modal title={`Tile (${x},${y})`} on:close={() => (showModal = false)} closeButton={true}>
       <div class="flex flex-col border-2 border-gray-400 h-64 text-center">
         <div class="flex text-4xl justify-start">
-          <button
-            class="w-12 border-2 border-gray-700 {tab === 0 ? 'bg-red-700' : 'bg-neutral-400'}"
-            on:click={() => (tab = 0)}
-          >
-            🧭
-          </button>
-          <button
-            class="w-12 border-2 border-gray-700 {tab === 1 ? 'bg-red-700' : 'bg-neutral-400'}"
-            on:click={() => (tab = 1)}
-          >
-            📜
-          </button>
-          <button
-            class="w-12 border-2 border-gray-700 {tab === 2 ? 'bg-red-700' : 'bg-neutral-400'}"
-            on:click={() => (tab = 2)}
-          >
-            🏪
-          </button>
-          <button
-            class="w-12 border-2 border-gray-700 {tab === 3 ? 'bg-red-700' : 'bg-neutral-400'}"
-            on:click={() => (tab = 3)}
-          >
-            👪
-          </button>
+          {#each ['🧭', '🏪', '👪', '📜'] as icon, i}
+            <button
+              class="w-12 border-2 border-gray-700 {tab === i ? 'bg-red-700' : 'bg-neutral-400'}"
+              on:click={() => (tab = i)}
+            >
+              {icon}
+            </button>
+          {/each}
         </div>
-        <div class="p-2 border-2 border-gray-400">
+        <div class="p-2 border-2 border-gray-400 h-full">
           {#if tab === 0}
             <div class="text-xl">Travel</div>
             {#if currentPlayer}
@@ -144,7 +113,7 @@
             {:else}
               <div>You need to join the game first!</div>
             {/if}
-          {:else if tab === 1}
+          {:else if tab === 3}
             <div class="text-xl">Lore</div>
             {#if tile && tile.item && tile.item.id === '1'}
               This tile is a forest.
@@ -153,65 +122,32 @@
             {:else}
               This tile is an empty desert.
             {/if}
+          {:else if tab === 1}
+            <Shop {currentPlayer} />
           {:else if tab === 2}
-            <div class="text-xl">Shop</div>
-            <div>
-              <div>
-                <div class="text-lg">Shop inventory</div>
-                {#if !$items.step}
-                  <div>Messages not loaded</div>
-                {:else if $items.error}
-                  <div>Error: {$items.error}</div>
-                {:else if $items.step === 'LOADING'}
-                  <div>Loading Map...</div>
-                {:else if !$items.data}
-                  <div>Something failed to load!</div>
-                {:else}
-                  {#each $items.data as item}
-                    <div class="flex">
-                      <div>
-                        {item.symbol}{item.name}: {100}
-                      </div>
-                      <div on:click={() => transfer(item.id, '20')}>Buy 20</div>
-                    </div>
-                  {/each}
-                {/if}
-              </div>
-            </div>
-            {#if currentPlayer}
-              <div>
-                <div>
-                  <div class="text-lg">Your inventory</div>
-                  {#each currentPlayer.balances as balance}
-                    {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
-                      <div class="flex">
-                        <div>
-                          {balance.item.symbol}{balance.item.name}: {Math.round(
-                            getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
-                          )}
-                        </div>
-                        <div on:click={() => transfer(balance.item.id, '20')}>Sell 20</div>
-                      </div>
-                    {/if}
-                  {/each}
-                </div>
-              </div>
-            {/if}
-          {:else}
             <div class="text-xl">Residents</div>
             <div class="italic">
               There are {residents.length} player(s) at this tile.
             </div>
             <ul class="list-none">
               {#each residents as player}
-                <li>
-                  <div class="flex border-2 border-dashed">
-                    <Blockie address={player.id} class="m-1 h-6 w-6" />
-                    <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${player.id}`}>
-                      {player.id.slice(0, 4)}...{player.id.slice(-4)}
-                    </a>
-                  </div>
-                </li>
+                <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${player.id}`}>
+                  <li class="flex justify-between w-full border-2 border-dashed">
+                    <div class="flex">
+                      <Blockie address={player.id} class="m-1 h-6 w-6" />
+                      <div>
+                        {player.id.slice(0, 4)}...{player.id.slice(-4)}
+                      </div>
+                    </div>
+                    <div>
+                      <div class="inline font-medium">Total level:</div>
+                      {Math.round(
+                        getSkill(currentPlayer, currentTimestamp / 1000, 1) +
+                          getSkill(currentPlayer, currentTimestamp / 1000, 2)
+                      )}
+                    </div>
+                  </li>
+                </a>
               {/each}
             </ul>
           {/if}
