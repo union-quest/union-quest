@@ -9,11 +9,11 @@
   export let currentPlayer: Player | null;
 
   async function buy(id: string, amount: string) {
-    await flow.execute((contracts) => contracts.UnionQuest.buy($wallet.address, id, amount));
+    await flow.execute((contracts) => contracts.UnionQuest.buy(id, amount));
   }
 
   async function sell(id: string, amount: string) {
-    await flow.execute((contracts) => contracts.UnionQuest.sell($wallet.address, id, amount));
+    await flow.execute((contracts) => contracts.UnionQuest.sell(id, amount));
   }
 
   let showModal = false;
@@ -40,12 +40,12 @@
   {#if currentPlayer}
     <div class="flex flex-row justify-around">
       <div class="border-2 w-full">
-        <div class="text-lg">MY INVENTORY</div>
+        <div class="text-lg">MY EQUIPMENT</div>
         <div>
           {#each currentPlayer.balances as balance}
-            {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
+            {#if ['3', '4'].includes(balance.item.id) && Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
               <div class="flex">
-                <div on:click={() => sell(balance.item.id, '20')}>
+                <div on:click={() => sell(balance.item.id, '1')}>
                   {balance.item.symbol}{balance.item.name} ({Math.round(
                     getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
                   )})
@@ -73,7 +73,7 @@
           {:else}
             {#each $items.data as item}
               <div class="flex">
-                <div on:click={() => buy(item.id, '20')}>
+                <div on:click={() => buy(item.id, '1')}>
                   {item.symbol}{item.name} (100)
                 </div>
               </div>

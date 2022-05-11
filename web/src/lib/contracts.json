@@ -7004,11 +7004,6 @@
         {
           "inputs": [
             {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
               "internalType": "uint256",
               "name": "id",
               "type": "uint256"
@@ -7219,11 +7214,6 @@
         },
         {
           "inputs": [
-            {
-              "internalType": "address",
-              "name": "from",
-              "type": "address"
-            },
             {
               "internalType": "uint256",
               "name": "id",

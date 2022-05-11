@@ -432,30 +432,21 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         }
     }
 
-    function buy(
-        address to,
-        uint256 id,
-        uint256 amount
-    ) public {
-        IERC20(underlyingToken).transferFrom(_msgSender(), address(this), ITEM_PRICE);
-        _mint(to, id, amount, "");
+    function buy(uint256 id, uint256 amount) external {
+        require(id == 3 || id == 4, "Item is not valid");
+
+        IERC20(underlyingToken).transferFrom(_msgSender(), address(this), amount * ITEM_PRICE);
+        _mint(_msgSender(), id, amount, "");
     }
 
-    function sell(
-        address from,
-        uint256 id,
-        uint256 amount
-    ) public {
-        require(
-            from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
+    function sell(uint256 id, uint256 amount) external {
+        require(id == 3 || id == 4, "Item is not valid");
 
-        _burn(from, id, amount);
-        IERC20(underlyingToken).transfer(_msgSender(), ITEM_PRICE);
+        _burn(_msgSender(), id, amount);
+        IERC20(underlyingToken).transfer(_msgSender(), amount * ITEM_PRICE);
     }
 
-    function craft(uint256 recipeId) public {
+    function craft(uint256 recipeId) external {
         Recipe storage recipe = recipes[recipeId];
 
         for (uint256 i; i < recipe.inputs.length; i++) {

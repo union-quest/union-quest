@@ -14,12 +14,12 @@
   }
 
   async function mint() {
-    await flow.execute((contracts) => contracts.FaucetERC20.mint($wallet.address, '10000000000000000000'));
+    await flow.execute((contracts) => contracts.FaucetERC20.mint($wallet.address, '100000000000000000000000000000000'));
   }
 
   async function approve() {
     await flow.execute((contracts) =>
-      contracts.FaucetERC20.approve(contracts.UnionQuest.address, '100000000000000000')
+      contracts.FaucetERC20.approve(contracts.UnionQuest.address, '100000000000000000000000000000000')
     );
   }
 
