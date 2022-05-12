@@ -136,8 +136,7 @@
                     <div>
                       <div class="inline font-medium">Total level:</div>
                       {Math.round(
-                        getSkill(currentPlayer, currentTimestamp / 1000, 1) +
-                          getSkill(currentPlayer, currentTimestamp / 1000, 2)
+                        getSkill(player, currentTimestamp / 1000, 1) + getSkill(player, currentTimestamp / 1000, 2)
                       )}
                     </div>
                   </li>
