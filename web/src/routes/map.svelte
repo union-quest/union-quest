@@ -18,7 +18,6 @@
   />
 </symbol>
 <WalletAccess>
-  <!-- <LeCanvas /> -->
   <section class="py-8 px-4">
     {#if !$tiles.step}
       <div>Messages not loaded</div>
@@ -29,6 +28,7 @@
     {:else if !$tiles.data || !$players.data}
       <div>Something failed to load!</div>
     {:else}
+      <!-- <LeCanvas tiles={$tiles.data} /> -->
       <div class="relative">
         <div class="flex justify-center">
           <div class="grid grid-cols-12 w-fit h-fit">
