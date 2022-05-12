@@ -18,31 +18,53 @@
   />
 </symbol>
 <WalletAccess>
-  {#if !$tiles.step || !$players.step}
-    <div>Messages not loaded</div>
-  {:else if $tiles.error || $players.error}
-    <div>Error: {$tiles.error}</div>
-  {:else if $tiles.step === 'LOADING' || $players.step === 'LOADING'}
-    <div>Loading Map...</div>
-  {:else if !$tiles.data || !$players.data}
-    <div>Something failed to load!</div>
-  {:else}
-    <LeCanvas tiles={$tiles.data} />
-    <div class="fixed bottom-0 right-0 border-8 border-double border-gray-700 bg-gray-300 p-1">
-      {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
-        <PlayerInfo
-          currentPlayer={$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
-        />
-      {:else}
-        <button
-          class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
-    text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
-          type="button"
-          on:click={() => join()}>Click here to join the game!</button
-        >
-      {/if}
-    </div>
-  {/if}
+  <section class="py-8 px-4">
+    {#if !$tiles.step}
+      <div>Messages not loaded</div>
+    {:else if $tiles.error}
+      <div>Error: {$tiles.error}</div>
+    {:else if $tiles.step === 'LOADING'}
+      <div>Loading Map...</div>
+    {:else if !$tiles.data || !$players.data}
+      <div>Something failed to load!</div>
+    {:else}
+      <div class="relative">
+        <div class="flex justify-center">
+          <div class="grid grid-cols-12 w-fit h-fit">
+            {#each [0, 1, 2, 3, 4, 5, 6] as x}
+              {#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as y}
+                <Tile
+                  {x}
+                  {y}
+                  tile={$tiles.data.find((v) => v.x === x.toString() && v.y === y.toString())}
+                  players={$players.data}
+                  currentPlayer={$players.data.find((p) =>
+                    $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+                  )}
+                />
+              {/each}
+            {/each}
+          </div>
+        </div>
+        <div class="fixed bottom-0 right-0 border-8 border-double border-gray-700 bg-gray-300 p-1">
+          {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
+            <PlayerInfo
+              currentPlayer={$players.data.find((p) =>
+                $wallet.address ? p.id === $wallet.address.toLowerCase() : false
+              )}
+            />
+          {:else}
+            <button
+              class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
+        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+              type="button"
+              on:click={() => join()}>Click here to join the game!</button
+            >
+          {/if}
+        </div>
+      </div>
+    {/if}
+  </section>
 </WalletAccess>
 
 <style>
