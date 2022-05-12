@@ -23,18 +23,23 @@
     let ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, 1000000, 1000000);
 
+    ctx.font = '1px Arial';
     for (let i = 0; i < 50; i++) {
       for (let j = 0; j < 50; j++) {
         let tile = tiles.find((t) => t.x === i.toString() && t.y === j.toString());
         if (tile && tile.item && tile.item.id === '1') {
           ctx.fillStyle = '#00aa77';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.fillText('🌲', i, j + 1);
         } else if (tile && tile.item && tile.item.id === '2') {
           ctx.fillStyle = '#770000';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.fillText('⛰️', i, j + 1);
         } else {
           ctx.fillStyle = '#00FF77';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.fillText('🏜️', i, j + 1);
         }
-
-        ctx.fillRect(i, j, 1, 1);
       }
     }
     ctx.lineWidth = 0.1;
@@ -54,8 +59,8 @@
   function getMouseMove(canvas, event) {
     let rect = canvas.getBoundingClientRect();
 
-    highX = Math.round((event.clientX - rect.left) / cameraZoom);
-    highY = Math.round((event.clientY - rect.top) / cameraZoom);
+    highX = Math.floor((event.clientX - rect.left) / cameraZoom);
+    highY = Math.floor((event.clientY - rect.top) / cameraZoom);
 
     draw();
   }

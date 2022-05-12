@@ -40,7 +40,7 @@
 </script>
 
 <div>
-  <TileModal {x} {y} {tile} {players} {currentPlayer} {showModal} />
+  <TileModal {x} {y} {tile} {players} {currentPlayer} bind:showModal />
   <div
     on:click={() => (showModal = true)}
     class="border-4 hover:border-gray-400 {currentPlayer && Math.round(currentX) === x && Math.round(currentY) === y
@@ -55,9 +55,7 @@
       {/each}
     </div>
     <div>
-      {#if x === 2 && y === 8}
-        <div class="flex w-24 h-24 text-5xl justify-center items-center bg-gray-400">🏪</div>
-      {:else if tile && tile.item && tile.item.id === '1'}
+      {#if tile && tile.item && tile.item.id === '1'}
         <div class="flex w-24 h-24 text-5xl justify-center items-center bg-green-300">🌲</div>
       {:else if tile && tile.item && tile.item.id === '2'}
         <div class="flex w-24 h-24 text-5xl justify-center items-center bg-gray-300">⛰️</div>
