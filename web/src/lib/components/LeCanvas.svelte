@@ -4,6 +4,8 @@
   import {onMount} from 'svelte';
   import TileModal from './TileModal.svelte';
 
+  // based on https://codepen.io/chengarda/pen/wRxoyB
+
   export let tiles: Tile[];
 
   const MIN_ZOOM = 20;

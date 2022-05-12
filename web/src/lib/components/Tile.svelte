@@ -54,8 +54,10 @@
         <Blockie address={player.id} class="m-1 h-6 w-6" />
       {/each}
     </div>
-    <div class="flex w-24 h-24 text-5xl justify-center items-center">
-      {#if tile && tile.item && tile.item.id === '1'}
+    <div>
+      {#if x === 2 && y === 8}
+        <div class="flex w-24 h-24 text-5xl justify-center items-center bg-gray-400">🏪</div>
+      {:else if tile && tile.item && tile.item.id === '1'}
         <div class="flex w-24 h-24 text-5xl justify-center items-center bg-green-300">🌲</div>
       {:else if tile && tile.item && tile.item.id === '2'}
         <div class="flex w-24 h-24 text-5xl justify-center items-center bg-gray-300">⛰️</div>
