@@ -51,7 +51,7 @@
   >
     <div class="absolute grid grid-cols-3">
       {#each residents.slice(0, 9) as player}
-        <Blockie address={player.id} class="m-1 h-6 w-6" />
+        <Blockie address={player.id} class="m-1 h-6 w-6 border-2 border-gray-900" />
       {/each}
     </div>
     <div>
