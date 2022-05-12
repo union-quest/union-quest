@@ -18,7 +18,7 @@
   />
 </symbol>
 <WalletAccess>
-  <section class="py-8 px-4">
+  <section>
     {#if !$tiles.step}
       <div>Messages not loaded</div>
     {:else if $tiles.error}

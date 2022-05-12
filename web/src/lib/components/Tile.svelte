@@ -56,11 +56,11 @@
     </div>
     <div class="flex w-24 h-24 text-5xl justify-center items-center">
       {#if tile && tile.item && tile.item.id === '1'}
-        🌲
+        <div class="flex w-24 h-24 text-5xl justify-center items-center bg-green-300">🌲</div>
       {:else if tile && tile.item && tile.item.id === '2'}
-        ⛰️
+        <div class="flex w-24 h-24 text-5xl justify-center items-center bg-gray-300">⛰️</div>
       {:else}
-        🏜️
+        <div class="flex w-24 h-24 text-5xl justify-center items-center bg-yellow-500">🏜️</div>
       {/if}
     </div>
   </div>

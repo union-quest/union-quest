@@ -61,7 +61,7 @@
       <div class="p-1">
         Your vouch must be manually updated and does <div class="inline font-bold">not</div>
         automatically increase when you perform an activity. This difference is indicated by the<span class="italic"
-          >"True Vouch"</span
+          >"Actual Vouch"</span
         >
         and <span class="italic">"Potential Vouch"</span> amounts.
       </div>
@@ -172,7 +172,7 @@
         <div class="text-xl">Inventory</div>
         {#each currentPlayer.balances as balance}
           {#if Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0}
-            <div>
+            <div class="border-2">
               {balance.item.symbol}{balance.item.name}: {Math.round(
                 getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
               )}
@@ -188,7 +188,7 @@
         </div>
         <div class="p-1">
           <div class="text-left flex">
-            <div class="font-bold">True Vouch:</div>
+            <div class="font-bold">Actual Vouch:</div>
             <div class="flex">
               {roundGood(parseInt(currentPlayer.vouch) / 10 ** 18)}
               <DaiSymbol />
