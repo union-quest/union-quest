@@ -74,7 +74,7 @@
             {#each $items.data as item}
               <div class="flex">
                 <div on:click={() => buy(item.id, '1')}>
-                  {item.symbol}{item.name} (100)
+                  {item.symbol}{item.name} (∞)
                 </div>
               </div>
             {/each}

@@ -5,6 +5,7 @@
   import {tiles} from '$lib/tile/tiles';
   import Tile from '$lib/components/Tile.svelte';
   import PlayerInfo from '$lib/components/PlayerInfo.svelte';
+  import LeCanvas from '$lib/components/LeCanvas.svelte';
 
   async function join() {
     await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
@@ -17,6 +18,7 @@
   />
 </symbol>
 <WalletAccess>
+  <!-- <LeCanvas /> -->
   <section class="py-8 px-4">
     {#if !$tiles.step}
       <div>Messages not loaded</div>

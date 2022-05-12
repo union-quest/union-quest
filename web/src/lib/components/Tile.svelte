@@ -1,12 +1,11 @@
 <script lang="ts">
-  import {flow, wallet} from '$lib/blockchain/wallet';
-  import {distance, getBalanceStreamed, getPosition, getSkill, Player} from '$lib/player/player';
+  import {flow} from '$lib/blockchain/wallet';
+  import {distance, getPosition, getSkill, Player} from '$lib/player/player';
   import type {Players} from '$lib/player/players';
   import type {Tile} from '$lib/tile/tiles';
   import Modal from '$lib/components/styled/Modal.svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import {onMount} from 'svelte';
-  import {items} from '$lib/item/items';
   import Shop from './Shop.svelte';
 
   export let x: number;
