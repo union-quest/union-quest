@@ -28,7 +28,7 @@
     {:else if !$tiles.data || !$players.data}
       <div>Something failed to load!</div>
     {:else}
-      <!-- <LeCanvas tiles={$tiles.data} /> -->
+      <LeCanvas tiles={$tiles.data} />
       <div class="relative">
         <div class="flex justify-center">
           <div class="grid grid-cols-12 w-fit h-fit">

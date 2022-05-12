@@ -18,43 +18,39 @@
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, 10000, 100000);
 
-    for (let i = 0; i < 10; i++) {
-      for (let j = 0; j < 10; j++) {
+    for (let i = 0; i < 50; i++) {
+      for (let j = 0; j < 50; j++) {
         let tile = tiles.find((t) => t.x === i.toString() && t.y === j.toString());
-        if (i === highX && j === highY) {
-          ctx.fillStyle = '#000099';
-        } else if (tile && tile.item && tile.item.id === '1') {
-          ctx.fillStyle = '#00cc77';
+        if (tile && tile.item && tile.item.id === '1') {
+          ctx.fillStyle = '#00aa77';
         } else if (tile && tile.item && tile.item.id === '2') {
           ctx.fillStyle = '#770000';
         } else {
-          ctx.fillStyle = '#FFFFFF';
+          ctx.fillStyle = '#00FF77';
         }
 
         ctx.fillRect(i, j, 1, 1);
-
-        ctx.fillStyle = '#0000ff';
-        ctx.lineWidth = 0.1;
-        ctx.beginPath();
-        ctx.rect(i, j, 1, 1);
-        ctx.stroke();
       }
     }
+    ctx.lineWidth = 0.1;
+    ctx.beginPath();
+    ctx.rect(highX, highY, 1, 1);
+    ctx.stroke();
   };
 
   function getMousePosition(canvas, event) {
     let rect = canvas.getBoundingClientRect();
 
     showModal = true;
-    x = Math.floor((event.clientX - rect.left) / scale);
-    y = Math.floor((event.clientY - rect.top) / scale);
+    x = Math.round((event.clientX - rect.left) / scale);
+    y = Math.round((event.clientY - rect.top) / scale);
   }
 
   function getMouseMove(canvas, event) {
     let rect = canvas.getBoundingClientRect();
 
-    highX = Math.floor((event.clientX - rect.left) / scale);
-    highY = Math.floor((event.clientY - rect.top) / scale);
+    highX = Math.round((event.clientX - rect.left) / scale);
+    highY = Math.round((event.clientY - rect.top) / scale);
 
     draw();
   }
@@ -104,29 +100,6 @@
 
 <div>
   <TileModal {x} {y} {showModal} players={[]} />
-  <div class="absolute bg-gray-500 w-64">
-    <button
-      on:click={() => {
-        const ctx = canvas.getContext('2d');
-        scale *= 2;
-        ctx.scale(2, 2);
-        draw();
-      }}
-    >
-      Zoom in
-    </button>
-    <button
-      class="absolute"
-      on:click={() => {
-        const ctx = canvas.getContext('2d');
-        scale /= 2;
-        ctx.scale(0.5, 0.5);
-        draw();
-      }}
-    >
-      Zoom out
-    </button>
-  </div>
   <canvas bind:this={canvas} />
 </div>
 
