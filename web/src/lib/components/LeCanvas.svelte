@@ -6,8 +6,11 @@
 
   export let tiles: Tile[];
 
+  const MIN_ZOOM = 20;
+  const MAX_ZOOM = 50;
+
   let canvas: HTMLCanvasElement;
-  let scale = 1;
+  let cameraZoom = 25;
   let showModal = false;
   let x = 0;
   let y = 0;
@@ -15,8 +18,8 @@
   let highY = 0;
 
   const draw = () => {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, 10000, 100000);
+    let ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 1000000, 1000000);
 
     for (let i = 0; i < 50; i++) {
       for (let j = 0; j < 50; j++) {
@@ -42,15 +45,28 @@
     let rect = canvas.getBoundingClientRect();
 
     showModal = true;
-    x = Math.round((event.clientX - rect.left) / scale);
-    y = Math.round((event.clientY - rect.top) / scale);
+    x = Math.floor((event.clientX - rect.left) / cameraZoom);
+    y = Math.floor((event.clientY - rect.top) / cameraZoom);
   }
 
   function getMouseMove(canvas, event) {
     let rect = canvas.getBoundingClientRect();
 
-    highX = Math.round((event.clientX - rect.left) / scale);
-    highY = Math.round((event.clientY - rect.top) / scale);
+    highX = Math.round((event.clientX - rect.left) / cameraZoom);
+    highY = Math.round((event.clientY - rect.top) / cameraZoom);
+
+    draw();
+  }
+
+  function zoom(evt) {
+    const ctx = canvas.getContext('2d');
+    // Reset current transformation matrix to the identity matrix
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    cameraZoom += evt.deltaY;
+    cameraZoom = Math.min(cameraZoom, MAX_ZOOM);
+    cameraZoom = Math.max(cameraZoom, MIN_ZOOM);
+    ctx.scale(cameraZoom, cameraZoom);
 
     draw();
   }
@@ -60,6 +76,9 @@
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(cameraZoom, cameraZoom);
 
     canvas.addEventListener(
       'click',
@@ -78,14 +97,7 @@
     canvas.addEventListener(
       'wheel',
       function (evt) {
-        const ctx = canvas.getContext('2d');
-        if (evt.deltaY > 0) {
-          scale *= 2;
-          ctx.scale(2, 2);
-        } else {
-          scale /= 2;
-          ctx.scale(0.5, 0.5);
-        }
+        zoom(evt);
         draw();
       },
       false
@@ -99,7 +111,7 @@
 </script>
 
 <div>
-  <TileModal {x} {y} {showModal} players={[]} />
+  <TileModal {x} {y} bind:showModal players={[]} tile={null} currentPlayer={null} />
   <canvas bind:this={canvas} />
 </div>
 
