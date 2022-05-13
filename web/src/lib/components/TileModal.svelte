@@ -66,7 +66,12 @@
               <div class="p-1">
                 <div>
                   This tile is {roundGood(
-                    distance(x, y, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+                    distance(
+                      x,
+                      y,
+                      getPosition(currentPlayer, currentTimestamp / 1000)[0],
+                      getPosition(currentPlayer, currentTimestamp / 1000)[1]
+                    )
                   )} unit(s) from you.
                 </div>
                 <div>
@@ -74,7 +79,12 @@
                   <span class="font-bold">
                     {roundGood(
                       SPEED_DIVISOR *
-                        distance(x, y, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+                        distance(
+                          x,
+                          y,
+                          getPosition(currentPlayer, currentTimestamp / 1000)[0],
+                          getPosition(currentPlayer, currentTimestamp / 1000)[1]
+                        )
                     )} seconds</span
                   >
                   to walk here.

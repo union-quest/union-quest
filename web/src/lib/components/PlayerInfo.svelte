@@ -136,7 +136,7 @@
               <div>
                 Walking to: ({currentPlayer.endTile.x}, {currentPlayer.endTile.y})
               </div>
-              <div>👟0.1</div>
+              <div>👟1</div>
               <div>
                 Distance: {roundBest(
                   distance(currentX, currentY, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
