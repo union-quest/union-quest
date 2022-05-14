@@ -136,7 +136,7 @@
   afterUpdate(update);
 </script>
 
-<canvas class={_class} bind:this={canvas} />
+<canvas class={_class} bind:this={canvas} id={address.toLowerCase()} />
 
 <style>
   canvas {

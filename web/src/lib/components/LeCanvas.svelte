@@ -1,10 +1,9 @@
 <script lang="ts">
   import {getPosition, Player} from '$lib/player/player';
-
   import type {Tile} from '$lib/tile/tiles';
-
   import {onMount} from 'svelte';
   import TileModal from './TileModal.svelte';
+  import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
 
   // based on https://codepen.io/chengarda/pen/wRxoyB
 
@@ -21,8 +20,8 @@
   let showModal = false;
   let x = 0;
   let y = 0;
-  let highX = 0;
-  let highY = 0;
+  let focusX = 0;
+  let focusY = 0;
 
   const draw = () => {
     let ctx = canvas.getContext('2d');
@@ -34,58 +33,59 @@
     for (let i = -50; i < 50; i++) {
       for (let j = -50; j < 50; j++) {
         let tile = tiles.find((t) => t.x === i.toString() && t.y === j.toString());
-        if (tile && tile.item && tile.item.id === '1') {
+        if (i === 0 && j === 0) {
+          ctx.fillStyle = '#09B051';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.fillText('⛺', i, j + 1);
+          ctx.strokeRect(i, j, 1, 1);
+        } else if (tile && tile.item && tile.item.id === '1') {
           ctx.fillStyle = '#22c55e';
           ctx.fillRect(i, j, 1, 1);
           ctx.fillText('🌲', i, j + 1);
           ctx.strokeRect(i, j, 1, 1);
         } else if (tile && tile.item && tile.item.id === '2') {
-          ctx.fillStyle = '#d1d5db';
+          ctx.fillStyle = '#cd9575';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.fillText('🪨', i, j + 1);
+          ctx.strokeRect(i, j, 1, 1);
+        } else if (i > 10 || i < -10 || j > 10 || j < -10) {
+          ctx.fillStyle = '#AAAAAA';
           ctx.fillRect(i, j, 1, 1);
           ctx.fillText('⛰️', i, j + 1);
           ctx.strokeRect(i, j, 1, 1);
-        } else if (i === 0 && j === 0) {
-          ctx.fillStyle = '#AAAAAA';
-          ctx.fillRect(i, j, 1, 1);
-          ctx.fillText('⛺', i, j + 1);
-          ctx.strokeRect(i, j, 1, 1);
         } else {
-          ctx.fillStyle = '#eab308';
+          ctx.fillStyle = '#59A608';
           ctx.fillRect(i, j, 1, 1);
           ctx.strokeRect(i, j, 1, 1);
         }
       }
     }
 
-    ctx.lineWidth = 0.1;
+    ctx.lineWidth = 0.05;
     ctx.strokeStyle = '#000000';
-    ctx.strokeRect(highX, highY, 1, 1);
+    ctx.strokeRect(focusX, focusY, 1, 1);
 
     if (currentPlayer) {
       ctx.strokeStyle = '#FF0000';
       ctx.strokeRect(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y), 1, 1);
-
-      ctx.strokeStyle = '#3b82f6';
-      ctx.strokeRect(
-        Math.round(getPosition(currentPlayer, currentTimestamp / 1000)[0]),
-        Math.round(getPosition(currentPlayer, currentTimestamp / 1000)[1]),
-        1,
-        1
-      );
     }
 
     // Replace these with blockies
     players.forEach((p) => {
-      ctx.fillStyle = '#0000AA';
-
       const position = getPosition(p, currentTimestamp / 1000);
-      ctx.fillRect(position[0] + 0.25, position[1] + 0.25, 0.5, 0.5);
+      let img = document.getElementById(p.id);
+      ctx.drawImage(img, position[0] + 0.25, position[1] + 0.25, 0.5, 0.5);
+
+      ctx.strokeStyle = '#222222';
+      ctx.strokeRect(position[0] + 0.25, position[1] + 0.25, 0.5, 0.5);
 
       if (position[0] === parseInt(p.endTile.x) && position[1] === parseInt(p.endTile.y)) {
-        if (p.endTile.item.id === '1') {
-          ctx.fillText('🪓', position[0] + 0.5, position[1] + 0.5);
-        } else {
-          ctx.fillText('⛏️', position[0] + 0.5, position[1] + 0.5);
+        if (p.endTile.item) {
+          if (p.endTile.item.id === '1') {
+            ctx.fillText('🪓', position[0] + 0.5, position[1] + 0.5);
+          } else {
+            ctx.fillText('⛏️', position[0] + 0.5, position[1] + 0.5);
+          }
         }
       } else {
         ctx.fillText('👟', position[0] + 0.5, position[1] + 0.5);
@@ -104,10 +104,8 @@
   function getMouseMove(canvas, event) {
     let rect = canvas.getBoundingClientRect();
 
-    highX = Math.floor((event.clientX - rect.left - window.innerWidth / 2) / cameraZoom);
-    highY = Math.floor((event.clientY - rect.top - window.innerHeight / 2) / cameraZoom);
-
-    draw();
+    focusX = Math.floor((event.clientX - rect.left - window.innerWidth / 2) / cameraZoom);
+    focusY = Math.floor((event.clientY - rect.top - window.innerHeight / 2) / cameraZoom);
   }
 
   function zoom(evt) {
@@ -121,8 +119,6 @@
 
     ctx.translate(window.innerWidth / 2, window.innerHeight / 2);
     ctx.scale(cameraZoom, cameraZoom);
-
-    draw();
   }
 
   onMount(() => {
@@ -154,16 +150,14 @@
       'wheel',
       function (evt) {
         zoom(evt);
-        draw();
       },
       false
     );
 
-    draw();
-
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
-    }, 100);
+      draw();
+    }, 10);
 
     return () => {
       cancelAnimationFrame(frame);
@@ -175,6 +169,9 @@
 <div>
   <TileModal {x} {y} bind:showModal players={[]} {currentPlayer} tile={null} />
   <canvas bind:this={canvas} />
+  {#each players as p}
+    <Blockie address={p.id} />
+  {/each}
 </div>
 
 <style>
