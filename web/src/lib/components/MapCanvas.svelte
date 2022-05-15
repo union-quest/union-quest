@@ -3,8 +3,6 @@
   import {onMount} from 'svelte';
   import TileModal from './TileModal.svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
-  import {AbiCoder} from '@ethersproject/abi';
-  import {keccak256} from '@ethersproject/keccak256';
 
   // based on https://codepen.io/chengarda/pen/wRxoyB
 
@@ -33,38 +31,31 @@
     ctx.font = '1px Arial';
     for (let i = -50; i < 50; i++) {
       for (let j = -50; j < 50; j++) {
-        if (i > 10 || i < -9 || j > 10 || j < -9) {
-          ctx.fillStyle = '#AAAAAA';
+        if (!tiles[i]) {
+          tiles[i] = {};
+        }
+        if (!tiles[i][j]) {
+          tiles[i][j] = getItem(i, j);
+        }
+        if (i === 0 && j === 0) {
+          ctx.fillStyle = '#9400D3';
           ctx.fillRect(i, j, 1, 1);
-          ctx.fillText('⛰️', i, j + 1);
+          ctx.fillText('🚪', i, j + 1);
+          ctx.strokeRect(i, j, 1, 1);
+        } else if (tiles[i][j] === 1) {
+          ctx.fillStyle = '#22c55e';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.fillText('🌲', i, j + 1);
+          ctx.strokeRect(i, j, 1, 1);
+        } else if (tiles[i][j] === 2) {
+          ctx.fillStyle = '#cd9575';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.fillText('🪨', i, j + 1);
           ctx.strokeRect(i, j, 1, 1);
         } else {
-          if (!tiles[i]) {
-            tiles[i] = {};
-          }
-          if (!tiles[i][j]) {
-            tiles[i][j] = getItem(i, j);
-          }
-          if (i === 0 && j === 0) {
-            ctx.fillStyle = '#9400D3';
-            ctx.fillRect(i, j, 1, 1);
-            ctx.fillText('🚪', i, j + 1);
-            ctx.strokeRect(i, j, 1, 1);
-          } else if (tiles[i][j] === 1) {
-            ctx.fillStyle = '#22c55e';
-            ctx.fillRect(i, j, 1, 1);
-            ctx.fillText('🌲', i, j + 1);
-            ctx.strokeRect(i, j, 1, 1);
-          } else if (tiles[i][j] === 2) {
-            ctx.fillStyle = '#cd9575';
-            ctx.fillRect(i, j, 1, 1);
-            ctx.fillText('🪨', i, j + 1);
-            ctx.strokeRect(i, j, 1, 1);
-          } else {
-            ctx.fillStyle = '#59A608';
-            ctx.fillRect(i, j, 1, 1);
-            ctx.strokeRect(i, j, 1, 1);
-          }
+          ctx.fillStyle = '#59A608';
+          ctx.fillRect(i, j, 1, 1);
+          ctx.strokeRect(i, j, 1, 1);
         }
       }
     }
@@ -87,8 +78,8 @@
       ctx.strokeRect(position[0] + 0.25, position[1] + 0.25, 0.5, 0.5);
 
       if (position[0] === parseInt(p.endTile.x) && position[1] === parseInt(p.endTile.y)) {
-        if (p.endTile.item) {
-          if (p.endTile.item.id === '1') {
+        if (getItem(p.endTile.x, p.endTile.y)) {
+          if (getItem(p.endTile.x, p.endTile.y) === 1) {
             ctx.fillText('🪓', position[0] + 0.5, position[1] + 0.5);
           } else {
             ctx.fillText('⛏️', position[0] + 0.5, position[1] + 0.5);

@@ -11,6 +11,7 @@ import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Tile } from '$lib/tile/tiles';
 import { AbiCoder } from '@ethersproject/abi';
 import { keccak256 } from '@ethersproject/keccak256';
+import { BigNumber } from '@ethersproject/bignumber';
 
 
 export type Player = {
@@ -108,12 +109,20 @@ export const distance = (x0: number, y0: number, x1: number, y1: number) => {
 }
 
 export const getItem = (x: number, y: number) => {
-  if (x === 0 && y === 0) {
+  if (x == 0 && y == 0 || x > 10 || x < -9 || y > 10 || y < -9) {
     return 0;
   }
 
   const abiCoder = new AbiCoder();
-  return parseInt(keccak256(abiCoder.encode(['int256', 'int256'], [x, y]))) % 3;
+
+  const res = BigNumber.from(keccak256(abiCoder.encode(['int256', 'int256'], [x, y]))).mod(BigNumber.from(5)).toNumber();
+  if (res < 2) {
+    return 0;
+  } else if (res < 4) {
+    return 1;
+  }
+
+  return 2;
 
 }
 

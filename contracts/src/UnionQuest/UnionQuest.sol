@@ -65,9 +65,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
 
         Player storage player = players[account];
 
-        uint256 tileItem = player.endX == 0 && player.endY == 0
-            ? 0
-            : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
+        uint256 tileItem = getItem(player.endX, player.endY);
         if (tileItem != 0 && tileItem == id) {
             int256 vX = player.endX - player.startX;
             int256 vY = player.endY - player.startY;
@@ -307,9 +305,8 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         }
 
         Player storage player = players[borrower_];
-        uint256 tileItem = player.endX == 0 && player.endY == 0
-            ? 0
-            : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
+
+        uint256 tileItem = getItem(player.endX, player.endY);
         if (tileItem != 0) {
             int256 vX = player.endX - player.startX;
             int256 vY = player.endY - player.startY;
@@ -349,9 +346,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
             player.startX = player.endX;
             player.startY = player.endY;
 
-            uint256 tileItem = player.endX == 0 && player.endY == 0
-                ? 0
-                : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
+            uint256 tileItem = getItem(player.endX, player.endY);
             if (tileItem != 0) {
                 uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
                     SKILL_INCREASE_DIVISOR;
@@ -379,10 +374,8 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
     function _settle(address account, uint256 id) internal {
         if (id != 0) {
             Player storage player = players[account];
-            uint256 tileItem = player.endX == 0 && player.endY == 0
-                ? 0
-                : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
 
+            uint256 tileItem = getItem(player.endX, player.endY);
             if (tileItem == id) {
                 int256 vX = player.endX - player.startX;
                 int256 vY = player.endY - player.startY;
@@ -454,5 +447,20 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
             y = z;
             z = (x / z + z) / 2;
         }
+    }
+
+    function getItem(int256 x, int256 y) private pure returns (uint256) {
+        if ((x == 0 && y == 0) || x > 10 || x < -9 || y > 10 || y < -9) {
+            return 0;
+        }
+
+        uint256 res = uint256(keccak256(abi.encode(x, y))) % 5;
+        if (res < 2) {
+            return 0;
+        } else if (res < 4) {
+            return 1;
+        }
+
+        return 2;
     }
 }
