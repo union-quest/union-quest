@@ -31,12 +31,6 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         uint256 output;
     }
 
-    struct Tile {
-        int256 x;
-        int256 y;
-        uint256 resourceId;
-    }
-
     struct Player {
         int256 startX;
         int256 startY;
@@ -48,7 +42,6 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
     ItemType[] private itemTypes;
     Recipe[] private recipes;
 
-    mapping(int256 => mapping(int256 => uint256)) private resource;
     mapping(address => Player) private players;
     mapping(address => mapping(uint256 => uint256)) private skills;
     mapping(uint256 => mapping(address => uint256)) private _balances;
@@ -57,7 +50,6 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
     event AddItemType(uint256 _index, ItemType _itemType);
     event AddRecipe(uint256 _index, Recipe _recipe);
     event Move(address account, int256 x, int256 y);
-    event SetResource(uint256 resourceId, int256 x, int256 y);
     event SetSkill(address account, uint256 skill, uint256 amount);
 
     constructor(
@@ -73,7 +65,9 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
 
         Player storage player = players[account];
 
-        uint256 tileItem = resource[player.endX][player.endY];
+        uint256 tileItem = player.endX == 0 && player.endY == 0
+            ? 0
+            : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
         if (tileItem != 0 && tileItem == id) {
             int256 vX = player.endX - player.startX;
             int256 vY = player.endY - player.startY;
@@ -306,16 +300,6 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         _unstake(amount);
     }
 
-    function setResources(Tile[] calldata tiles) external onlyOwner {
-        for (uint256 i; i < tiles.length; i++) {
-            Tile calldata tile = tiles[i];
-
-            resource[tile.x][tile.y] = tile.resourceId;
-
-            emit SetResource(tile.resourceId, tile.x, tile.y);
-        }
-    }
-
     function updateTrust(address borrower_) external {
         uint256 totalSkill;
         for (uint256 i = MIN_SKILL; i < MAX_SKILL; i++) {
@@ -323,7 +307,9 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         }
 
         Player storage player = players[borrower_];
-        uint256 tileItem = resource[player.endX][player.endY];
+        uint256 tileItem = player.endX == 0 && player.endY == 0
+            ? 0
+            : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
         if (tileItem != 0) {
             int256 vX = player.endX - player.startX;
             int256 vY = player.endY - player.startY;
@@ -363,7 +349,9 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
             player.startX = player.endX;
             player.startY = player.endY;
 
-            uint256 tileItem = resource[player.endX][player.endY];
+            uint256 tileItem = player.endX == 0 && player.endY == 0
+                ? 0
+                : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
             if (tileItem != 0) {
                 uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
                     SKILL_INCREASE_DIVISOR;
@@ -391,7 +379,9 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
     function _settle(address account, uint256 id) internal {
         if (id != 0) {
             Player storage player = players[account];
-            uint256 tileItem = resource[player.endX][player.endY];
+            uint256 tileItem = player.endX == 0 && player.endY == 0
+                ? 0
+                : uint256(keccak256(abi.encode(player.endX, player.endY))) % MAX_SKILL;
 
             if (tileItem == id) {
                 int256 vX = player.endX - player.startX;

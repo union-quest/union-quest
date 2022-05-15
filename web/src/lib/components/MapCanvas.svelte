@@ -1,13 +1,13 @@
 <script lang="ts">
-  import {getPosition, Player} from '$lib/player/player';
-  import type {Tile} from '$lib/tile/tiles';
+  import {getItem, getPosition, Player} from '$lib/player/player';
   import {onMount} from 'svelte';
   import TileModal from './TileModal.svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
+  import {AbiCoder} from '@ethersproject/abi';
+  import {keccak256} from '@ethersproject/keccak256';
 
   // based on https://codepen.io/chengarda/pen/wRxoyB
 
-  export let tiles: Tile[];
   export let players: Player[];
   export let currentPlayer: Player | null;
 
@@ -22,6 +22,7 @@
   let y = 0;
   let focusX = 0;
   let focusY = 0;
+  let tiles = {};
 
   const draw = () => {
     let ctx = canvas.getContext('2d');
@@ -32,31 +33,38 @@
     ctx.font = '1px Arial';
     for (let i = -50; i < 50; i++) {
       for (let j = -50; j < 50; j++) {
-        let tile = tiles.find((t) => t.x === i.toString() && t.y === j.toString());
-        if (i === 0 && j === 0) {
-          ctx.fillStyle = '#09B051';
-          ctx.fillRect(i, j, 1, 1);
-          ctx.fillText('⛺', i, j + 1);
-          ctx.strokeRect(i, j, 1, 1);
-        } else if (tile && tile.item && tile.item.id === '1') {
-          ctx.fillStyle = '#22c55e';
-          ctx.fillRect(i, j, 1, 1);
-          ctx.fillText('🌲', i, j + 1);
-          ctx.strokeRect(i, j, 1, 1);
-        } else if (tile && tile.item && tile.item.id === '2') {
-          ctx.fillStyle = '#cd9575';
-          ctx.fillRect(i, j, 1, 1);
-          ctx.fillText('🪨', i, j + 1);
-          ctx.strokeRect(i, j, 1, 1);
-        } else if (i > 10 || i < -10 || j > 10 || j < -10) {
+        if (i > 10 || i < -9 || j > 10 || j < -9) {
           ctx.fillStyle = '#AAAAAA';
           ctx.fillRect(i, j, 1, 1);
           ctx.fillText('⛰️', i, j + 1);
           ctx.strokeRect(i, j, 1, 1);
         } else {
-          ctx.fillStyle = '#59A608';
-          ctx.fillRect(i, j, 1, 1);
-          ctx.strokeRect(i, j, 1, 1);
+          if (!tiles[i]) {
+            tiles[i] = {};
+          }
+          if (!tiles[i][j]) {
+            tiles[i][j] = getItem(i, j);
+          }
+          if (i === 0 && j === 0) {
+            ctx.fillStyle = '#9400D3';
+            ctx.fillRect(i, j, 1, 1);
+            ctx.fillText('🚪', i, j + 1);
+            ctx.strokeRect(i, j, 1, 1);
+          } else if (tiles[i][j] === 1) {
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(i, j, 1, 1);
+            ctx.fillText('🌲', i, j + 1);
+            ctx.strokeRect(i, j, 1, 1);
+          } else if (tiles[i][j] === 2) {
+            ctx.fillStyle = '#cd9575';
+            ctx.fillRect(i, j, 1, 1);
+            ctx.fillText('🪨', i, j + 1);
+            ctx.strokeRect(i, j, 1, 1);
+          } else {
+            ctx.fillStyle = '#59A608';
+            ctx.fillRect(i, j, 1, 1);
+            ctx.strokeRect(i, j, 1, 1);
+          }
         }
       }
     }
@@ -94,7 +102,7 @@
     let rect = canvas.getBoundingClientRect();
 
     showModal = true;
-    x = Math.floor((event.clientX - rect.left - window.innerWidth / 2) / cameraZoom);
+    x = Math.floor((event.clientX - rect.left - window.innerWidth / 2) / cameraZoom + 0.5);
     y = Math.floor((event.clientY - rect.top - window.innerHeight / 2) / cameraZoom);
   }
 
@@ -125,7 +133,7 @@
 
     const ctx = canvas.getContext('2d');
 
-    ctx.translate(window.innerWidth / 2, window.innerHeight / 2);
+    ctx.translate(window.innerWidth / 2 - 0.5 * cameraZoom, window.innerHeight / 2);
     ctx.scale(cameraZoom, cameraZoom);
 
     canvas.addEventListener(
@@ -163,13 +171,7 @@
 </script>
 
 <div>
-  <TileModal
-    {x}
-    {y}
-    bind:showModal
-    {currentPlayer}
-    tile={tiles.find((t) => t.x === x.toString() && t.y === y.toString())}
-  />
+  <TileModal bind:x bind:y bind:showModal {currentPlayer} />
   <canvas bind:this={canvas} />
   {#each players as p}
     <Blockie class="hidden" address={p.id} />

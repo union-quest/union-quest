@@ -1,14 +1,11 @@
 <script lang="ts">
   import {flow} from '$lib/blockchain/wallet';
-  import {distance, getPosition, getSkill, Player} from '$lib/player/player';
-  import type {Tile} from '$lib/tile/tiles';
+  import {distance, getItem, getPosition, getSkill, Player} from '$lib/player/player';
   import Modal from '$lib/components/styled/Modal.svelte';
   import {onMount} from 'svelte';
-  import Shop from './Shop.svelte';
 
   export let x: number;
   export let y: number;
-  export let tile: Tile | null;
   export let currentPlayer: Player | null;
   export let showModal: boolean;
 
@@ -67,14 +64,15 @@
               </div>
 
               <div>
-                {#if tile && tile.item}
+                {#if getItem(x, y) !== 0}
                   Once you arrive, you will start gathering
                   <span class="inline font-bold">
-                    {tile.item.symbol}{tile.item.name}
+                    <!-- {tile.item.symbol}{tile.item.name} -->
+                    something
                   </span>
                   at a rate of
                   <div class="inline font-bold">
-                    {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, parseInt(tile.item.id)) / 10)}
+                    {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, getItem(x, y)))}
                   </div>
                   units/s.
                 {:else}
@@ -92,6 +90,9 @@
             </div>
           {:else}
             <div>You need to join the game first!</div>
+          {/if}
+          {#if x === 0 && y === 0}
+            <div class="italic">This is the spawn tile. All new players enter the UnionQuest world from here.</div>
           {/if}
         </div>
       </div>

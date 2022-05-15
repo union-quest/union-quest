@@ -6775,31 +6775,6 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "uint256",
-              "name": "resourceId",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "internalType": "int256",
-              "name": "x",
-              "type": "int256"
-            },
-            {
-              "indexed": false,
-              "internalType": "int256",
-              "name": "y",
-              "type": "int256"
-            }
-          ],
-          "name": "SetResource",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": false,
               "internalType": "address",
               "name": "account",
               "type": "address"
@@ -7264,36 +7239,6 @@
             }
           ],
           "name": "setApprovalForAll",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "components": [
-                {
-                  "internalType": "int256",
-                  "name": "x",
-                  "type": "int256"
-                },
-                {
-                  "internalType": "int256",
-                  "name": "y",
-                  "type": "int256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "resourceId",
-                  "type": "uint256"
-                }
-              ],
-              "internalType": "struct UnionQuest.Tile[]",
-              "name": "tiles",
-              "type": "tuple[]"
-            }
-          ],
-          "name": "setResources",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"

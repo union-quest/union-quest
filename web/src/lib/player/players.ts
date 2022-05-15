@@ -61,11 +61,6 @@ class UserStore implements QueryStore<Players> {
         endTile {
           x
           y
-          item {
-            id
-            name
-            symbol
-          }
         }
         balances {
           id

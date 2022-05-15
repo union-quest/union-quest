@@ -1,11 +1,24 @@
 /* eslint-disable prefer-const */
-import { AddItemType, AddRecipe, Move, SetResource, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
+import { AddItemType, AddRecipe, Move, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
 import { Balance, Player, Item, Recipe, Tile } from '../generated/schema';
-import { BigInt, Bytes, } from '@graphprotocol/graph-ts';
+import { BigInt, Bytes, crypto, ethereum, log, } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
+
+export function getOrCreateTile(
+  x: BigInt, y: BigInt
+): Tile {
+  let entity = Tile.load(x.toString() + "_" + y.toString());
+  if (!entity) {
+    entity = new Tile(x.toString() + "_" + y.toString());
+    entity.x = x;
+    entity.y = y;
+  }
+
+  return entity;
+}
 
 export function getOrCreatePlayer(
   id: string
@@ -17,24 +30,11 @@ export function getOrCreatePlayer(
     tile.save();
     getOrCreateBalance("1", id).save();
     getOrCreateBalance("2", id).save();
-    entity.startTile = "0_0";
-    entity.endTile = "0_0";
+    entity.startTile = tile.id;
+    entity.endTile = tile.id;
     entity.startTimestamp = BigInt.fromString("0");
     entity.woodSkill = BigInt.fromString("0");
     entity.stoneSkill = BigInt.fromString("0");
-  }
-
-  return entity;
-}
-
-export function getOrCreateTile(
-  x: BigInt, y: BigInt
-): Tile {
-  let entity = Tile.load(x.toString() + "_" + y.toString());
-  if (!entity) {
-    entity = new Tile(x.toString() + "_" + y.toString());
-    entity.x = x;
-    entity.y = y;
   }
 
   return entity;
@@ -94,19 +94,6 @@ export function handleAddRecipe(event: AddRecipe): void {
   entity.output = event.params._recipe.output.toString();
 
   entity.save();
-}
-
-
-export function handleSetResource(event: SetResource): void {
-  let entity = getOrCreateTile(event.params.x, event.params.y);
-  let item = getOrCreateItem(event.params.resourceId.toString());
-
-  entity.x = event.params.x;
-  entity.y = event.params.y;
-  entity.item = event.params.resourceId.toString();
-
-  entity.save();
-  item.save();
 }
 
 export function handleMove(event: Move): void {

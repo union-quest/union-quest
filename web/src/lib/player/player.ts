@@ -9,6 +9,9 @@ import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Tile } from '$lib/tile/tiles';
+import { AbiCoder } from '@ethersproject/abi';
+import { keccak256 } from '@ethersproject/keccak256';
+
 
 export type Player = {
   id: string;
@@ -104,6 +107,16 @@ export const distance = (x0: number, y0: number, x1: number, y1: number) => {
   return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 }
 
+export const getItem = (x: number, y: number) => {
+  if (x === 0 && y === 0) {
+    return 0;
+  }
+
+  const abiCoder = new AbiCoder();
+  return parseInt(keccak256(abiCoder.encode(['int256', 'int256'], [x, y]))) % 3;
+
+}
+
 export const getPosition = (player: Player, currentTimestamp: number): [number, number] => {
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / 10;
   const distanceNeeded = distance(
@@ -137,7 +150,9 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
 
   const savedSkill = parseInt(resourceId === 1 ? player.woodSkill : player.stoneSkill);
 
-  if (distanceTravelled >= distanceNeeded && player.endTile.item && resourceId.toString() === player.endTile.item.id) {
+  const tileItem = getItem(parseInt(player.endTile.x), parseInt(player.endTile.y));
+
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString()) {
     return savedSkill +
       (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
@@ -160,7 +175,9 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
     parseInt(player.endTile.y)
   );
 
-  if (distanceTravelled >= distanceNeeded && player.endTile.item && resourceId.toString() === player.endTile.item.id) {
+  const tileItem = getItem(parseInt(player.endTile.x), parseInt(player.endTile.y));
+
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString()) {
     const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
 

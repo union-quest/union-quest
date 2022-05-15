@@ -16,7 +16,6 @@ type Tile @entity {
   id: ID!
   x: BigInt!
   y: BigInt!
-  item: Item
 }
 
 type Balance @entity {

@@ -14,7 +14,6 @@ export type Tile = {
   id: string;
   x: string;
   y: string;
-  item?: Item;
 }
 
 export type Tiles = Tile[]
@@ -59,11 +58,6 @@ class TileStore implements QueryStore<Tiles> {
         id
         x
         y
-        item {
-          id
-          name
-          symbol
-        }
       }
     }`,
       chainTempo,

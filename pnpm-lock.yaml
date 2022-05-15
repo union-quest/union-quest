@@ -154,6 +154,7 @@ importers:
       '@ethersproject/bignumber': ^5.5.0
       '@ethersproject/bytes': ^5.5.0
       '@ethersproject/contracts': ^5.5.0
+      '@ethersproject/keccak256': ^5.5.0
       '@ethersproject/providers': ^5.5.1
       '@ethersproject/solidity': ^5.5.0
       '@sentry/browser': ^6.16.1
@@ -200,6 +201,7 @@ importers:
       '@ethersproject/bignumber': 5.5.0
       '@ethersproject/bytes': 5.5.0
       '@ethersproject/contracts': 5.5.0
+      '@ethersproject/keccak256': 5.5.0
       '@ethersproject/providers': 5.5.1
       '@ethersproject/solidity': 5.5.0
       '@sentry/browser': 6.16.1
@@ -346,6 +348,8 @@ packages:
       level-mem: 5.0.1
       lru-cache: 5.1.1
       semaphore-async-await: 1.5.1
+    transitivePeerDependencies:
+      - supports-color
 
   /@ethereumjs/common/2.4.0:
     resolution: {integrity: sha512-UdkhFWzWcJCZVsj1O/H8/oqj/0RVYjLc1OhPjBrQdALAkQHpCp8xXI4WLnuGTADqTdJZww0NtgwG+TRPkXt27w==}
@@ -397,6 +401,8 @@ packages:
       mcl-wasm: 0.7.9
       merkle-patricia-tree: 4.2.2
       rustbn.js: 0.2.0
+    transitivePeerDependencies:
+      - supports-color
 
   /@ethersproject/abi/5.0.7:
     resolution: {integrity: sha512-Cqktk+hSIckwP/W8O47Eef60VwmoSC/L3lY0+dIBhQPCNn9E4V7rwmm2aFrNRRDJfFlGuZ1khkQUOc3oBX+niw==}
@@ -2017,6 +2023,10 @@ packages:
       bn.js: 5.2.0
       ethers: 4.0.48
       web3: 1.5.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /@truffle/provider/0.2.39:
@@ -2025,6 +2035,10 @@ packages:
       '@truffle/error': 0.0.14
       '@truffle/interface-adapter': 0.5.5
       web3: 1.5.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /@trysound/sax/0.2.0:
@@ -2146,7 +2160,7 @@ packages:
   /@types/keyv/3.1.3:
     resolution: {integrity: sha512-FXCJgyyN3ivVgRoml4h94G/p3kY+u/B86La+QptcqJaWtBWtmc6TtkNfS40n9bIvyLteHh7zXOtgbobORKPbDg==}
     dependencies:
-      '@types/node': 17.0.0
+      '@types/node': 17.0.8
     dev: true
 
   /@types/level-errors/3.0.0:
@@ -3719,6 +3733,8 @@ packages:
       qs: 6.7.0
       raw-body: 2.4.0
       type-is: 1.6.18
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /boolbase/1.0.0:
@@ -4911,24 +4927,45 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.0.0
 
   /debug/3.1.0:
     resolution: {integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
-  /debug/3.2.6:
+  /debug/3.2.6_supports-color@6.0.0:
     resolution: {integrity: sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==}
     deprecated: Debug versions >=3.2.0 <3.2.7 || >=4 <4.3.1 have a low-severity ReDos regression when used in a Node.js environment. It is recommended you upgrade to 3.2.7 or 4.3.1. (https://github.com/visionmedia/debug/issues/797)
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.1.1
+      supports-color: 6.0.0
     dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.1.3
     dev: true
@@ -5165,6 +5202,8 @@ packages:
     dependencies:
       address: 1.1.2
       debug: 2.6.9
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /detective/5.2.0:
@@ -6115,6 +6154,10 @@ packages:
       servify: 0.1.12
       ws: 3.3.3
       xhr-request-promise: 0.1.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /eth-lib/0.2.8:
@@ -6461,6 +6504,8 @@ packages:
       type-is: 1.6.18
       utils-merge: 1.0.1
       vary: 1.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /ext/1.5.0:
@@ -6600,6 +6645,8 @@ packages:
       parseurl: 1.3.3
       statuses: 1.5.0
       unpipe: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /find-replace/3.0.0:
@@ -7178,6 +7225,8 @@ packages:
     resolution: {integrity: sha512-Y5WMo7xKKq1muPsxD+KmrR8DH5auG7fBdDVueZwETwV6VytKyU9OX/ddpq2/1hp1vIPvVb4T81dKQz3BivkNLw==}
     engines: {node: '>=4'}
     dependencies:
+      '@types/keyv': 3.1.3
+      '@types/responselike': 1.0.0
       decompress-response: 3.3.0
       duplexer3: 0.1.4
       get-stream: 3.0.0
@@ -7200,6 +7249,8 @@ packages:
     dependencies:
       '@sindresorhus/is': 0.14.0
       '@szmarczak/http-timer': 1.1.2
+      '@types/keyv': 3.1.3
+      '@types/responselike': 1.0.0
       cacheable-request: 6.1.0
       decompress-response: 3.3.0
       duplexer3: 0.1.4
@@ -9126,6 +9177,8 @@ packages:
     resolution: {integrity: sha1-CAUuDODYOdPEMXi5CluzQkvvH5k=}
     dependencies:
       morgan: 1.10.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /koa-range/0.3.0:
@@ -9193,6 +9246,8 @@ packages:
       statuses: 1.5.0
       type-is: 1.6.18
       vary: 1.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /ky-universal/0.2.2_ky@0.11.2:
@@ -9628,6 +9683,8 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       serve-index-75lb: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /lws-json/2.0.0:
@@ -9643,6 +9700,8 @@ packages:
     dependencies:
       koa-morgan: 1.0.1
       stream-log-stats: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /lws-mime/2.0.0:
@@ -9716,6 +9775,8 @@ packages:
       reduce-flatten: 3.0.0
       typical: 6.0.1
       walk-back: 4.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /mafmt/6.0.10:
@@ -10080,7 +10141,7 @@ packages:
       ansi-colors: 3.2.3
       browser-stdout: 1.3.1
       chokidar: 3.3.0
-      debug: 3.2.6
+      debug: 3.2.6_supports-color@6.0.0
       diff: 3.5.0
       escape-string-regexp: 1.0.5
       find-up: 3.0.0
@@ -10178,6 +10239,8 @@ packages:
       depd: 2.0.0
       on-finished: 2.3.0
       on-headers: 1.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /mri/1.2.0:
@@ -12582,6 +12645,8 @@ packages:
       on-finished: 2.3.0
       range-parser: 1.2.1
       statuses: 1.5.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /sentence-case/3.0.4:
@@ -12608,6 +12673,8 @@ packages:
       http-errors: 1.6.3
       mime-types: 2.1.30
       parseurl: 1.3.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /serve-static/1.14.1:
@@ -12618,6 +12685,8 @@ packages:
       escape-html: 1.0.3
       parseurl: 1.3.3
       send: 0.17.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /servify/0.1.12:
@@ -12629,6 +12698,8 @@ packages:
       express: 4.17.1
       request: 2.88.2
       xhr: 2.6.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /set-blocking/2.0.0:
@@ -12876,6 +12947,10 @@ packages:
       semver: 7.3.5
       shelljs: 0.8.4
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /sorcery/0.10.0:
@@ -13366,6 +13441,10 @@ packages:
       setimmediate: 1.0.5
       tar: 4.4.19
       xhr-request: 1.1.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /sync-request/6.1.0:
@@ -14292,6 +14371,10 @@ packages:
       '@types/node': 12.20.23
       got: 9.6.0
       swarm-js: 0.1.40
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /web3-core-helpers/1.5.2:
@@ -14330,6 +14413,8 @@ packages:
       web3-providers-http: 1.5.2
       web3-providers-ipc: 1.5.2
       web3-providers-ws: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-core-subscriptions/1.5.2:
@@ -14351,6 +14436,8 @@ packages:
       web3-core-method: 1.5.2
       web3-core-requestmanager: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-eth-abi/1.5.2:
@@ -14376,6 +14463,8 @@ packages:
       web3-core-helpers: 1.5.2
       web3-core-method: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-eth-contract/1.5.2:
@@ -14390,6 +14479,8 @@ packages:
       web3-core-subscriptions: 1.5.2
       web3-eth-abi: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-eth-ens/1.5.2:
@@ -14404,6 +14495,8 @@ packages:
       web3-eth-abi: 1.5.2
       web3-eth-contract: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-eth-iban/1.5.2:
@@ -14424,6 +14517,8 @@ packages:
       web3-core-method: 1.5.2
       web3-net: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-eth/1.5.2:
@@ -14442,6 +14537,8 @@ packages:
       web3-eth-personal: 1.5.2
       web3-net: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-net/1.5.2:
@@ -14451,6 +14548,8 @@ packages:
       web3-core: 1.5.2
       web3-core-method: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-providers-http/1.5.2:
@@ -14476,6 +14575,8 @@ packages:
       eventemitter3: 4.0.4
       web3-core-helpers: 1.5.2
       websocket: 1.0.34
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-shh/1.5.2:
@@ -14487,6 +14588,8 @@ packages:
       web3-core-method: 1.5.2
       web3-core-subscriptions: 1.5.2
       web3-net: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /web3-utils/1.5.2:
@@ -14514,6 +14617,10 @@ packages:
       web3-net: 1.5.2
       web3-shh: 1.5.2
       web3-utils: 1.5.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /web3w-walletconnect-loader/0.3.2:
@@ -14551,6 +14658,8 @@ packages:
       typedarray-to-buffer: 3.1.5
       utf-8-validate: 5.0.5
       yaeti: 0.0.6
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /whatwg-fetch/3.6.2:
@@ -14706,6 +14815,14 @@ packages:
 
   /ws/3.3.3:
     resolution: {integrity: sha512-nnWLa/NwZSt4KQJu51MYlCcSQ5g7INpOrOMt4XV8j4dqTXdmlUmSHQ8/oLC069ckre0fRsgfvsKwbTdtKLCDkA==}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
     dependencies:
       async-limiter: 1.0.1
       safe-buffer: 5.1.2
