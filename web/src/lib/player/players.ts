@@ -54,14 +54,10 @@ class UserStore implements QueryStore<Players> {
         woodSkill
         stoneSkill
         vouch
-        startTile {
-          x
-          y
-        }
-        endTile {
-          x
-          y
-        }
+        startX
+        startY
+        endX
+        endY
         balances {
           id
           value

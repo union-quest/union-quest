@@ -112,13 +112,13 @@
       <div>
         <div class="text-xl">Status</div>
         <div>Location: ({Math.round(currentX)}, {Math.round(currentY)})</div>
-        {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y)}
-          {#if getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 0}
+        {#if currentX === parseInt(currentPlayer.endX) && currentY === parseInt(currentPlayer.endY)}
+          {#if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 0}
             <div class="border-2 border-gray-600">There's nothing to do here!</div>
           {:else}
             <div class="border-2 border-gray-600">
               <div>
-                {#if getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 1}
+                {#if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1}
                   Woodcutting
                 {:else}
                   Mining
@@ -126,12 +126,12 @@
               </div>
               <div class="text-left">
                 <div>
-                  {getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 1 ? '🪓' : '⛏️'}
+                  {getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1 ? '🪓' : '⛏️'}
                   {Math.round(
                     getSkill(
                       currentPlayer,
                       currentTimestamp / 1000,
-                      getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+                      getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
                     )
                   )}
                   <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
@@ -143,7 +143,7 @@
                     getBalanceStreamed(
                       currentPlayer,
                       currentTimestamp / 1000,
-                      getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)).toString()
+                      getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)).toString()
                     )
                   )}
                   <div class="inline text-sm text-green-700">
@@ -151,7 +151,7 @@
                       getSkill(
                         currentPlayer,
                         currentTimestamp / 1000,
-                        getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+                        getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
                       ) / 10
                     )} units/s)
                   </div>
@@ -164,12 +164,12 @@
             <div>Walking</div>
             <div class="text-left">
               <div>
-                Walking to: ({currentPlayer.endTile.x}, {currentPlayer.endTile.y})
+                Walking to: ({currentPlayer.endX}, {currentPlayer.endY})
               </div>
               <div>👟1</div>
               <div>
                 Distance: {roundBest(
-                  distance(currentX, currentY, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
+                  distance(currentX, currentY, parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
                 )} tiles
                 <div class="inline text-sm text-green-700">(-0.1 tiles/s)</div>
               </div>

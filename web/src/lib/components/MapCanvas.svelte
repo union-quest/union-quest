@@ -25,6 +25,9 @@
   const draw = () => {
     let ctx = canvas.getContext('2d');
 
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.translate(window.innerWidth / 2, window.innerHeight / 2);
     ctx.scale(cameraZoom, cameraZoom);
@@ -75,7 +78,7 @@
 
     if (currentPlayer) {
       ctx.strokeStyle = '#FF0000';
-      ctx.strokeRect(parseInt(currentPlayer.endTile.x) - 0.5, parseInt(currentPlayer.endTile.y) - 0.5, 1, 1);
+      ctx.strokeRect(parseInt(currentPlayer.endX) - 0.5, parseInt(currentPlayer.endY) - 0.5, 1, 1);
     }
 
     players.forEach((p) => {
@@ -86,9 +89,9 @@
       ctx.strokeStyle = '#ffffff';
       ctx.strokeRect(position[0] - 0.25, position[1] - 0.25, 0.5, 0.5);
 
-      if (position[0] === parseInt(p.endTile.x) && position[1] === parseInt(p.endTile.y)) {
-        if (getItem(p.endTile.x, p.endTile.y)) {
-          if (getItem(p.endTile.x, p.endTile.y) === 1) {
+      if (position[0] === parseInt(p.endX) && position[1] === parseInt(p.endY)) {
+        if (getItem(p.endX, p.endY)) {
+          if (getItem(p.endX, p.endY) === 1) {
             ctx.fillText('🪓', position[0], position[1]);
           } else {
             ctx.fillText('⛏️', position[0], position[1]);
@@ -115,7 +118,7 @@
     }
   }
 
-  function onClick(e) {
+  function onClick() {
     showModal = true;
   }
 
@@ -171,16 +174,6 @@
   }
 
   onMount(() => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    canvas.addEventListener(
-      'click',
-      function (evt) {
-        onClick(evt);
-      },
-      false
-    );
     canvas.addEventListener('mousedown', onPointerDown);
     canvas.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown));
     canvas.addEventListener('mouseup', onPointerUp);
@@ -188,6 +181,7 @@
     canvas.addEventListener('mousemove', onPointerMove);
     canvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove));
     canvas.addEventListener('wheel', (e) => adjustZoom(e));
+    canvas.addEventListener('dblclick', onClick);
 
     const interval = setInterval(() => {
       currentTimestamp = Date.now();

@@ -2,7 +2,6 @@
   import WalletAccess from '$lib/blockchain/WalletAccess.svelte';
   import {wallet, flow} from '$lib/blockchain/wallet';
   import {players} from '$lib/player/players';
-  import {tiles} from '$lib/tile/tiles';
   import PlayerInfo from '$lib/components/PlayerInfo.svelte';
   import MapCanvas from '$lib/components/MapCanvas.svelte';
 
@@ -17,13 +16,13 @@
   />
 </symbol>
 <WalletAccess>
-  {#if !$tiles.step}
+  {#if !$players.step}
     <div>Messages not loaded</div>
-  {:else if $tiles.error}
-    <div>Error: {$tiles.error}</div>
-  {:else if $tiles.step === 'LOADING'}
+  {:else if $players.error}
+    <div>Error: {$players.error}</div>
+  {:else if $players.step === 'LOADING'}
     <div>Loading Map...</div>
-  {:else if !$tiles.data || !$players.data}
+  {:else if !$players.data}
     <div>Something failed to load!</div>
   {:else}
     <MapCanvas

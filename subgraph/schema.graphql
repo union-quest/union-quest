@@ -27,8 +27,10 @@ type Balance @entity {
 
 type Player @entity {
   id: ID!
-  startTile: Tile!
-  endTile: Tile!
+  startX: BigInt!
+  startY: BigInt!
+  endX: BigInt!
+  endY: BigInt!
   startTimestamp: BigInt!
   woodSkill: BigInt!
   stoneSkill: BigInt!

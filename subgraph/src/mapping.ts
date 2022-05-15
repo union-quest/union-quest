@@ -1,23 +1,16 @@
 /* eslint-disable prefer-const */
 import { AddItemType, AddRecipe, Move, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Balance, Player, Item, Recipe, Tile } from '../generated/schema';
-import { BigInt, Bytes, crypto, ethereum, log, } from '@graphprotocol/graph-ts';
+import { Balance, Player, Item, Recipe } from '../generated/schema';
+import { BigInt, Bytes } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
 
-export function getOrCreateTile(
-  x: BigInt, y: BigInt
-): Tile {
-  let entity = Tile.load(x.toString() + "_" + y.toString());
-  if (!entity) {
-    entity = new Tile(x.toString() + "_" + y.toString());
-    entity.x = x;
-    entity.y = y;
-  }
-
-  return entity;
+function distance(x0: BigInt, y0: BigInt, x1: BigInt, y1: BigInt): BigInt {
+  const xDiff = x1.minus(x0);
+  const yDiff = y1.minus(y0);
+  return xDiff.times(xDiff).plus(yDiff.times(yDiff)).sqrt();
 }
 
 export function getOrCreatePlayer(
@@ -26,12 +19,12 @@ export function getOrCreatePlayer(
   let entity = Player.load(id);
   if (!entity) {
     entity = new Player(id);
-    let tile = getOrCreateTile(BigInt.fromString("0"), BigInt.fromString("0"));
-    tile.save();
     getOrCreateBalance("1", id).save();
     getOrCreateBalance("2", id).save();
-    entity.startTile = tile.id;
-    entity.endTile = tile.id;
+    entity.startX = BigInt.fromString("0");
+    entity.startY = BigInt.fromString("0");
+    entity.endX = BigInt.fromString("0");
+    entity.endY = BigInt.fromString("0");
     entity.startTimestamp = BigInt.fromString("0");
     entity.woodSkill = BigInt.fromString("0");
     entity.stoneSkill = BigInt.fromString("0");
@@ -98,14 +91,31 @@ export function handleAddRecipe(event: AddRecipe): void {
 
 export function handleMove(event: Move): void {
   let entity = getOrCreatePlayer(event.params.account.toHexString());
-  let endTile = getOrCreateTile(event.params.x, event.params.y);
 
-  entity.startTile = entity.endTile;
-  entity.endTile = event.params.x.toString() + "_" + event.params.y.toString();
+  const distanceTravelled = (event.block.timestamp.minus(entity.startTimestamp)).div(BigInt.fromString("10"));
+  const distanceNeeded = distance(
+    entity.startX,
+    entity.startY,
+    entity.endX,
+    entity.endY
+  );
+
+  if (distanceTravelled.lt(distanceNeeded)) {
+    const vX = entity.endX.minus(entity.startX);
+    const vY = entity.endY.minus(entity.startY);
+
+    entity.startX = entity.startX.plus((vX.times(distanceTravelled)).div(distanceNeeded));
+    entity.startY = entity.startY.plus((vY.times(distanceTravelled)).div(distanceNeeded));
+  } else {
+    entity.startX = entity.endX;
+    entity.startY = entity.endY;
+  }
+
+  entity.endX = event.params.x;
+  entity.endY = event.params.y;
   entity.startTimestamp = event.block.timestamp;
 
   entity.save();
-  endTile.save();
 }
 
 export function handleSetSkill(event: SetSkill): void {
@@ -146,6 +156,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   item.save();
 }
 
+// FIXME, check that staker is UnionQuest
 export function handleUpdateTrust(event: LogUpdateTrust): void {
   let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
 
