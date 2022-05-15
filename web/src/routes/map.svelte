@@ -4,7 +4,7 @@
   import {players} from '$lib/player/players';
   import {tiles} from '$lib/tile/tiles';
   import PlayerInfo from '$lib/components/PlayerInfo.svelte';
-  import LeCanvas from '$lib/components/LeCanvas.svelte';
+  import MapCanvas from '$lib/components/MapCanvas.svelte';
 
   async function join() {
     await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
@@ -26,7 +26,7 @@
   {:else if !$tiles.data || !$players.data}
     <div>Something failed to load!</div>
   {:else}
-    <LeCanvas
+    <MapCanvas
       tiles={$tiles.data}
       players={$players.data}
       currentPlayer={$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}

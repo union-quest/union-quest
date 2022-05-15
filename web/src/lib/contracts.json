@@ -6649,6 +6649,11 @@
                   "internalType": "string",
                   "name": "symbol",
                   "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "stake",
+                  "type": "uint256"
                 }
               ],
               "indexed": false,
@@ -6673,7 +6678,12 @@
               "components": [
                 {
                   "internalType": "uint256[]",
-                  "name": "inputs",
+                  "name": "inputIds",
+                  "type": "uint256[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "inputQuantities",
                   "type": "uint256[]"
                 },
                 {
@@ -6916,6 +6926,11 @@
                   "internalType": "string",
                   "name": "symbol",
                   "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "stake",
+                  "type": "uint256"
                 }
               ],
               "internalType": "struct UnionQuest.ItemType[]",
@@ -6934,7 +6949,12 @@
               "components": [
                 {
                   "internalType": "uint256[]",
-                  "name": "inputs",
+                  "name": "inputIds",
+                  "type": "uint256[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "inputQuantities",
                   "type": "uint256[]"
                 },
                 {

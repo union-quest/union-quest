@@ -81,6 +81,7 @@ export function handleAddItemType(event: AddItemType): void {
 
   entity.name = event.params._itemType.name;
   entity.symbol = event.params._itemType.symbol;
+  entity.stake = event.params._itemType.stake;
 
   entity.save();
 }
@@ -88,7 +89,8 @@ export function handleAddItemType(event: AddItemType): void {
 export function handleAddRecipe(event: AddRecipe): void {
   let entity = getOrCreateRecipe(event.params._index.toString());
 
-  entity.inputs = [event.params._recipe.inputs[0].toString(), event.params._recipe.inputs[1].toString()]
+  entity.inputIds = [event.params._recipe.inputIds[0].toString(), event.params._recipe.inputIds[1].toString()];
+  entity.inputQuantities = [event.params._recipe.inputQuantities[0], event.params._recipe.inputQuantities[1]];
   entity.output = event.params._recipe.output.toString();
 
   entity.save();

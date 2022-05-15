@@ -70,7 +70,6 @@
       ctx.strokeRect(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y), 1, 1);
     }
 
-    // Replace these with blockies
     players.forEach((p) => {
       const position = getPosition(p, currentTimestamp / 1000);
       let img = document.getElementById(p.id);
@@ -87,8 +86,6 @@
             ctx.fillText('⛏️', position[0] + 0.5, position[1] + 0.5);
           }
         }
-      } else {
-        ctx.fillText('👟', position[0] + 0.5, position[1] + 0.5);
       }
     });
   };
@@ -104,20 +101,19 @@
   function getMouseMove(canvas, event) {
     let rect = canvas.getBoundingClientRect();
 
-    focusX = Math.floor((event.clientX - rect.left - window.innerWidth / 2) / cameraZoom);
+    focusX = Math.floor((event.clientX - rect.left - window.innerWidth / 2) / cameraZoom + 0.5);
     focusY = Math.floor((event.clientY - rect.top - window.innerHeight / 2) / cameraZoom);
   }
 
   function zoom(evt) {
     const ctx = canvas.getContext('2d');
-    // Reset current transformation matrix to the identity matrix
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     cameraZoom += evt.deltaY;
     cameraZoom = Math.min(cameraZoom, MAX_ZOOM);
     cameraZoom = Math.max(cameraZoom, MIN_ZOOM);
 
-    ctx.translate(window.innerWidth / 2, window.innerHeight / 2);
+    ctx.translate(window.innerWidth / 2 - cameraZoom * 0.5, window.innerHeight / 2);
     ctx.scale(cameraZoom, cameraZoom);
   }
 
@@ -167,10 +163,16 @@
 </script>
 
 <div>
-  <TileModal {x} {y} bind:showModal players={[]} {currentPlayer} tile={null} />
+  <TileModal
+    {x}
+    {y}
+    bind:showModal
+    {currentPlayer}
+    tile={tiles.find((t) => t.x === x.toString() && t.y === y.toString())}
+  />
   <canvas bind:this={canvas} />
   {#each players as p}
-    <Blockie address={p.id} />
+    <Blockie class="hidden" address={p.id} />
   {/each}
 </div>
 

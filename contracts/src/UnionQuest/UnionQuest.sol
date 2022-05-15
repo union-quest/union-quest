@@ -16,18 +16,18 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
     uint256 constant SPEED_DIVISOR = 10;
     uint256 constant SKILL_INCREASE_DIVISOR = 10;
     uint256 constant TRUST_MODIFIER = 0.01 ether;
-    uint256 constant ITEM_PRICE = 5 ether;
     uint256 constant MIN_SKILL = 1;
     uint256 constant MAX_SKILL = 3;
-    uint256 constant CRAFT_AMOUNT = 100;
 
     struct ItemType {
         string name;
         string symbol;
+        uint256 stake;
     }
 
     struct Recipe {
-        uint256[] inputs;
+        uint256[] inputIds;
+        uint256[] inputQuantities;
         uint256 output;
     }
 
@@ -208,14 +208,10 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         uint256 amount,
         bytes memory data
     ) internal virtual {
-        require(to != address(0), "ERC1155: mint to the zero address");
-
         address operator = _msgSender();
 
         _balances[id][to] += amount;
         emit TransferSingle(operator, address(0), to, id, amount);
-
-        _doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
     }
 
     function _burn(
@@ -433,25 +429,29 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
     }
 
     function buy(uint256 id, uint256 amount) external {
-        require(id == 3 || id == 4, "Item is not valid");
+        ItemType storage item = itemTypes[id];
 
-        IERC20(underlyingToken).transferFrom(_msgSender(), address(this), amount * ITEM_PRICE);
+        require(item.stake > 0, "Item stake not set");
+
+        IERC20(underlyingToken).transferFrom(_msgSender(), address(this), item.stake * amount);
         _mint(_msgSender(), id, amount, "");
     }
 
     function sell(uint256 id, uint256 amount) external {
-        require(id == 3 || id == 4, "Item is not valid");
+        ItemType storage item = itemTypes[id];
+
+        require(item.stake > 0, "Item stake not set");
 
         _burn(_msgSender(), id, amount);
-        IERC20(underlyingToken).transfer(_msgSender(), amount * ITEM_PRICE);
+        IERC20(underlyingToken).transfer(_msgSender(), item.stake * amount);
     }
 
     function craft(uint256 recipeId) external {
         Recipe storage recipe = recipes[recipeId];
 
-        for (uint256 i; i < recipe.inputs.length; i++) {
-            _settle(_msgSender(), recipe.inputs[i]);
-            _burn(_msgSender(), recipe.inputs[i], CRAFT_AMOUNT);
+        for (uint256 i; i < recipe.inputIds.length; i++) {
+            _settle(_msgSender(), recipe.inputIds[i]);
+            _burn(_msgSender(), recipe.inputIds[i], recipe.inputQuantities[i]);
         }
 
         _mint(_msgSender(), recipe.output, 1, "");

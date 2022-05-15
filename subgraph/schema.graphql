@@ -2,11 +2,13 @@ type Item @entity {
   id: ID!
   name: String!
   symbol: String!
+  stake: BigInt!
 }
 
 type Recipe @entity {
   id: ID!
-  inputs: [Item!]!
+  inputIds: [Item!]!
+  inputQuantities: [BigInt!]!
   output: Item!
 }
 

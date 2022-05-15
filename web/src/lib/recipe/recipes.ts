@@ -10,7 +10,7 @@ import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Item } from '$lib/item/items';
 
-export type Recipe = { id: string, inputs: Item[], output: Item }
+export type Recipe = { id: string, inputIds: Item[], inputQuantities: string, output: Item }
 type Recipes = Recipe[];
 
 // TODO web3w needs to export the type
@@ -51,11 +51,12 @@ class RecipesStore implements QueryStore<Recipes> {
     query {
       recipes {
         id
-        inputs {
+        inputIds {
           id
           name
           symbol
         }
+        inputQuantities
         output {
           id
           name
