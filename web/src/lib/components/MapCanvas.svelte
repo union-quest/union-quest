@@ -37,6 +37,14 @@
     ctx.font = '1px Arial';
     for (let i = -50; i < 50; i++) {
       for (let j = -50; j < 50; j++) {
+        ctx.fillStyle = '#808080';
+        ctx.fillRect(i - 0.5, j - 0.5, 1, 1);
+        ctx.fillText('⛰️', i - 0.5, j + 0.5);
+      }
+    }
+
+    for (let i = -9; i < 11; i++) {
+      for (let j = -9; j < 11; j++) {
         if (!tiles[i]) {
           tiles[i] = {};
         }
@@ -63,12 +71,12 @@
       }
     }
 
+    ctx.lineWidth = 0.04;
+
     if (currentPlayer) {
       ctx.strokeStyle = '#FF0000';
       ctx.strokeRect(parseInt(currentPlayer.endTile.x) - 0.5, parseInt(currentPlayer.endTile.y) - 0.5, 1, 1);
     }
-
-    ctx.lineWidth = 0.04;
 
     players.forEach((p) => {
       const position = getPosition(p, currentTimestamp / 1000);
