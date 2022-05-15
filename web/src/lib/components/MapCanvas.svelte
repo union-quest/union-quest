@@ -9,7 +9,7 @@
   export let players: Player[];
   export let currentPlayer: Player | null;
 
-  const MIN_ZOOM = 30;
+  const MIN_ZOOM = 20;
   const MAX_ZOOM = 100;
   let currentTimestamp = Date.now();
 

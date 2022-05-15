@@ -27,7 +27,6 @@
     <div>Something failed to load!</div>
   {:else}
     <MapCanvas
-      tiles={$tiles.data}
       players={$players.data}
       currentPlayer={$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
     />
