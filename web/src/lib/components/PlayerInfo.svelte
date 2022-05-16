@@ -1,23 +1,18 @@
 <script lang="ts">
-  import {balance, chain, flow, wallet} from '$lib/blockchain/wallet';
+  import {chain, flow, wallet} from '$lib/blockchain/wallet';
   import {distance, getBalanceStreamed, getItem, getPosition, getSkill, Player} from '$lib/player/player';
   import {onMount} from 'svelte';
-  import {recipes} from '$lib/recipe/recipes';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
   import Modal from './styled/Modal.svelte';
   import Shop from './Shop.svelte';
-  import DarkSwitch from './styled/DarkSwitch.svelte';
   import Crafting from './Crafting.svelte';
+  import {BigNumber} from '@ethersproject/bignumber/src.ts';
 
   export let currentPlayer: Player | null;
 
-  async function craft() {
-    await flow.execute((contracts) => contracts.UnionQuest.craft(0));
-  }
-
   async function mint() {
-    await flow.execute((contracts) => contracts.FaucetERC20.mint($wallet.address, '100000000000000000000000000000000'));
+    await flow.execute((contracts) => contracts.FaucetERC20.mint($wallet.address, '100000000000000000000'));
   }
 
   async function approve() {
@@ -36,6 +31,7 @@
   let currentTimestamp = Date.now();
   let currentX = 0;
   let currentY = 0;
+  let balance = BigNumber.from('0');
 
   const roundBest = (n: number) => Math.round(n * 10) / 10;
   const roundGood = (n: number) => Math.round(n * 100) / 100;
@@ -45,6 +41,8 @@
   }
 
   onMount(() => {
+    flow.execute((contracts) => contracts.FaucetERC20.balanceOf($wallet.address).then((x) => (balance = x)));
+
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
 
@@ -67,9 +65,8 @@
       </div>
       <div class="p-1">
         Your vouch must be manually updated and does <div class="inline font-bold">not</div>
-        automatically increase when you perform an activity. This difference is indicated by the<span class="italic"
-          >"Actual Vouch"</span
-        >
+        automatically increase when you perform an activity. This difference is indicated by the
+        <span class="italic"> "Actual Vouch" </span>
         and <span class="italic">"Potential Vouch"</span> amounts.
       </div>
       <div class="border-2 bg-gray-200 border-gray-500 m-1 p-2">
@@ -87,15 +84,15 @@
     {$wallet.address.slice(0, 4)}...{$wallet.address.slice(-4)}
     <Blockie address={$wallet.address} class="m-1 h-6 w-6" />
   </div>
-  <div class="flex text-2xl justify-around text-base">
+  <div class="flex text-2xl justify-between text-base">
     <div class="border-2 w-full border-gray-500">
       {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '1'))} 🪵
     </div>
     <div class="border-2 w-full border-gray-500">
       {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '2'))} 🪨
     </div>
-    <div class="flex border-2 border-gray-500 w-full">
-      0
+    <div class="flex border-2 border-gray-500 w-full justify-center">
+      {balance.div('1000000000000000000')}
       <DaiSymbol />
     </div>
   </div>
@@ -120,6 +117,7 @@
           {:else}
             <div class="border-2 border-gray-600">
               <div>
+                Activity:
                 {#if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1}
                   Woodcutting
                 {:else}
@@ -167,7 +165,6 @@
               <div>
                 Walking to: ({currentPlayer.endX}, {currentPlayer.endY})
               </div>
-              <div>👟1</div>
               <div>
                 Distance: {roundBest(
                   distance(currentX, currentY, parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
@@ -249,10 +246,9 @@
       <div>
         <div class="text-xl">Settings</div>
         <div>
-          <div class="flex border-2">Dark mode: <DarkSwitch /></div>
           <div on:click={mint} class="border-2">Mint free testnet DAI</div>
-          <div on:click={approve} class="border-2">Set DAI allowance for shops</div>
-          <div on:click={approveNFT} class="border-2">Set NFT allowance for shops</div>
+          <div on:click={approve} class="border-2">Allow DAI transfers for The Shop</div>
+          <div on:click={approveNFT} class="border-2">Allow NFT transfers for The Shop</div>
         </div>
       </div>
     {/if}

@@ -1,9 +1,11 @@
 <script lang="ts">
-  import {flow} from '$lib/blockchain/wallet';
+  import {flow, wallet} from '$lib/blockchain/wallet';
   import type {Player} from '$lib/player/player';
   import {shopItems} from '$lib/item/items';
   import Modal from './styled/Modal.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
+  import {BigNumber} from '@ethersproject/bignumber';
+  import {onMount} from 'svelte';
 
   export let currentPlayer: Player | null;
 
@@ -16,12 +18,22 @@
   }
 
   let showModal = false;
+  let balance = BigNumber.from('0');
+
+  onMount(() => {
+    flow.execute((contracts) => contracts.FaucetERC20.balanceOf($wallet.address).then((x) => (balance = x)));
+  });
 </script>
 
 <div class="h-full">
   {#if showModal}
     <Modal title={`Shop`} on:close={() => (showModal = false)} closeButton={true}>
-      <div class="flex flex-row justify-around">
+      <div class="flex flex-col">
+        <div class="flex border-2 justify-center m-2 w-fit">
+          You own:
+          {balance.div('1000000000000000000')}
+          <DaiSymbol />
+        </div>
         <div>
           {#if !$shopItems.step}
             <div>Messages not loaded</div>

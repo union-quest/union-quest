@@ -58,9 +58,9 @@
           tiles[i][j] = getItem(i, j);
         }
         if (i === 0 && j === 0) {
-          ctx.fillStyle = '#9400D3';
+          ctx.fillStyle = '#1CA3EC';
           ctx.fillRect(i - 0.5, j - 0.5, 1, 1);
-          ctx.fillText('🚪', i - 0.5, j + 0.5);
+          ctx.fillText('🏰', i - 0.5, j + 0.5);
         } else if (tiles[i][j] === 1) {
           ctx.fillStyle = '#22c55e';
           ctx.fillRect(i - 0.5, j - 0.5, 1, 1);
