@@ -257,7 +257,9 @@
       <div>
         <div class="text-xl">Settings</div>
         <div>
-          <div on:click={mint} class="border-2">Mint free testnet DAI</div>
+          {#if chainId === '1337'}
+            <div on:click={mint} class="border-2">Mint free testnet DAI</div>
+          {/if}
           <div on:click={approve} class="border-2">Allow DAI transfers for The Shop</div>
           <div on:click={approveNFT} class="border-2">Allow NFT transfers for The Shop</div>
         </div>
