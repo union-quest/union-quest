@@ -37,7 +37,9 @@
     <p class="m-6 text-gray-800 dark:text-gray-300 text-2xl">A fully on-chain MMORPG.</p>
     <div class="max-w-md mx-auto pt-1 mt-5 space-y-3 md:mt-8 md:space-y-5">
       <div class="space-y-5 sm:flex sm:justify-center sm:space-y-0 sm:space-x-3">
-        <NavButton class="big secondary" href={url('map/')} label="World map">View the world map</NavButton>
+        <NavButton class="big primary" href={url('map/')} label="World map">Play</NavButton>
+      </div>
+      <div class="space-y-5 sm:flex sm:justify-center sm:space-y-0 sm:space-x-3">
         <NavButton
           blank={true}
           class="big secondary"

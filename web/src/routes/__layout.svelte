@@ -1,8 +1,6 @@
 <script lang="ts">
   import '../service-worker-handler';
   import '../global.css';
-  import {url} from '$lib/utils/url';
-  import NavBar from '$lib/components/styled/navigation/NavBar.svelte';
   import Notifications from '$lib/components/styled/notification/Notifications.svelte';
   import NoInstallPrompt from '$lib/components/generic/NoInstallPrompt.svelte';
   import NewVersionNotification from '$lib/components/styled/NewVersionNotification.svelte';
@@ -37,17 +35,14 @@
 <NoInstallPrompt />
 <NewVersionNotification />
 
-<NavBar
+<!-- <NavBar
   links={[
     {href: url(''), title: 'Home'},
     {href: url('map/'), title: 'Map'},
   ]}
-/>
+/> -->
 
-<div class="absolute top-0 right-0 m-2 flex">
-  {#if $wallet.address}
-    <Blockie address={$wallet.address} class="mr-2 h-8 w-8" />
-  {/if}
+<div class="absolute top-0 right-0 m-2 flex bg-yellow-500">
   <DarkSwitch />
 </div>
 

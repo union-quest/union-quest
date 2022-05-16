@@ -15,9 +15,12 @@
 
   let canvas: HTMLCanvasElement;
   let cameraZoom = 50;
-  let cameraOffset = {x: window.innerWidth / 2, y: window.innerHeight / 2};
+  let cameraOffset;
   let isDragging = false;
   let dragStart = {x: 0, y: 0};
+
+  let x = 0;
+  let y = 0;
 
   let showModal = false;
   let tiles = {};
@@ -90,8 +93,8 @@
       ctx.strokeRect(position[0] - 0.25, position[1] - 0.25, 0.5, 0.5);
 
       if (position[0] === parseInt(p.endX) && position[1] === parseInt(p.endY)) {
-        if (getItem(p.endX, p.endY)) {
-          if (getItem(p.endX, p.endY) === 1) {
+        if (getItem(parseInt(p.endX), parseInt(p.endY))) {
+          if (getItem(parseInt(p.endX), parseInt(p.endY)) === 1) {
             ctx.fillText('🪓', position[0], position[1]);
           } else {
             ctx.fillText('⛏️', position[0], position[1]);
@@ -101,12 +104,7 @@
     });
 
     ctx.strokeStyle = '#0000FF';
-    ctx.strokeRect(
-      Math.floor(window.innerWidth / 2 - cameraOffset.x) - 0.5,
-      Math.floor(window.innerHeight / 2 - cameraOffset.y) - 0.5,
-      1,
-      1
-    );
+    ctx.strokeRect(x, y, 1, 1);
   };
 
   // Gets the relevant location from a mouse or single touch event
@@ -118,7 +116,7 @@
     }
   }
 
-  function onClick() {
+  function onDblClick() {
     showModal = true;
   }
 
@@ -137,6 +135,17 @@
       cameraOffset.x = getEventLocation(e).x / cameraZoom - dragStart.x;
       cameraOffset.y = getEventLocation(e).y / cameraZoom - dragStart.y;
     }
+
+    let rect = canvas.getBoundingClientRect();
+
+    x =
+      Math.floor(
+        (e.clientX - rect.left - window.innerWidth / 2) / cameraZoom + (window.innerWidth / 2 - cameraOffset.x) + 0.5
+      ) - 0.5;
+    y =
+      Math.floor(
+        (e.clientY - rect.left - window.innerHeight / 2) / cameraZoom + (window.innerHeight / 2 - cameraOffset.y) - 0.5
+      ) + 0.5;
   }
 
   function handleTouch(e, singleTouchHandler) {
@@ -174,6 +183,8 @@
   }
 
   onMount(() => {
+    cameraOffset = {x: window.innerWidth / 2, y: window.innerHeight / 2};
+
     canvas.addEventListener('mousedown', onPointerDown);
     canvas.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown));
     canvas.addEventListener('mouseup', onPointerUp);
@@ -181,7 +192,7 @@
     canvas.addEventListener('mousemove', onPointerMove);
     canvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove));
     canvas.addEventListener('wheel', (e) => adjustZoom(e));
-    canvas.addEventListener('dblclick', onClick);
+    canvas.addEventListener('dblclick', onDblClick);
 
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
@@ -195,12 +206,7 @@
 </script>
 
 <div>
-  <TileModal
-    x={Math.floor(window.innerWidth / 2 - cameraOffset.x)}
-    y={Math.floor(window.innerHeight / 2 - cameraOffset.y)}
-    bind:showModal
-    {currentPlayer}
-  />
+  <TileModal x={x + 0.5} y={y + 0.5} bind:showModal {currentPlayer} />
   <canvas bind:this={canvas} />
   {#each players as p}
     <Blockie class="hidden" address={p.id} />
