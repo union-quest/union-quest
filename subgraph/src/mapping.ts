@@ -7,6 +7,9 @@ import { BigInt, Bytes } from '@graphprotocol/graph-ts';
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
 
+let UNION_QUEST_ADDRESS_STRING = '0xFa4330DC07143e2c163cABc6780C167B9969D5F9';
+let UNION_QUEST_ADDRESS: Bytes = Bytes.fromHexString(UNION_QUEST_ADDRESS_STRING) as Bytes;
+
 function distance(x0: BigInt, y0: BigInt, x1: BigInt, y1: BigInt): BigInt {
   const xDiff = x1.minus(x0);
   const yDiff = y1.minus(y0);
@@ -156,11 +159,12 @@ export function handleTransferSingle(event: TransferSingle): void {
   item.save();
 }
 
-// FIXME, check that staker is UnionQuest
 export function handleUpdateTrust(event: LogUpdateTrust): void {
-  let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
+  if (event.params.staker == UNION_QUEST_ADDRESS) {
+    let borrower = getOrCreatePlayer(event.params.borrower.toHexString());
 
-  borrower.vouch = event.params.trustAmount;
+    borrower.vouch = event.params.trustAmount;
 
-  borrower.save();
+    borrower.save();
+  }
 }

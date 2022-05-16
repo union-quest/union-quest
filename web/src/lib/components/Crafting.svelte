@@ -36,7 +36,7 @@
       {:else if $recipes.step === 'LOADING'}
         <div>Loading Map...</div>
       {:else if !$recipes.data}
-        <div>Something failed to load!</div>
+        <div>Recipes failed to load!</div>
       {:else}
         <div class="flex flex-col">
           <div class="flex justify-between text-center">

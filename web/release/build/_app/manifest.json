@@ -1,10 +1,10 @@
 {
   ".svelte-kit/build/runtime/internal/start.js": {
-    "file": "start-e7c7f785.js",
+    "file": "start-658281d7.js",
     "src": ".svelte-kit/build/runtime/internal/start.js",
     "isEntry": true,
     "imports": [
-      "_vendor-986b52e5.js",
+      "_vendor-ec6c92af.js",
       "_paths-28a87002.js"
     ],
     "dynamicImports": [
@@ -18,92 +18,76 @@
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-35e00405.js",
+    "file": "pages/__layout.svelte-631271cf.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-986b52e5.js",
+      "_vendor-ec6c92af.js",
       "_paths-28a87002.js",
-      "_url-a636e22e.js",
-      "_wallet-675ff59e.js",
-      "_CanvasBlockie-26496520.js"
+      "_wallet-bec7b7de.js"
     ],
     "css": [
-      "assets/pages/__layout.svelte-bcb56387.css"
+      "assets/pages/__layout.svelte-fa4af0df.css",
+      "assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css"
     ]
   },
   ".svelte-kit/build/components/error.svelte": {
-    "file": "error.svelte-07631379.js",
+    "file": "error.svelte-cbd7a37b.js",
     "src": ".svelte-kit/build/components/error.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-986b52e5.js"
+      "_vendor-ec6c92af.js"
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-9849b97d.js",
+    "file": "pages/index.svelte-dacebb10.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-986b52e5.js",
-      "_wallet-675ff59e.js",
-      "_NavButton-db9aa491.js",
-      "_url-a636e22e.js",
+      "_vendor-ec6c92af.js",
+      "_wallet-bec7b7de.js",
+      "_url-107b818f.js",
       "_paths-28a87002.js"
     ]
   },
   "src/routes/map.svelte": {
-    "file": "pages/map.svelte-f1ffe4d1.js",
+    "file": "pages/map.svelte-140eff3d.js",
     "src": "src/routes/map.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-986b52e5.js",
-      "_wallet-675ff59e.js",
-      "_NavButton-db9aa491.js",
-      "_paths-28a87002.js",
-      "_CanvasBlockie-26496520.js"
+      "_vendor-ec6c92af.js",
+      "_wallet-bec7b7de.js",
+      "_url-107b818f.js",
+      "_paths-28a87002.js"
     ],
     "css": [
-      "assets/pages/map.svelte-9c32b72f.css"
+      "assets/pages/map.svelte-1e7ae53b.css",
+      "assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css"
     ]
   },
-  "_vendor-986b52e5.js": {
-    "file": "chunks/vendor-986b52e5.js"
+  "_vendor-ec6c92af.js": {
+    "file": "chunks/vendor-ec6c92af.js"
   },
   "_paths-28a87002.js": {
     "file": "chunks/paths-28a87002.js"
   },
-  "_url-a636e22e.js": {
-    "file": "chunks/url-a636e22e.js",
+  "_wallet-bec7b7de.js": {
+    "file": "chunks/wallet-bec7b7de.js",
     "imports": [
-      "_paths-28a87002.js",
-      "_wallet-675ff59e.js"
-    ]
-  },
-  "_CanvasBlockie-26496520.js": {
-    "file": "chunks/CanvasBlockie-26496520.js",
-    "imports": [
-      "_vendor-986b52e5.js"
-    ],
-    "css": [
-      "assets/CanvasBlockie-021ba57e.css"
-    ]
-  },
-  "_wallet-675ff59e.js": {
-    "file": "chunks/wallet-675ff59e.js",
-    "imports": [
-      "_vendor-986b52e5.js",
+      "_vendor-ec6c92af.js",
       "_paths-28a87002.js"
     ]
   },
-  "_NavButton-db9aa491.js": {
-    "file": "chunks/NavButton-db9aa491.js",
+  "_url-107b818f.js": {
+    "file": "chunks/url-107b818f.js",
     "imports": [
-      "_vendor-986b52e5.js"
+      "_vendor-ec6c92af.js",
+      "_paths-28a87002.js",
+      "_wallet-bec7b7de.js"
     ]
   }
 }

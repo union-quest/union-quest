@@ -25,7 +25,7 @@
   {:else if $players.step === 'LOADING'}
     <div>Loading Map...</div>
   {:else if !$players.data}
-    <div>Something failed to load!</div>
+    <div>Players failed to load!</div>
   {:else}
     <MapCanvas
       players={$players.data}

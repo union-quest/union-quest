@@ -1,20 +1,18 @@
-const timestamp = 1650782815354;
+const timestamp = 1652729975748;
 const build = [
-  "/_app/start-e7c7f785.js",
+  "/_app/start-658281d7.js",
   "/_app/assets/start-f6bd5930.css",
-  "/_app/pages/__layout.svelte-35e00405.js",
-  "/_app/assets/pages/__layout.svelte-bcb56387.css",
-  "/_app/error.svelte-07631379.js",
-  "/_app/pages/index.svelte-9849b97d.js",
-  "/_app/pages/map.svelte-f1ffe4d1.js",
-  "/_app/assets/pages/map.svelte-9c32b72f.css",
-  "/_app/chunks/vendor-986b52e5.js",
+  "/_app/pages/__layout.svelte-631271cf.js",
+  "/_app/assets/pages/__layout.svelte-fa4af0df.css",
+  "/_app/assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css",
+  "/_app/error.svelte-cbd7a37b.js",
+  "/_app/pages/index.svelte-dacebb10.js",
+  "/_app/pages/map.svelte-140eff3d.js",
+  "/_app/assets/pages/map.svelte-1e7ae53b.css",
+  "/_app/chunks/vendor-ec6c92af.js",
   "/_app/chunks/paths-28a87002.js",
-  "/_app/chunks/url-a636e22e.js",
-  "/_app/chunks/CanvasBlockie-26496520.js",
-  "/_app/assets/CanvasBlockie-021ba57e.css",
-  "/_app/chunks/wallet-675ff59e.js",
-  "/_app/chunks/NavButton-db9aa491.js"
+  "/_app/chunks/wallet-bec7b7de.js",
+  "/_app/chunks/url-107b818f.js"
 ];
 const URLS_TO_PRE_CACHE = build.concat(["/","/map/"]);
 const CACHE_NAME = "cache-name" + timestamp;

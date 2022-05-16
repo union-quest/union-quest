@@ -52,7 +52,8 @@
     </div>
     <div class="m-4 border-2">
       <div class="text-2xl font-bold">How to play</div>
-      <div>
+      <div>coming soon :)</div>
+      <!-- <div>
         UnionQuest is a fully on-chain MMORPG. With that, you're free to do whatever you want, but there are a few
         places you might want to start:
       </div>
@@ -60,7 +61,7 @@
       <div>Gather wood and stone and craft the Golden Axe and Pickaxe.</div>
       <div>Buy items from the shop.</div>
       <div>You need items to do aynthing + improve ytour skill.</div>
-      <div>Your vouch is based off of your max level.</div>
+      <div>Your vouch is based off of your max level.</div> -->
     </div>
   </div>
 </section>

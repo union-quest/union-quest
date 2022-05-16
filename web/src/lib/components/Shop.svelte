@@ -37,7 +37,7 @@
           {:else if $shopItems.step === 'LOADING'}
             <div>Loading Map...</div>
           {:else if !$shopItems.data}
-            <div>Something failed to load!</div>
+            <div>Shop items failed to load!</div>
           {:else}
             {#each $shopItems.data as item}
               <div class="flex flex-col border-2 border-dotted p-1">
