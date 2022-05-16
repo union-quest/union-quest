@@ -7,6 +7,7 @@
   import DaiSymbol from './DaiSymbol.svelte';
   import Modal from './styled/Modal.svelte';
   import Shop from './Shop.svelte';
+  import DarkSwitch from './styled/DarkSwitch.svelte';
 
   export let currentPlayer: Player | null;
 
@@ -78,8 +79,8 @@
         >
           View the Bank on union.finance
         </a>
-      </div></Modal
-    >
+      </div>
+    </Modal>
   {/if}
   <div class="flex text-2xl justify-center p-2">
     {$wallet.address.slice(0, 4)}...{$wallet.address.slice(-4)}
@@ -137,8 +138,7 @@
                   <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
                 </div>
                 <div>
-                  <!-- {currentPlayer.endTile.item.symbol} -->
-                  something
+                  {getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1 ? '🪵' : '🪨'}
                   {Math.round(
                     getBalanceStreamed(
                       currentPlayer,
@@ -182,10 +182,10 @@
         <div class="text-xl">Skills</div>
         <div class="text-left text-lg">
           <div class="flex">
-            <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
+            <div class="border-2 rounded-lg border-gray-600 m-1 w-full text-center">
               ⛏️ {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 2))}
             </div>
-            <div class="border-2 rounded-lg border-gray-600 m-1 w-16 text-center">
+            <div class="border-2 rounded-lg border-gray-600 m-1 w-full text-center">
               🪓 {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, 1))}
             </div>
           </div>
@@ -288,6 +288,7 @@
       <div>
         <div class="text-xl">Settings</div>
         <div>
+          <div class="flex border-2">Dark mode: <DarkSwitch /></div>
           <div on:click={mint} class="border-2">Mint free testnet DAI</div>
           <div on:click={approve} class="border-2">Set DAI allowance for shops</div>
           <div on:click={approveNFT} class="border-2">Set NFT allowance for shops</div>

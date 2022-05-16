@@ -4,6 +4,8 @@
   import {players} from '$lib/player/players';
   import PlayerInfo from '$lib/components/PlayerInfo.svelte';
   import MapCanvas from '$lib/components/MapCanvas.svelte';
+  import NavButton from '$lib/components/styled/navigation/NavButton.svelte';
+  import {url} from '$lib/utils/url';
 
   async function join() {
     await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
@@ -30,6 +32,16 @@
       currentPlayer={$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}
     />
     <div class="relative">
+      <div class="fixed bottom-0 left-0 m-2">
+        <NavButton href={url('/')} label="Home">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+            />
+          </svg>
+        </NavButton>
+      </div>
+
       <div class="fixed bottom-0 right-0 border-8 border-double border-gray-700 bg-gray-300 p-1">
         {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
           <PlayerInfo

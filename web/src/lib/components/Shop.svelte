@@ -1,7 +1,9 @@
 <script lang="ts">
   import {flow} from '$lib/blockchain/wallet';
   import type {Player} from '$lib/player/player';
-  import {items} from '$lib/item/items';
+  import {shopItems} from '$lib/item/items';
+  import Modal from './styled/Modal.svelte';
+  import DaiSymbol from './DaiSymbol.svelte';
 
   export let currentPlayer: Player | null;
 
@@ -12,34 +14,46 @@
   async function sell(id: string, amount: string) {
     await flow.execute((contracts) => contracts.UnionQuest.sell(id, amount));
   }
+
+  let showModal = false;
 </script>
 
 <div class="h-full">
+  {#if showModal}
+    <Modal title={`Shop`} on:close={() => (showModal = false)} closeButton={true}>
+      <div class="flex flex-row justify-around">
+        <div>
+          {#if !$shopItems.step}
+            <div>Messages not loaded</div>
+          {:else if $shopItems.error}
+            <div>Error: {$shopItems.error}</div>
+          {:else if $shopItems.step === 'LOADING'}
+            <div>Loading Map...</div>
+          {:else if !$shopItems.data}
+            <div>Something failed to load!</div>
+          {:else}
+            {#each $shopItems.data as item}
+              <div class="flex flex-col">
+                <div class="flex">
+                  {item.symbol}{item.name}
+                  <div class="flex">
+                    {item.stake}
+                    <DaiSymbol />
+                  </div>
+                </div>
+                {#if currentPlayer}
+                  <div>
+                    <div class="border-2" on:click={() => buy(item.id, '1')}>Buy</div>
+                    <div class="border-2" on:click={() => sell(item.id, '1')}>Sell</div>
+                  </div>
+                {/if}
+              </div>
+            {/each}
+          {/if}
+        </div>
+      </div>
+    </Modal>
+  {/if}
   <div class="text-xl">Shop</div>
-
-  <div class="flex flex-row justify-around">
-    <div>
-      {#if !$items.step}
-        <div>Messages not loaded</div>
-      {:else if $items.error}
-        <div>Error: {$items.error}</div>
-      {:else if $items.step === 'LOADING'}
-        <div>Loading Map...</div>
-      {:else if !$items.data}
-        <div>Something failed to load!</div>
-      {:else}
-        {#each $items.data as item}
-          <div class="flex">
-            <div>
-              {item.symbol}{item.name}
-            </div>
-            {#if currentPlayer}
-              <div class="border-2" on:click={() => buy(item.id, '1')}>Buy</div>
-              <div class="border-2" on:click={() => sell(item.id, '1')}>Sell</div>
-            {/if}
-          </div>
-        {/each}
-      {/if}
-    </div>
-  </div>
+  <button class="border-2 border-gray-700 p-1" on:click={() => (showModal = true)}>Enter the shop</button>
 </div>

@@ -9,7 +9,7 @@ import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 
-export type Item = { id: string, name: string, symbol: string }
+export type Item = { id: string, name: string, symbol: string, stake: string }
 type Items = Item[];
 
 // TODO web3w needs to export the type
@@ -52,6 +52,7 @@ class ItemsStore implements QueryStore<Items> {
         id
         name
         symbol
+        stake
       }
     }`,
       chainTempo,
@@ -84,4 +85,4 @@ class ItemsStore implements QueryStore<Items> {
   }
 }
 
-export const items = new ItemsStore(SUBGRAPH_ENDPOINT, transactions);
+export const shopItems = new ItemsStore(SUBGRAPH_ENDPOINT, transactions);

@@ -67,8 +67,7 @@
                 {#if getItem(x, y) !== 0}
                   Once you arrive, you will start gathering
                   <span class="inline font-bold">
-                    <!-- {tile.item.symbol}{tile.item.name} -->
-                    something
+                    {getItem(x, y) === 1 ? '🪵' : '🪨'}
                   </span>
                   at a rate of
                   <div class="inline font-bold">

@@ -9,6 +9,8 @@
 
   import {appDescription, url as appUrl} from '../application.json';
   import {wallet} from '$lib/blockchain/wallet';
+  import NavButton from '$lib/components/styled/navigation/NavButton.svelte';
+  import {url} from '$lib/utils/url';
 
   const title = 'Union Quest, Template for Decentralised Applications.';
   const description = appDescription;
@@ -34,17 +36,6 @@
 
 <NoInstallPrompt />
 <NewVersionNotification />
-
-<!-- <NavBar
-  links={[
-    {href: url(''), title: 'Home'},
-    {href: url('map/'), title: 'Map'},
-  ]}
-/> -->
-
-<div class="absolute top-0 right-0 m-2 flex bg-yellow-500">
-  <DarkSwitch />
-</div>
 
 <slot />
 <Notifications />
