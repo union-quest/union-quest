@@ -4,7 +4,7 @@
   import {shopItems} from '$lib/item/items';
   import Modal from './styled/Modal.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
-  import type {BigNumber} from '@ethersproject/bignumber';
+  import {BigNumber} from '@ethersproject/bignumber';
 
   export let currentPlayer: Player | null;
   export let balance: BigNumber;
@@ -52,7 +52,11 @@
                 </div>
                 {#if currentPlayer}
                   <div class="flex">
-                    <div class="border-2 w-full m-1" on:click={() => buy(item.id, '1')}>Buy 1</div>
+                    {#if balance.gt(BigNumber.from(0))}
+                      <div class="border-2 w-full m-1" on:click={() => buy(item.id, '1')}>Buy 1</div>
+                    {:else}
+                      <div class="border-2 w-full m-1 bg-red-400">Buy 1</div>
+                    {/if}
                     <div class="border-2 w-full m-1" on:click={() => sell(item.id, '1')}>Sell 1</div>
                   </div>
                 {/if}
