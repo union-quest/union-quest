@@ -8,21 +8,32 @@
   import Shop from './Shop.svelte';
   import Crafting from './Crafting.svelte';
   import {BigNumber} from '@ethersproject/bignumber/src.ts';
+  import {chainId} from '$lib/config';
 
   export let currentPlayer: Player | null;
 
   async function mint() {
-    await flow.execute((contracts) => contracts.FaucetERC20.mint($wallet.address, '100000000000000000000'));
+    await flow.execute((contracts) =>
+      chainId === '1337'
+        ? contracts.FaucetERC20.mint($wallet.address, '100000000000000000000')
+        : contracts.DAI.mint($wallet.address, '100000000000000000000')
+    );
   }
 
   async function approve() {
     await flow.execute((contracts) =>
-      contracts.FaucetERC20.approve(contracts.UnionQuest.address, '100000000000000000000000000000000')
+      chainId === '1337'
+        ? contracts.FaucetERC20.approve(contracts.UnionQuest.address, '100000000000000000000000000000000')
+        : contracts.DAI.approve(contracts.UnionQuest.address, '100000000000000000000000000000000')
     );
   }
 
   async function approveNFT() {
     await flow.execute((contracts) => contracts.UnionQuest.setApprovalForAll(contracts.UnionQuest.address, true));
+  }
+
+  async function updateTrust() {
+    await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
   }
 
   let tab = 0;
@@ -36,12 +47,12 @@
   const roundBest = (n: number) => Math.round(n * 10) / 10;
   const roundGood = (n: number) => Math.round(n * 100) / 100;
 
-  async function updateTrust() {
-    await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
-  }
-
   onMount(() => {
-    flow.execute((contracts) => contracts.FaucetERC20.balanceOf($wallet.address).then((x) => (balance = x)));
+    flow.execute((contracts) =>
+      chainId === '1337'
+        ? contracts.FaucetERC20.balanceOf($wallet.address).then((x) => (balance = x))
+        : contracts.DAI.balanceOf($wallet.address).then((x) => (balance = x))
+    );
 
     const interval = setInterval(() => {
       currentTimestamp = Date.now();

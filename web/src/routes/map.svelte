@@ -8,7 +8,7 @@
   import {url} from '$lib/utils/url';
 
   async function join() {
-    await flow.execute((contracts) => contracts.UnionQuest.updateTrust($wallet.address));
+    await flow.execute((contracts) => contracts.UnionQuest.move(0, 0));
   }
 </script>
 
