@@ -8,6 +8,7 @@
   import Modal from './styled/Modal.svelte';
   import Shop from './Shop.svelte';
   import DarkSwitch from './styled/DarkSwitch.svelte';
+  import Crafting from './Crafting.svelte';
 
   export let currentPlayer: Player | null;
 
@@ -215,47 +216,7 @@
     {:else if tab === 3}
       <Shop {currentPlayer} />
     {:else if tab === 4}
-      <div>
-        <div class="text-xl">
-          Crafting
-          <button class="border-2 border-gray-700">ℹ️</button>
-        </div>
-
-        {#if !$recipes.step}
-          <div>Messages not loaded</div>
-        {:else if $recipes.error}
-          <div>Error: {$recipes.error}</div>
-        {:else if $recipes.step === 'LOADING'}
-          <div>Loading Map...</div>
-        {:else if !$recipes.data}
-          <div>Something failed to load!</div>
-        {:else}
-          {#each $recipes.data as recipe}
-            <div class="flex flex-row justify-around">
-              <div>
-                {#each recipe.inputIds as input, i}
-                  <div class="border-2">
-                    <div class="border-2 bg-gray-300">{recipe.inputQuantities[i]}</div>
-                    <div class="border-2 text-xl">{input.symbol}</div>
-                  </div>
-                {/each}
-              </div>
-              <div>➡️</div>
-              <div>
-                <div class="border-2">
-                  <div class="border-2 text-2xl">{recipe.output.symbol}</div>
-                  <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
-                </div>
-                {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputIds[0].id) > parseInt(recipe.inputQuantities[0]) && getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputIds[1].id) > parseInt(recipe.inputQuantities[1])}
-                  <button class="border-2 bg-green-400 border-gray-500 p-1 m-2" on:click={craft}> Craft </button>
-                {:else}
-                  <button class="border-2 bg-red-400 border-gray-500 p-1 m-2"> Craft </button>
-                {/if}
-              </div>
-            </div>
-          {/each}
-        {/if}
-      </div>
+      <Crafting {currentPlayer} />
     {:else if tab === 5}
       <div>
         <div class="text-xl">

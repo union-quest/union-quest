@@ -34,17 +34,19 @@
           {:else}
             {#each $shopItems.data as item}
               <div class="flex flex-col">
-                <div class="flex">
-                  {item.symbol}{item.name}
+                <div class="flex flex-row justify-between">
+                  <div>
+                    {item.symbol}{item.name}
+                  </div>
                   <div class="flex">
                     {item.stake}
                     <DaiSymbol />
                   </div>
                 </div>
                 {#if currentPlayer}
-                  <div>
-                    <div class="border-2" on:click={() => buy(item.id, '1')}>Buy</div>
-                    <div class="border-2" on:click={() => sell(item.id, '1')}>Sell</div>
+                  <div class="flex">
+                    <div class="border-2 w-full m-1" on:click={() => buy(item.id, '1')}>Buy 1</div>
+                    <div class="border-2 w-full m-1" on:click={() => sell(item.id, '1')}>Sell 1</div>
                   </div>
                 {/if}
               </div>
