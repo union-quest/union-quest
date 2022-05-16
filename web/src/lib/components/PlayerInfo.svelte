@@ -211,7 +211,7 @@
         {/if}
       </div>
     {:else if tab === 3}
-      <Shop {currentPlayer} />
+      <Shop {currentPlayer} {balance} />
     {:else if tab === 4}
       <Crafting {currentPlayer} />
     {:else if tab === 5}
