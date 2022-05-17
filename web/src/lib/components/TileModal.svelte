@@ -14,7 +14,7 @@
   const roundGood = (n: number) => Math.round(n * 10) / 10;
 
   async function move(x, y) {
-    await flow.execute((contracts) => contracts.UnionQuest.move(x, y));
+    await flow.execute((contracts) => contracts.UnionQuest.move(x, y, {gasLimit: '100000'}));
   }
 
   let currentTimestamp = Date.now();
