@@ -10,6 +10,7 @@
   import {BigNumber} from '@ethersproject/bignumber/src.ts';
   import {chainId} from '$lib/config';
 
+  export let players: Player[];
   export let currentPlayer: Player | null;
 
   async function mint() {
@@ -108,7 +109,7 @@
     </div>
   </div>
   <div class="flex text-2xl justify-start">
-    {#each ['🎮', '📊', '🎒', '🏪', '🛠️', '🏦', '⚙️'] as icon, i}
+    {#each ['🎮', '📊', '🎒', '🏪', '🛠️', '🏦', '🏅', '⚙️'] as icon, i}
       <button
         class="w-12 border-2 border-gray-700 {tab === i ? 'bg-red-700' : 'bg-neutral-400'}"
         on:click={() => (tab = i)}
@@ -228,7 +229,7 @@
     {:else if tab === 5}
       <div>
         <div class="text-xl">
-          Vouching rewards
+          Vouching Rewards
           <button class="border-2 border-gray-700" on:click={() => (showModal = true)}>ℹ️</button>
         </div>
         <div class="p-1">
@@ -251,6 +252,29 @@
             </div>
           </div>
           <button class="border-2 bg-yellow-400 border-gray-500 p-1" on:click={updateTrust}>Update</button>
+        </div>
+      </div>
+    {:else if tab === 6}
+      <div>
+        <div class="text-xl">Players</div>
+        <div class="flex flex-col">
+          {#each players as player}
+            <div class="flex justify-between p-1">
+              <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${player.id}`}>
+                <div class="flex">
+                  <Blockie address={player.id} class="h-6 w-6" />
+                  {player.id.slice(0, 4)}...{player.id.slice(-4)}
+                </div>
+              </a>
+              <div>
+                <div class="inline font-medium">Total level:</div>
+                {Math.round(
+                  getSkill(player, currentTimestamp / 1000, 1) + getSkill(player, currentTimestamp / 1000, 2)
+                )}
+              </div>
+            </div>
+            <div />
+          {/each}
         </div>
       </div>
     {:else}

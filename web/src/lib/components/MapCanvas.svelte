@@ -11,6 +11,7 @@
 
   const MIN_ZOOM = 25;
   const MAX_ZOOM = 100;
+  const SCROLL_SENSITIVITY = 0.5;
   let currentTimestamp = Date.now();
 
   let canvas: HTMLCanvasElement;
@@ -115,7 +116,6 @@
       return {x: e.clientX, y: e.clientY};
     }
   }
-
   function onDblClick() {
     showModal = true;
   }
@@ -128,6 +128,8 @@
 
   function onPointerUp(e) {
     isDragging = false;
+    initialPinchDistance = null;
+    lastZoom = cameraZoom;
   }
 
   function onPointerMove(e) {
@@ -176,10 +178,20 @@
     }
   }
 
-  function adjustZoom(evt) {
-    cameraZoom -= evt.deltaY;
-    cameraZoom = Math.min(cameraZoom, MAX_ZOOM);
-    cameraZoom = Math.max(cameraZoom, MIN_ZOOM);
+  function adjustZoom(zoomAmount, zoomFactor) {
+    if (!isDragging) {
+      if (zoomAmount) {
+        cameraZoom += zoomAmount;
+      } else if (zoomFactor) {
+        console.log(zoomFactor);
+        cameraZoom = zoomFactor * lastZoom;
+      }
+
+      cameraZoom = Math.min(cameraZoom, MAX_ZOOM);
+      cameraZoom = Math.max(cameraZoom, MIN_ZOOM);
+
+      console.log(zoomAmount);
+    }
   }
 
   onMount(() => {
@@ -191,7 +203,7 @@
     canvas.addEventListener('touchend', (e) => handleTouch(e, onPointerUp));
     canvas.addEventListener('mousemove', onPointerMove);
     canvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove));
-    canvas.addEventListener('wheel', (e) => adjustZoom(e));
+    canvas.addEventListener('wheel', (e) => adjustZoom(-e.deltaY * SCROLL_SENSITIVITY));
     canvas.addEventListener('dblclick', onDblClick);
 
     const interval = setInterval(() => {
