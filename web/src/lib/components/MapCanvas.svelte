@@ -20,8 +20,8 @@
   let isDragging = false;
   let dragStart = {x: 0, y: 0};
 
-  let x = 100000000;
-  let y = 100000000;
+  let x;
+  let y;
 
   let showModal = false;
   let tiles = {};
