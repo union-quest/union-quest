@@ -27,17 +27,16 @@
   let tiles = {};
 
   const draw = () => {
-    let ctx = canvas.getContext('2d');
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    let ctx = canvas.getContext('2d');
+
     ctx.translate(window.innerWidth / 2, window.innerHeight / 2);
     ctx.scale(cameraZoom, cameraZoom);
     ctx.translate(-window.innerWidth / 2 + cameraOffset.x, -window.innerHeight / 2 + cameraOffset.y);
-
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
     ctx.strokeStyle = '#BBBBBB';
 
     ctx.lineWidth = 0.01;

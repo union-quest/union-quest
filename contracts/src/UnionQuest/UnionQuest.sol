@@ -340,8 +340,8 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
         uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
         if (distanceTravelled < distanceNeeded) {
-            player.startX = player.startX + (vX * int256(distanceTravelled)) / int256(distanceNeeded);
-            player.startY = player.startY + (vY * int256(distanceTravelled)) / int256(distanceNeeded);
+            player.startX += (vX * int256(distanceTravelled)) / int256(distanceNeeded);
+            player.startY += (vY * int256(distanceTravelled)) / int256(distanceNeeded);
         } else {
             player.startX = player.endX;
             player.startY = player.endY;
