@@ -1,21 +1,27 @@
 <script lang="js">
   import {onMount} from 'svelte';
+  import {mat4} from 'gl-matrix';
 
   // Vertex shader program
+
   const vsSource = `
     attribute vec4 aVertexPosition;
-
+    attribute vec4 aVertexColor;
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
-
-    void main() {
+    varying lowp vec4 vColor;
+    void main(void) {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vColor = aVertexColor;
     }
   `;
 
+  // Fragment shader program
+
   const fsSource = `
-    void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    varying lowp vec4 vColor;
+    void main(void) {
+      gl_FragColor = vColor;
     }
   `;
 
@@ -89,11 +95,40 @@
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
+    // Now set up the colors for the vertices
+
+    var colors = [
+      1.0,
+      1.0,
+      1.0,
+      1.0, // white
+      1.0,
+      0.0,
+      0.0,
+      1.0, // red
+      0.0,
+      1.0,
+      0.0,
+      1.0, // green
+      0.0,
+      0.0,
+      1.0,
+      1.0, // blue
+    ];
+
+    const colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
     return {
       position: positionBuffer,
+      color: colorBuffer,
     };
   }
 
+  //
+  // Draw the scene.
+  //
   function drawScene(gl, programInfo, buffers) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
     gl.clearDepth(1.0); // Clear everything
@@ -135,14 +170,13 @@
     ); // amount to translate
 
     // Tell WebGL how to pull out the positions from the position
-    // buffer into the vertexPosition attribute.
+    // buffer into the vertexPosition attribute
     {
-      const numComponents = 2; // pull out 2 values per iteration
-      const type = gl.FLOAT; // the data in the buffer is 32bit floats
-      const normalize = false; // don't normalize
-      const stride = 0; // how many bytes to get from one set of values to the next
-      // 0 = use type and numComponents above
-      const offset = 0; // how many bytes inside the buffer to start from
+      const numComponents = 2;
+      const type = gl.FLOAT;
+      const normalize = false;
+      const stride = 0;
+      const offset = 0;
       gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
       gl.vertexAttribPointer(
         programInfo.attribLocations.vertexPosition,
@@ -153,6 +187,19 @@
         offset
       );
       gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+    }
+
+    // Tell WebGL how to pull out the colors from the color buffer
+    // into the vertexColor attribute.
+    {
+      const numComponents = 4;
+      const type = gl.FLOAT;
+      const normalize = false;
+      const stride = 0;
+      const offset = 0;
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+      gl.vertexAttribPointer(programInfo.attribLocations.vertexColor, numComponents, type, normalize, stride, offset);
+      gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
     }
 
     // Tell WebGL to use our program when drawing
@@ -183,17 +230,19 @@
       return;
     }
 
-    // Set clear color to black, fully opaque
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    // Clear the color buffer with specified clear color
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
+    // Initialize a shader program; this is where all the lighting
+    // for the vertices and so forth is established.
     const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
 
+    // Collect all the info needed to use the shader program.
+    // Look up which attributes our shader program is using
+    // for aVertexPosition, aVertexColor and also
+    // look up uniform locations.
     const programInfo = {
       program: shaderProgram,
       attribLocations: {
         vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+        vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
       },
       uniformLocations: {
         projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
@@ -201,8 +250,11 @@
       },
     };
 
+    // Here's where we call the routine that builds all the
+    // objects we'll be drawing.
     const buffers = initBuffers(gl);
 
+    // Draw the scene
     drawScene(gl, programInfo, buffers);
   });
 </script>
