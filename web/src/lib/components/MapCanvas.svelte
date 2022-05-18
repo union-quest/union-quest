@@ -182,14 +182,11 @@
       if (zoomAmount) {
         cameraZoom += zoomAmount;
       } else if (zoomFactor) {
-        console.log(zoomFactor);
         cameraZoom = zoomFactor * lastZoom;
       }
 
       cameraZoom = Math.min(cameraZoom, MAX_ZOOM);
       cameraZoom = Math.max(cameraZoom, MIN_ZOOM);
-
-      console.log(zoomAmount);
     }
   }
 
@@ -207,9 +204,14 @@
 
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
-      draw();
     }, 10);
 
+    function render() {
+      draw();
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
     return () => {
       clearInterval(interval);
     };
