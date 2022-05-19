@@ -23,6 +23,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         string name;
         string symbol;
         uint256 stake;
+        uint256 tool;
     }
 
     struct Recipe {
@@ -336,7 +337,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
             player.startY = player.endY;
 
             uint256 tileItem = getItem(player.endX, player.endY);
-            if ((tileItem == 1 && balanceOf(account, 3) > 0) || (tileItem == 2 && balanceOf(account, 4) > 0)) {
+            if (tileItem > 0 && balanceOf(account, itemTypes[tileItem].tool) > 0) {
                 uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
                     SKILL_INCREASE_DIVISOR;
 

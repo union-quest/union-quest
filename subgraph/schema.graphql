@@ -3,6 +3,7 @@ type Item @entity {
   name: String!
   symbol: String!
   stake: BigInt!
+  tool: Item
   balances: [Balance!]! @derivedFrom(field: "item")
 }
 

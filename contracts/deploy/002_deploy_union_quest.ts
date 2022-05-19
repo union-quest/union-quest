@@ -107,7 +107,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     await execute("UserManager", { from: deployer, log: true }, "addMember", unionQuest.address);
   }
 
-  await execute("UnionQuest", { from: deployer, log: true }, "addItemTypes", [["Air", "💨", 0], ["Wood", "🪵", 0], ["Stone", "🪨", 0], ["Basic Axe", "🪓", "100"], ["Basic Pickaxe", "⛏️", "100"], ["Superior Axe", "🪓", 0], ["Superior Pickaxe", "⛏️", 0], ["Golden Axe", "🪓", 0], ["Golden Pickaxe", "⛏️", 0],]);
+  await execute("UnionQuest", { from: deployer, log: true }, "addItemTypes", [["Air", "💨", 0, 0], ["Wood", "🪵", 0, 3], ["Stone", "🪨", 0, 4], ["Basic Axe", "🪓", "100", 0], ["Basic Pickaxe", "⛏️", "100", 0], ["Superior Axe", "🪓", "500", 0], ["Superior Pickaxe", "⛏️", "500", 0], ["Golden Axe", "🪓", 0, 0], ["Golden Pickaxe", "⛏️", 0, 0],]);
   await execute("UnionQuest", { from: deployer, log: true }, "addRecipes", [[[1, 2], [100, 50], 7], [[1, 2], [100, 50], 8]]);
 };
 export default func;

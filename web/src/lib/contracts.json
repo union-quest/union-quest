@@ -6654,6 +6654,11 @@
                   "internalType": "uint256",
                   "name": "stake",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "tool",
+                  "type": "uint256"
                 }
               ],
               "indexed": false,
@@ -6905,6 +6910,11 @@
                 {
                   "internalType": "uint256",
                   "name": "stake",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "tool",
                   "type": "uint256"
                 }
               ],

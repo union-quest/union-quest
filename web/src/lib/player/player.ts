@@ -22,7 +22,7 @@ export type Player = {
   endY: string;
   startTimestamp: string;
   vouch: string;
-  balances: { id: string; player: string, item?: Item, value: string, skill: string }[];
+  balances: { id: string; player: string, item: Item, value: string, skill: string }[];
 }
 
 // TODO web3w needs to export the type
@@ -157,10 +157,8 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
     parseInt(player.endY)
   );
 
-  const toolId = resourceId.toString() === "1" ? "3" : "4";
-
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
-  const toolBalance = player.balances.find(b => b.item.id === toolId);
+  const toolBalance = player.balances.find(b => b.item.id === resourceBalance.item.tool.id);
 
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
   const savedTool = toolBalance ? parseInt(toolBalance.value) : 0;
@@ -186,8 +184,7 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
-  const toolId = resourceId === "1" ? "3" : "4";
-  const toolBalance = player.balances.find(b => b.item.id === toolId);
+  const toolBalance = player.balances.find(b => b.item.id === resourceBalance.item.tool.id);
 
   const savedBalance = resourceBalance ? parseInt(resourceBalance.value) : 0;
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
