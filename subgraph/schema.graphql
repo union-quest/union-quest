@@ -4,12 +4,13 @@ type Item @entity {
   symbol: String!
   stake: BigInt!
   tools: [Item!]!
+  recipes: [Recipe!]! @derivedFrom(field: "output")
   balances: [Balance!]! @derivedFrom(field: "item")
 }
 
 type Recipe @entity {
   id: ID!
-  inputIds: [Item!]!
+  inputs: [Item!]!
   inputQuantities: [BigInt!]!
   output: Item!
 }
