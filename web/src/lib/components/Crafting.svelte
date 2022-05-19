@@ -28,7 +28,7 @@
 
 <div>
   {#if showModal}
-    <Modal title={`Crafting`} on:close={() => (showModal = false)} closeButton={true}>
+    <Modal title="Crafting" on:close={() => (showModal = false)} closeButton={true}>
       {#if !$recipes.step}
         <div>Messages not loaded</div>
       {:else if $recipes.error}
@@ -51,7 +51,7 @@
             <div class="text-xl ">Recipe {recipe.id}</div>
             <div class="flex flex-row justify-between m-2 border-2">
               <div>
-                {#each recipe.inputIds as input, i}
+                {#each recipe.inputs as input, i}
                   <div class="border-2">
                     <div class="border-2 bg-gray-300">{recipe.inputQuantities[i]}</div>
                     <div class="border-2 text-xl">{input.symbol}</div>
@@ -64,7 +64,7 @@
                   <div class="border-2 text-2xl">{recipe.output.symbol}</div>
                   <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
                 </div>
-                {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputIds[0].id) > parseInt(recipe.inputQuantities[0]) && getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputIds[1].id) > parseInt(recipe.inputQuantities[1])}
+                {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[0].id) > parseInt(recipe.inputQuantities[0]) && getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[1].id) > parseInt(recipe.inputQuantities[1])}
                   <button class="border-2 bg-green-400 border-gray-500 p-1 m-2" on:click={() => craft(recipe.id)}
                     >Craft</button
                   >

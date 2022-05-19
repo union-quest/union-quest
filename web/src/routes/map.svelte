@@ -6,7 +6,7 @@
   import MapCanvas from '$lib/components/MapCanvas.svelte';
   import NavButton from '$lib/components/styled/navigation/NavButton.svelte';
   import {url} from '$lib/utils/url';
-  import MapCanvasWebGl from '$lib/components/MapCanvasWebGL.svelte';
+  import Player from '$lib/components/Player.svelte';
 
   async function join() {
     await flow.execute((contracts) => contracts.UnionQuest.move(0, 0));
@@ -28,7 +28,6 @@
   {:else if !$players.data}
     <div>Players failed to load!</div>
   {:else}
-    <!-- <MapCanvasWebGl /> -->
     <MapCanvas
       players={$players.data}
       currentPlayer={$players.data.find((p) => ($wallet.address ? p.id === $wallet.address.toLowerCase() : false))}

@@ -8,10 +8,8 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
-import type { Item } from '$lib/item/items';
 
-export type Recipe = { id: string, inputs: Item[], inputQuantities: string, output: Item }
-type Recipes = Recipe[];
+export type Item = { id: string, name: string, symbol: string, stake: string, tools: Item[], recipes: any[] }
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
@@ -41,35 +39,46 @@ type TransactionRecord = {
   events?: unknown[]; // TODO
 };
 
-class RecipesStore implements QueryStore<Recipes> {
-  private queryStore: QueryStore<Recipes>;
-  private store: Readable<QueryState<Recipes>>;
-  constructor(endpoint: EndPoint, private transactions: TransactionStore) {
+class ItemStore implements QueryStore<Item> {
+  private queryStore: QueryStore<Item>;
+  private store: Readable<QueryState<Item>>;
+  constructor(endpoint: EndPoint, private transactions: TransactionStore, id: string) {
     this.queryStore = new HookedQueryStore(
       endpoint,
       `
-    query {
-      recipes {
+    query getItem($id: ID!) {
+      item(id: $id) {
         id
-        inputs {
+        name
+        symbol
+        stake
+        tools {
           id
           name
           symbol
         }
-        inputQuantities
-        output {
+        recipes {
           id
-          name
-          symbol
+          inputs {
+            id
+            name
+            symbol
+          }
+          inputQuantities
+          output {
+            id
+            name
+            symbol
+          }
         }
       }
     }`,
       chainTempo,
-      { path: 'recipes' }
+      { path: 'item', variables: { id: id } }
     );
     this.store = derived([this.queryStore, this.transactions], (values) => this.update(values));
   }
-  private update([$query]: [QueryState<Recipes>, TransactionRecord[]]): QueryState<Recipes> {
+  private update([$query]: [QueryState<Item>, TransactionRecord[]]): QueryState<Item> {
     if (!$query.data) {
       return $query;
     } else {
@@ -87,11 +96,11 @@ class RecipesStore implements QueryStore<Recipes> {
   }
 
   subscribe(
-    run: Subscriber<QueryState<Recipes>>,
-    invalidate?: Invalidator<QueryState<Recipes>> | undefined
+    run: Subscriber<QueryState<Item>>,
+    invalidate?: Invalidator<QueryState<Item>> | undefined
   ): Unsubscriber {
     return this.store.subscribe(run, invalidate);
   }
 }
 
-export const recipes = new RecipesStore(SUBGRAPH_ENDPOINT, transactions);
+export const getItem = (id: string) => new ItemStore(SUBGRAPH_ENDPOINT, transactions, id);

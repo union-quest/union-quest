@@ -9,6 +9,8 @@
   import Crafting from './Crafting.svelte';
   import {BigNumber} from '@ethersproject/bignumber/src.ts';
   import {chainId} from '$lib/config';
+  import Inventory from './Inventory.svelte';
+  import Players from './Players.svelte';
 
   export let players: Player[];
   export let currentPlayer: Player | null;
@@ -208,20 +210,7 @@
         </div>
       </div>
     {:else if tab === 2}
-      <div>
-        <div class="text-xl">Equipment</div>
-        {#if currentPlayer.balances.filter((balance) => balance.item.id !== '1' && balance.item.id !== '2' && Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0).length > 0}
-          {#each currentPlayer.balances.filter((balance) => balance.item.id !== '1' && balance.item.id !== '2' && Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)) > 0) as balance}
-            <div class="border-2">
-              {balance.item.symbol}{balance.item.name}: {Math.round(
-                getBalanceStreamed(currentPlayer, currentTimestamp / 1000, balance.item.id)
-              )}
-            </div>
-          {/each}
-        {:else}
-          You don't own any equipment.
-        {/if}
-      </div>
+      <Inventory player={currentPlayer} />
     {:else if tab === 3}
       <Shop {currentPlayer} {balance} />
     {:else if tab === 4}
@@ -255,28 +244,7 @@
         </div>
       </div>
     {:else if tab === 6}
-      <div>
-        <div class="text-xl">Players</div>
-        <div class="flex flex-col">
-          {#each players as player}
-            <div class="flex justify-between p-1">
-              <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${player.id}`}>
-                <div class="flex">
-                  <Blockie address={player.id} class="h-6 w-6" />
-                  {player.id.slice(0, 4)}...{player.id.slice(-4)}
-                </div>
-              </a>
-              <div>
-                <div class="inline font-medium">Total level:</div>
-                {Math.round(
-                  getSkill(player, currentTimestamp / 1000, 1) + getSkill(player, currentTimestamp / 1000, 2)
-                )}
-              </div>
-            </div>
-            <div />
-          {/each}
-        </div>
-      </div>
+      <Players {players} />
     {:else}
       <div>
         <div class="text-xl">Settings</div>

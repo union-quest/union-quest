@@ -8,8 +8,8 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
+import type { Item } from './item';
 
-export type Item = { id: string, name: string, symbol: string, stake: string, tools: Item[] }
 type Items = Item[];
 
 // TODO web3w needs to export the type

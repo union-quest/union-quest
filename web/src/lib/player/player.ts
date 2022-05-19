@@ -63,6 +63,25 @@ class UserStore implements QueryStore<Player> {
     query getPlayer($id: ID!){
       player(id: $id) {
         id
+        startTimestamp
+        vouch
+        startX
+        startY
+        endX
+        endY
+        balances {
+          id
+          value
+          skill
+          item {
+            id
+            name
+            symbol
+            tools {
+              id
+            }
+          }
+        }
       }
     }`,
       chainTempo,
