@@ -40,7 +40,7 @@
             <div>Shop items failed to load!</div>
           {:else}
             {#each $shopItems.data as item}
-              <div class="flex flex-col border-2 border-dotted p-1">
+              <div class="flex flex-col border-2 border-dotted p-1 m-1">
                 <div class="flex flex-row justify-between">
                   <div>
                     {item.symbol}{item.name}

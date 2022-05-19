@@ -6656,9 +6656,9 @@
                   "type": "uint256"
                 },
                 {
-                  "internalType": "uint256",
-                  "name": "tool",
-                  "type": "uint256"
+                  "internalType": "uint256[]",
+                  "name": "toolIds",
+                  "type": "uint256[]"
                 }
               ],
               "indexed": false,
@@ -6913,9 +6913,9 @@
                   "type": "uint256"
                 },
                 {
-                  "internalType": "uint256",
-                  "name": "tool",
-                  "type": "uint256"
+                  "internalType": "uint256[]",
+                  "name": "toolIds",
+                  "type": "uint256[]"
                 }
               ],
               "internalType": "struct UnionQuest.ItemType[]",

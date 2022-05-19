@@ -64,7 +64,7 @@ class UserStore implements QueryStore<Players> {
             id
             name
             symbol
-            tool {
+            tools {
               id
             }
           }

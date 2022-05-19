@@ -8,8 +8,8 @@
 
   export let currentPlayer: Player | null;
 
-  async function craft() {
-    await flow.execute((contracts) => contracts.UnionQuest.craft(0));
+  async function craft(id: string) {
+    await flow.execute((contracts) => contracts.UnionQuest.craft(id));
   }
 
   let currentTimestamp = Date.now();
@@ -65,7 +65,9 @@
                   <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
                 </div>
                 {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputIds[0].id) > parseInt(recipe.inputQuantities[0]) && getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputIds[1].id) > parseInt(recipe.inputQuantities[1])}
-                  <button class="border-2 bg-green-400 border-gray-500 p-1 m-2" on:click={craft}> Craft </button>
+                  <button class="border-2 bg-green-400 border-gray-500 p-1 m-2" on:click={() => craft(recipe.id)}
+                    >Craft</button
+                  >
                 {:else}
                   <button class="border-2 bg-red-400 border-gray-500 p-1 m-2">Craft</button>
                 {/if}

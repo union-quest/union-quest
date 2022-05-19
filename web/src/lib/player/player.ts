@@ -158,14 +158,14 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
-  const toolBalance = player.balances.find(b => b.item.id === resourceBalance.item.tool.id);
+  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.id === b.item.id));
 
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
-  const savedTool = toolBalance ? parseInt(toolBalance.value) : 0;
+  const hasTool = toolBalances.some(b => parseInt(b.value) > 0);
 
   const tileItem = getItem(parseInt(player.endX), parseInt(player.endY));
 
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && savedTool > 0) {
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && hasTool) {
     return savedSkill +
       (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
@@ -184,14 +184,15 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
-  const toolBalance = player.balances.find(b => b.item.id === resourceBalance.item.tool.id);
+  // fixme, assumes that user has resource balance
+  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.id === b.item.id));
 
   const savedBalance = resourceBalance ? parseInt(resourceBalance.value) : 0;
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
-  const savedTool = toolBalance ? parseInt(toolBalance.value) : 0;
+  const hasTool = toolBalances.some(b => parseInt(b.value) > 0);
 
   const tileItem = getItem(parseInt(player.endX), parseInt(player.endY));
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && savedTool > 0) {
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && hasTool) {
     const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
 

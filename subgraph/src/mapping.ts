@@ -22,6 +22,8 @@ export function getOrCreatePlayer(
   let entity = Player.load(id);
   if (!entity) {
     entity = new Player(id);
+    getOrCreateBalance("1", id).save()
+    getOrCreateBalance("2", id).save()
     entity.startX = BigInt.fromString("0");
     entity.startY = BigInt.fromString("0");
     entity.endX = BigInt.fromString("0");
@@ -74,15 +76,15 @@ export function getOrCreateBalance(
 
 export function handleAddItemType(event: AddItemType): void {
   let entity = getOrCreateItem(event.params._index.toString());
-  let tool = getOrCreateItem(event.params._itemType.tool.toString());
 
   entity.name = event.params._itemType.name;
   entity.symbol = event.params._itemType.symbol;
   entity.stake = event.params._itemType.stake;
-  entity.tool = event.params._itemType.tool.toString()
+  if (event.params._itemType.toolIds.length > 0) {
+    entity.tools = [event.params._itemType.toolIds[0].toString(), event.params._itemType.toolIds[1].toString(), event.params._itemType.toolIds[2].toString()];
+  }
 
   entity.save();
-  tool.save();
 }
 
 export function handleAddRecipe(event: AddRecipe): void {
