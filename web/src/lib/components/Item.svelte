@@ -34,15 +34,15 @@
     </div>
     <div class="flex flex-col">
       <div class="text-xl">Can be crafted with:</div>
-      {#if $item.data.recipes.length > 0}
-        {#each $item.data.recipes as recipe}
+      {#if $item.data.outputRecipes.length > 0}
+        {#each $item.data.outputRecipes as recipe}
           <div class="text-xl ">Recipe {recipe.id}</div>
           <div class="flex flex-row justify-between m-2 border-2">
             <div>
               {#each recipe.inputs as input, i}
                 <div class="border-2">
-                  <div class="border-2 bg-gray-300">{recipe.inputQuantities[i]}</div>
-                  <div class="border-2 text-xl">{input.symbol}</div>
+                  <div class="border-2 bg-gray-300">{recipe.inputs[i].quantity}</div>
+                  <div class="border-2 text-xl">{input.item.symbol}</div>
                 </div>
               {/each}
             </div>
@@ -51,6 +51,33 @@
               <div class="border-2 text-center">
                 <div class="border-2 text-2xl">{recipe.output.symbol}</div>
                 <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
+              </div>
+            </div>
+          </div>
+        {/each}
+      {:else}
+        This item cannot be crafted.
+      {/if}
+    </div>
+    <div class="flex flex-col">
+      <div class="text-xl">Can be used to craft:</div>
+      {#if $item.data.inputRecipes.length > 0}
+        {#each $item.data.inputRecipes as input}
+          <div class="text-xl ">Recipe {input.recipe.id}</div>
+          <div class="flex flex-row justify-between m-2 border-2">
+            <div>
+              {#each input.recipe.inputs as input, i}
+                <div class="border-2">
+                  <div class="border-2 bg-gray-300">{input.quantity}</div>
+                  <div class="border-2 text-xl">{input.item.symbol}</div>
+                </div>
+              {/each}
+            </div>
+            <div class="text-2xl">➡️</div>
+            <div class="flex flex-col">
+              <div class="border-2 text-center">
+                <div class="border-2 text-2xl">{input.recipe.output.symbol}</div>
+                <div class="border-2 text-xl bg-gray-300">{input.recipe.output.name}</div>
               </div>
             </div>
           </div>

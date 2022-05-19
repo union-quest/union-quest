@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Balance, Player, Item, Recipe } from '../generated/schema';
+import { Balance, Player, Item, Recipe, Input } from '../generated/schema';
 import { BigInt, Bytes } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
@@ -49,6 +49,17 @@ export function getOrCreateItem(
   return entity;
 }
 
+export function getOrCreateInput(
+  recipeId: string, itemId: string
+): Input {
+  let entity = Input.load(recipeId + "_" + itemId);
+  if (!entity) {
+    entity = new Input(recipeId + "_" + itemId);
+  }
+
+  return entity;
+}
+
 export function getOrCreateRecipe(
   id: string
 ): Recipe {
@@ -89,9 +100,20 @@ export function handleAddItemType(event: AddItemType): void {
 export function handleAddRecipe(event: AddRecipe): void {
   let entity = getOrCreateRecipe(event.params._index.toString());
 
+  for (let i = 0; i < event.params._recipe.inputIds.length; i++) {
+    let input = getOrCreateInput(event.params._index.toString(), event.params._recipe.inputIds[i].toString());
+    input.item = event.params._recipe.inputIds[i].toString();
+    input.recipe = event.params._index.toString();
+    input.quantity = event.params._recipe.inputQuantities[i];
+    input.save()
+  }
 
-  entity.inputs = event.params._recipe.inputIds.map<string>((t: BigInt) => t.toString());
-  entity.inputQuantities = event.params._recipe.inputQuantities;
+  if (event.params._index.equals(BigInt.fromString("0"))) {
+    entity.inputs = event.params._recipe.inputIds.map<string>((t: BigInt) => "0_" + t.toString());
+  } else {
+    entity.inputs = event.params._recipe.inputIds.map<string>((t: BigInt) => "1_" + t.toString());
+  }
+
   entity.output = event.params._recipe.output.toString();
 
   entity.save();

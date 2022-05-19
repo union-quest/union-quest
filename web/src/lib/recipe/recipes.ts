@@ -8,9 +8,10 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
-import type { Item } from '$lib/item/items';
+import type { Item } from '$lib/item/item';
 
-export type Recipe = { id: string, inputs: Item[], inputQuantities: string, output: Item }
+export type Input = { id: string, item: Item, recipe: Recipe, quantity: string };
+export type Recipe = { id: string, inputs: Input[], output: Item };
 type Recipes = Recipe[];
 
 // TODO web3w needs to export the type
@@ -52,11 +53,13 @@ class RecipesStore implements QueryStore<Recipes> {
       recipes {
         id
         inputs {
-          id
-          name
-          symbol
+          quantity
+          item {
+            id
+            name
+            symbol
+          }
         }
-        inputQuantities
         output {
           id
           name
