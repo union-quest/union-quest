@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { AddItemType, AddRecipe, Move, SetSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
+import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
 import { Balance, Player, Item, Recipe } from '../generated/schema';
 import { BigInt, Bytes } from '@graphprotocol/graph-ts';
@@ -29,8 +29,6 @@ export function getOrCreatePlayer(
     entity.endX = BigInt.fromString("0");
     entity.endY = BigInt.fromString("0");
     entity.startTimestamp = BigInt.fromString("0");
-    entity.woodSkill = BigInt.fromString("0");
-    entity.stoneSkill = BigInt.fromString("0");
   }
 
   return entity;
@@ -64,9 +62,10 @@ export function getOrCreateBalance(
   let entity = Balance.load(itemId + "_" + playerId);
   if (!entity) {
     entity = new Balance(itemId + "_" + playerId);
-    entity.value = BigInt.fromString("0");
     entity.item = itemId;
     entity.player = playerId;
+    entity.value = BigInt.fromString("0");
+    entity.skill = BigInt.fromString("0");
   }
 
   return entity;
@@ -121,16 +120,12 @@ export function handleMove(event: Move): void {
   entity.save();
 }
 
-export function handleSetSkill(event: SetSkill): void {
-  let entity = getOrCreatePlayer(event.params.account.toHexString());
+export function handleIncreaseSkill(event: IncreaseSkill): void {
+  let balance = getOrCreateBalance(event.params.id.toString(), event.params.account.toHexString());
 
-  if (event.params.skill.equals(BigInt.fromString("1"))) {
-    entity.woodSkill = event.params.amount;
-  } else {
-    entity.stoneSkill = event.params.amount;
-  }
+  balance.skill = balance.skill.plus(event.params.value);
 
-  entity.save();
+  balance.save();
 }
 
 export function handleTransferSingle(event: TransferSingle): void {

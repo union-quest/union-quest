@@ -1,18 +1,18 @@
-const timestamp = 1652907609040;
+const timestamp = 1652960917481;
 const build = [
-  "/_app/start-86ec1cdc.js",
+  "/_app/start-625938d6.js",
   "/_app/assets/start-f6bd5930.css",
-  "/_app/pages/__layout.svelte-171d0674.js",
+  "/_app/pages/__layout.svelte-52f52818.js",
   "/_app/assets/pages/__layout.svelte-fa4af0df.css",
   "/_app/assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css",
   "/_app/error.svelte-cbd7a37b.js",
-  "/_app/pages/index.svelte-d9fbbb21.js",
-  "/_app/pages/map.svelte-c4b26989.js",
+  "/_app/pages/index.svelte-f4168b8b.js",
+  "/_app/pages/map.svelte-c5a09c13.js",
   "/_app/assets/pages/map.svelte-1e7ae53b.css",
   "/_app/chunks/vendor-ec6c92af.js",
   "/_app/chunks/paths-28a87002.js",
-  "/_app/chunks/wallet-d6815d85.js",
-  "/_app/chunks/url-443ae6c8.js"
+  "/_app/chunks/wallet-f19ba47f.js",
+  "/_app/chunks/url-6a45ccd3.js"
 ];
 const URLS_TO_PRE_CACHE = build.concat(["/","/map/"]);
 const CACHE_NAME = "cache-name" + timestamp;

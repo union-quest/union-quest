@@ -1,6 +1,6 @@
 {
   ".svelte-kit/build/runtime/internal/start.js": {
-    "file": "start-86ec1cdc.js",
+    "file": "start-625938d6.js",
     "src": ".svelte-kit/build/runtime/internal/start.js",
     "isEntry": true,
     "imports": [
@@ -18,14 +18,14 @@
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-171d0674.js",
+    "file": "pages/__layout.svelte-52f52818.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js",
-      "_wallet-d6815d85.js"
+      "_wallet-f19ba47f.js"
     ],
     "css": [
       "assets/pages/__layout.svelte-fa4af0df.css",
@@ -42,26 +42,26 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-d9fbbb21.js",
+    "file": "pages/index.svelte-f4168b8b.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
-      "_wallet-d6815d85.js",
-      "_url-443ae6c8.js",
+      "_wallet-f19ba47f.js",
+      "_url-6a45ccd3.js",
       "_paths-28a87002.js"
     ]
   },
   "src/routes/map.svelte": {
-    "file": "pages/map.svelte-c4b26989.js",
+    "file": "pages/map.svelte-c5a09c13.js",
     "src": "src/routes/map.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
-      "_wallet-d6815d85.js",
-      "_url-443ae6c8.js",
+      "_wallet-f19ba47f.js",
+      "_url-6a45ccd3.js",
       "_paths-28a87002.js"
     ],
     "css": [
@@ -75,19 +75,19 @@
   "_paths-28a87002.js": {
     "file": "chunks/paths-28a87002.js"
   },
-  "_wallet-d6815d85.js": {
-    "file": "chunks/wallet-d6815d85.js",
+  "_wallet-f19ba47f.js": {
+    "file": "chunks/wallet-f19ba47f.js",
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js"
     ]
   },
-  "_url-443ae6c8.js": {
-    "file": "chunks/url-443ae6c8.js",
+  "_url-6a45ccd3.js": {
+    "file": "chunks/url-6a45ccd3.js",
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js",
-      "_wallet-d6815d85.js"
+      "_wallet-f19ba47f.js"
     ]
   }
 }

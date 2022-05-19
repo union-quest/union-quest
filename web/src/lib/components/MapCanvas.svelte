@@ -19,6 +19,8 @@
   let cameraOffset;
   let isDragging = false;
   let dragStart = {x: 0, y: 0};
+  let mouseDownStart = {x: 0, y: 0};
+  const delta = 6;
 
   let x;
   let y;
@@ -115,17 +117,23 @@
       return {x: e.clientX, y: e.clientY};
     }
   }
-  function onDblClick() {
-    showModal = true;
-  }
 
   function onPointerDown(e) {
     isDragging = true;
     dragStart.x = getEventLocation(e).x / cameraZoom - cameraOffset.x;
     dragStart.y = getEventLocation(e).y / cameraZoom - cameraOffset.y;
+
+    mouseDownStart.x = getEventLocation(e).x;
+    mouseDownStart.y = getEventLocation(e).y;
   }
 
   function onPointerUp(e) {
+    if (
+      Math.abs(mouseDownStart.x - getEventLocation(e).x) < delta &&
+      Math.abs(mouseDownStart.y - getEventLocation(e).y) < delta
+    ) {
+      showModal = true;
+    }
     isDragging = false;
     initialPinchDistance = null;
     lastZoom = cameraZoom;
@@ -200,7 +208,6 @@
     canvas.addEventListener('mousemove', onPointerMove);
     canvas.addEventListener('touchmove', (e) => handleTouch(e, onPointerMove));
     canvas.addEventListener('wheel', (e) => adjustZoom(-e.deltaY * SCROLL_SENSITIVITY));
-    canvas.addEventListener('dblclick', onDblClick);
 
     const interval = setInterval(() => {
       currentTimestamp = Date.now();

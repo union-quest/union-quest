@@ -21,10 +21,8 @@ export type Player = {
   endX: string;
   endY: string;
   startTimestamp: string;
-  woodSkill: string;
-  stoneSkill: string;
   vouch: string;
-  balances: { id: string; player: string, item?: Item, value: string }[];
+  balances: { id: string; player: string, item?: Item, value: string, skill: string }[];
 }
 
 // TODO web3w needs to export the type
@@ -159,11 +157,17 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
     parseInt(player.endY)
   );
 
-  const savedSkill = parseInt(resourceId === 1 ? player.woodSkill : player.stoneSkill);
+  const toolId = resourceId.toString() === "1" ? "3" : "4";
+
+  const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
+  const toolBalance = player.balances.find(b => b.item.id === toolId);
+
+  const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
+  const savedTool = toolBalance ? parseInt(toolBalance.value) : 0;
 
   const tileItem = getItem(parseInt(player.endX), parseInt(player.endY));
 
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString()) {
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && savedTool > 0) {
     return savedSkill +
       (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
@@ -173,11 +177,6 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
 }
 
 export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: string): number => {
-  const balanceObject = player.balances.find(b => b.item.id === resourceId.toString());
-
-  const savedBalance = balanceObject ? parseInt(balanceObject.value) : 0;
-  const savedSkill = resourceId === "1" ? parseInt(player.woodSkill) : parseInt(player.stoneSkill);
-
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
   const distanceNeeded = distance(
     parseInt(player.startX),
@@ -186,9 +185,16 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
     parseInt(player.endY)
   );
 
-  const tileItem = getItem(parseInt(player.endX), parseInt(player.endY));
+  const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
+  const toolId = resourceId === "1" ? "3" : "4";
+  const toolBalance = player.balances.find(b => b.item.id === toolId);
 
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString()) {
+  const savedBalance = resourceBalance ? parseInt(resourceBalance.value) : 0;
+  const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
+  const savedTool = toolBalance ? parseInt(toolBalance.value) : 0;
+
+  const tileItem = getItem(parseInt(player.endX), parseInt(player.endY));
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && savedTool > 0) {
     const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
 

@@ -28,8 +28,8 @@ dataSources:
           handler: handleMove
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
-        - event: SetSkill(address,uint256,uint256)
-          handler: handleSetSkill
+        - event: IncreaseSkill(indexed address,uint256,uint256)
+          handler: handleIncreaseSkill
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: UserManager

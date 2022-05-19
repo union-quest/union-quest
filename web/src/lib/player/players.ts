@@ -51,8 +51,6 @@ class UserStore implements QueryStore<Players> {
       players {
         id
         startTimestamp
-        woodSkill
-        stoneSkill
         vouch
         startX
         startY
@@ -61,6 +59,7 @@ class UserStore implements QueryStore<Players> {
         balances {
           id
           value
+          skill
           item {
             id
             name

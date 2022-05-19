@@ -3,6 +3,7 @@ type Item @entity {
   name: String!
   symbol: String!
   stake: BigInt!
+  balances: [Balance!]! @derivedFrom(field: "item")
 }
 
 type Recipe @entity {
@@ -12,19 +13,6 @@ type Recipe @entity {
   output: Item!
 }
 
-type Tile @entity {
-  id: ID!
-  x: BigInt!
-  y: BigInt!
-}
-
-type Balance @entity {
-  id: ID!
-  item: Item!
-  player: Player!
-  value: BigInt!
-}
-
 type Player @entity {
   id: ID!
   startX: BigInt!
@@ -32,8 +20,14 @@ type Player @entity {
   endX: BigInt!
   endY: BigInt!
   startTimestamp: BigInt!
-  woodSkill: BigInt!
-  stoneSkill: BigInt!
   vouch: BigInt!
   balances: [Balance!]! @derivedFrom(field: "player")
+}
+
+type Balance @entity {
+  id: ID!
+  item: Item!
+  player: Player!
+  value: BigInt!
+  skill: BigInt!
 }
