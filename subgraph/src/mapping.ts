@@ -43,6 +43,7 @@ export function getOrCreateItem(
     entity.name = "";
     entity.symbol = "";
     entity.stake = BigInt.fromString("0");
+    entity.tools = [];
   }
 
   return entity;
@@ -80,9 +81,7 @@ export function handleAddItemType(event: AddItemType): void {
   entity.name = event.params._itemType.name;
   entity.symbol = event.params._itemType.symbol;
   entity.stake = event.params._itemType.stake;
-  if (event.params._itemType.toolIds.length > 0) {
-    entity.tools = [event.params._itemType.toolIds[0].toString(), event.params._itemType.toolIds[1].toString(), event.params._itemType.toolIds[2].toString()];
-  }
+  entity.tools = event.params._itemType.toolIds.map<string>((t: BigInt) => t.toString())
 
   entity.save();
 }
@@ -90,8 +89,9 @@ export function handleAddItemType(event: AddItemType): void {
 export function handleAddRecipe(event: AddRecipe): void {
   let entity = getOrCreateRecipe(event.params._index.toString());
 
-  entity.inputs = [event.params._recipe.inputIds[0].toString(), event.params._recipe.inputIds[1].toString()];
-  entity.inputQuantities = [event.params._recipe.inputQuantities[0], event.params._recipe.inputQuantities[1]];
+
+  entity.inputs = event.params._recipe.inputIds.map<string>((t: BigInt) => t.toString());
+  entity.inputQuantities = event.params._recipe.inputQuantities;
   entity.output = event.params._recipe.output.toString();
 
   entity.save();
