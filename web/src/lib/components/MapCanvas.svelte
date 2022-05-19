@@ -84,6 +84,16 @@
     if (currentPlayer) {
       ctx.strokeStyle = '#FF0000';
       ctx.strokeRect(parseInt(currentPlayer.endX) - 0.5, parseInt(currentPlayer.endY) - 0.5, 1, 1);
+
+      ctx.fillStyle = '#FF0000';
+
+      const position = getPosition(currentPlayer, currentTimestamp / 1000);
+
+      // Filled triangle
+      ctx.beginPath();
+      ctx.moveTo(position[0], position[1]);
+      ctx.lineTo(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY));
+      ctx.stroke();
     }
 
     players.forEach((p) => {
