@@ -29,7 +29,7 @@
     <div>Description: {$item.data.description}</div>
     <div>Symbol: {$item.data.symbol}</div>
     <div>Stake: {$item.data.stake}</div>
-    <button on:click={() => transfer(id)}>Transfer 1</button>
+    <button class="border-2" on:click={() => transfer(id)}>Transfer 1</button>
     <div class="flex flex-col">
       <div class="text-xl">Can be mined with:</div>
       {#if $item.data.tools.length > 0}

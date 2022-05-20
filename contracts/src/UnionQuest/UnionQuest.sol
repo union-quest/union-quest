@@ -77,7 +77,7 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         Player storage player = players[account];
 
         uint256 tileItem = getItem(player.endX, player.endY);
-        if (tileItem != 0 && tileItem == id) {
+        if (hasTool(account, tileItem)) {
             int256 vX = player.endX - player.startX;
             int256 vY = player.endY - player.startY;
 
@@ -357,8 +357,6 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
             player.startY = player.endY;
 
             uint256 tileItem = getItem(player.endX, player.endY);
-
-            // Need to check that you can multiply the mint amount by a constant
             if (hasTool(account, tileItem)) {
                 uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
                     SKILL_INCREASE_DIVISOR;
