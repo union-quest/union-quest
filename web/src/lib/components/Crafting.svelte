@@ -53,8 +53,8 @@
               <div>
                 {#each recipe.inputs as input, i}
                   <div class="border-2">
-                    <div class="border-2 bg-gray-300">{recipe.inputQuantities[i]}</div>
-                    <div class="border-2 text-xl">{input.symbol}</div>
+                    <div class="border-2 bg-gray-300">{input.quantity}</div>
+                    <div class="border-2 text-xl">{input.item.symbol}</div>
                   </div>
                 {/each}
               </div>
@@ -64,10 +64,10 @@
                   <div class="border-2 text-2xl">{recipe.output.symbol}</div>
                   <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
                 </div>
-                {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[0].id) > parseInt(recipe.inputQuantities[0]) && getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[1].id) > parseInt(recipe.inputQuantities[1])}
-                  <button class="border-2 bg-green-400 border-gray-500 p-1 m-2" on:click={() => craft(recipe.id)}
-                    >Craft</button
-                  >
+                {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[0].item.id) > parseInt(recipe.inputs[0].quantity) && getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[1].item.id) > parseInt(recipe.inputs[1].quantity)}
+                  <button class="border-2 bg-green-400 border-gray-500 p-1 m-2" on:click={() => craft(recipe.id)}>
+                    Craft
+                  </button>
                 {:else}
                   <button class="border-2 bg-red-400 border-gray-500 p-1 m-2">Craft</button>
                 {/if}

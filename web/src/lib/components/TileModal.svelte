@@ -65,15 +65,7 @@
 
               <div>
                 {#if getItem(x, y) !== 0}
-                  Once you arrive, you will start gathering
-                  <span class="inline font-bold">
-                    {getItem(x, y) === 1 ? '🪵' : '🪨'}
-                  </span>
-                  at a rate of
-                  <div class="inline font-bold">
-                    {Math.round(getSkill(currentPlayer, currentTimestamp / 1000, getItem(x, y)))}
-                  </div>
-                  units/s.
+                  Once you arrive, you will start gathering {getItem(x, y) === 1 ? '🪵' : '🪨'}.
                 {:else}
                   There are no resources on this tile.
                 {/if}

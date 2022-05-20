@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Balance, Player, Item, Recipe, Input } from '../generated/schema';
+import { Balance, Player, Item, Recipe, Input, Tool } from '../generated/schema';
 import { BigInt, Bytes } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
@@ -43,7 +43,17 @@ export function getOrCreateItem(
     entity.name = "";
     entity.symbol = "";
     entity.stake = BigInt.fromString("0");
-    entity.tools = [];
+  }
+
+  return entity;
+}
+
+export function getOrCreateTool(
+  itemId: string, toolId: string
+): Tool {
+  let entity = Tool.load(itemId + "_" + toolId);
+  if (!entity) {
+    entity = new Tool(itemId + "_" + toolId);
   }
 
   return entity;
@@ -92,7 +102,13 @@ export function handleAddItemType(event: AddItemType): void {
   entity.name = event.params._itemType.name;
   entity.symbol = event.params._itemType.symbol;
   entity.stake = event.params._itemType.stake;
-  entity.tools = event.params._itemType.toolIds.map<string>((t: BigInt) => t.toString())
+
+  for (let i = 0; i < event.params._itemType.toolIds.length; i++) {
+    let tool = getOrCreateTool(event.params._index.toString(), event.params._itemType.toolIds[i].toString());
+    tool.item = event.params._index.toString();
+    tool.tool = event.params._itemType.toolIds[i].toString();
+    tool.save();
+  }
 
   entity.save();
 }
@@ -106,12 +122,6 @@ export function handleAddRecipe(event: AddRecipe): void {
     input.recipe = event.params._index.toString();
     input.quantity = event.params._recipe.inputQuantities[i];
     input.save()
-  }
-
-  if (event.params._index.equals(BigInt.fromString("0"))) {
-    entity.inputs = event.params._recipe.inputIds.map<string>((t: BigInt) => "0_" + t.toString());
-  } else {
-    entity.inputs = event.params._recipe.inputIds.map<string>((t: BigInt) => "1_" + t.toString());
   }
 
   entity.output = event.params._recipe.output.toString();

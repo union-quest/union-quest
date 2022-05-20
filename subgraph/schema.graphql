@@ -1,12 +1,19 @@
+type Tool @entity {
+  id: ID!
+  item: Item!
+  tool: Item!
+}
+
 type Item @entity {
   id: ID!
   name: String!
   symbol: String!
   stake: BigInt!
-  tools: [Item!]!
-  outputRecipes: [Recipe!]! @derivedFrom(field: "output")
-  inputRecipes: [Input!]! @derivedFrom(field: "item")
+  tools: [Tool!]! @derivedFrom(field: "item")
+  isTools: [Tool!]! @derivedFrom(field: "tool")
   balances: [Balance!]! @derivedFrom(field: "item")
+  inputs: [Input!]! @derivedFrom(field: "item")
+  outputRecipes: [Recipe!]! @derivedFrom(field: "output")
 }
 
 type Input @entity {
@@ -18,8 +25,8 @@ type Input @entity {
 
 type Recipe @entity {
   id: ID!
-  inputs: [Input!]!
   output: Item!
+  inputs: [Input!]! @derivedFrom(field: "recipe")
 }
 
 type Player @entity {

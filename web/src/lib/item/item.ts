@@ -10,7 +10,8 @@ import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Input, Recipe } from '$lib/recipe/recipes';
 
-export type Item = { id: string, name: string, symbol: string, stake: string, tools: Item[], inputRecipes: Input[], outputRecipes: Recipe[] }
+type Tool = { id: string, tool: Item, item: Item };
+export type Item = { id: string, name: string, symbol: string, stake: string, tools: Tool[], isTools: Tool[], inputs: Input[], outputRecipes: Recipe[] }
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
@@ -54,9 +55,18 @@ class ItemStore implements QueryStore<Item> {
         symbol
         stake
         tools {
-          id
-          name
-          symbol
+          tool {
+            id
+            name
+            symbol
+          }
+        }
+        isTools {
+          item {
+            id
+            name
+            symbol
+          }
         }
         outputRecipes {
           id
@@ -74,7 +84,7 @@ class ItemStore implements QueryStore<Item> {
             symbol
           }
         }
-        inputRecipes {
+        inputs {
           id
           recipe {
             id

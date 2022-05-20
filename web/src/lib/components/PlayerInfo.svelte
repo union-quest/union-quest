@@ -11,6 +11,7 @@
   import {chainId} from '$lib/config';
   import Inventory from './Inventory.svelte';
   import Players from './Players.svelte';
+  import Item from './Item.svelte';
 
   export let players: Player[];
   export let currentPlayer: Player | null;
@@ -148,7 +149,6 @@
                       getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
                     )
                   )}
-                  <div class="inline text-sm text-green-700">(+0.1 point/s)</div>
                 </div>
                 <div>
                   {getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1 ? '🪵' : '🪨'}
@@ -159,15 +159,6 @@
                       getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)).toString()
                     )
                   )}
-                  <div class="inline text-sm text-green-700">
-                    (+{roundBest(
-                      getSkill(
-                        currentPlayer,
-                        currentTimestamp / 1000,
-                        getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
-                      ) / 10
-                    )} units/s)
-                  </div>
                 </div>
               </div>
             </div>

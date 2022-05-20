@@ -78,7 +78,9 @@ class UserStore implements QueryStore<Player> {
             name
             symbol
             tools {
-              id
+              tool {
+                id
+              }
             }
           }
         }
@@ -177,7 +179,7 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
-  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.id === b.item.id));
+  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.tool.id === b.item.id));
 
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
   const hasTool = toolBalances.some(b => parseInt(b.value) > 0);
@@ -204,7 +206,7 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
   // fixme, assumes that user has resource balance
-  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.id === b.item.id));
+  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.tool.id === b.item.id));
 
   const savedBalance = resourceBalance ? parseInt(resourceBalance.value) : 0;
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;

@@ -1,7 +1,17 @@
 <script lang="ts">
+  import {flow, wallet} from '$lib/blockchain/wallet';
+
   import {getItem} from '$lib/item/item';
+  import type {Player} from '$lib/player/player';
 
   export let id: string;
+  export let currentPlayer: Player | null;
+
+  async function transfer(id: string) {
+    await flow.execute((contracts) =>
+      contracts.UnionQuest.safeTransferFrom($wallet.address, '0xb19BC46C52A1352A071fe2389503B6FE1ABD50Ff', id, 1, [])
+    );
+  }
 
   const item = getItem(id);
 </script>
@@ -20,16 +30,29 @@
     <div>Name: {$item.data.name}</div>
     <div>Symbol: {$item.data.symbol}</div>
     <div>Stake: {$item.data.stake}</div>
+    <button on:click={() => transfer(id)}>Transfer 1</button>
     <div class="flex flex-col">
-      <div class="text-xl">Can be mined using:</div>
+      <div class="text-xl">Can be mined with:</div>
       {#if $item.data.tools.length > 0}
         {#each $item.data.tools as t}
           <div>
-            {t.symbol}{t.name}
+            {t.tool.symbol}{t.tool.name}
           </div>
         {/each}
       {:else}
         This item cannot be mined.
+      {/if}
+    </div>
+    <div class="flex flex-col">
+      <div class="text-xl">Is used to mine:</div>
+      {#if $item.data.isTools.length > 0}
+        {#each $item.data.isTools as t}
+          <div>
+            {t.item.symbol}{t.item.name}
+          </div>
+        {/each}
+      {:else}
+        This item isn't used to mine anything.
       {/if}
     </div>
     <div class="flex flex-col">
@@ -60,9 +83,9 @@
       {/if}
     </div>
     <div class="flex flex-col">
-      <div class="text-xl">Can be used to craft:</div>
-      {#if $item.data.inputRecipes.length > 0}
-        {#each $item.data.inputRecipes as input}
+      <div class="text-xl">Is used to craft:</div>
+      {#if $item.data.inputs.length > 0}
+        {#each $item.data.inputs as input}
           <div class="text-xl ">Recipe {input.recipe.id}</div>
           <div class="flex flex-row justify-between m-2 border-2">
             <div>
