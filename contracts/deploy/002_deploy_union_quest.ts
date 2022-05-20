@@ -107,7 +107,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     await execute("UserManager", { from: deployer, log: true }, "addMember", unionQuest.address);
   }
 
-  await execute("UnionQuest", { from: deployer, log: true }, "addItemTypes", [["Air", "💨", 0, []], ["Wood", "🪵", 0, [3, 5, 7]], ["Stone", "🪨", 0, [4, 6, 8]], ["Basic Axe", "🪓", "100", []], ["Basic Pickaxe", "⛏️", "100", []], ["Superior Axe", "🪓", "500", []], ["Superior Pickaxe", "⛏️", "500", []], ["Golden Axe", "🪓", 0, []], ["Golden Pickaxe", "⛏️", 0, []],]);
+  await execute("UnionQuest", { from: deployer, log: true }, "addItemTypes", [
+    ["", "", "", 0, []],
+    ["Wood", "A piece of wood.", "🪵", 0, [3, 5, 7]],
+    ["Stone", "A piece of stone.", "🪨", 0, [4, 6, 8]],
+    ["Basic Axe", "Just an axe.", "🪓", "100", []],
+    ["Basic Pickaxe", "Just a pickaxe.", "⛏️", "100", []],
+    ["Superior Axe", "A decent axe.", "🪓", "500", []],
+    ["Superior Pickaxe", "A decent pickaxe.", "⛏️", "500", []],
+    ["Golden Axe", "The greatest axe in the land.", "🪓", 0, []],
+    ["Golden Pickaxe", "The greatest pickaxe in the land.", "⛏️", 0, []]
+  ]);
   await execute("UnionQuest", { from: deployer, log: true }, "addRecipes", [[[1, 2], [100, 50], 7], [[1, 2], [100, 50], 8]]);
 };
 export default func;

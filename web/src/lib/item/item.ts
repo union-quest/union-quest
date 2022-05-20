@@ -11,7 +11,7 @@ import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Input, Recipe } from '$lib/recipe/recipes';
 
 type Tool = { id: string, tool: Item, item: Item };
-export type Item = { id: string, name: string, symbol: string, stake: string, tools: Tool[], isTools: Tool[], inputs: Input[], outputRecipes: Recipe[] }
+export type Item = { id: string, name: string, description: string, symbol: string, stake: string, tools: Tool[], isTools: Tool[], inputs: Input[], outputRecipes: Recipe[] }
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
@@ -52,6 +52,7 @@ class ItemStore implements QueryStore<Item> {
       item(id: $id) {
         id
         name
+        description
         symbol
         stake
         tools {

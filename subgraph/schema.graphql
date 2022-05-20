@@ -7,6 +7,7 @@ type Tool @entity {
 type Item @entity {
   id: ID!
   name: String!
+  description: String!
   symbol: String!
   stake: BigInt!
   tools: [Tool!]! @derivedFrom(field: "item")

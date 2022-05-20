@@ -5,12 +5,12 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@unioncredit/v1-sdk/contracts/UnionVoucher.sol";
 
-contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
+contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVoucher {
     using Address for address;
 
     uint256 private constant SPEED_DIVISOR = 10;
@@ -21,6 +21,7 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
 
     struct ItemType {
         string name;
+        string description;
         string symbol;
         uint256 stake;
         uint256[] toolIds;
@@ -58,6 +59,15 @@ contract UnionQuest is Context, ERC165, IERC1155, Ownable, UnionVoucher {
         address _unionToken,
         address _underlyingToken
     ) BaseUnionMember(_marketRegistry, _unionToken, _underlyingToken) {}
+
+    function uri(uint256 id) external view virtual override returns (string memory) {
+        ItemType storage item = itemTypes[id];
+
+        return
+            string(
+                abi.encodePacked('data:text/plain,{"name":"', item.name, '", "description":"', item.description, '"}')
+            );
+    }
 
     function balanceOf(address account, uint256 id) public view virtual override returns (uint256 balance) {
         require(account != address(0), "ERC1155: address zero is not a valid owner");

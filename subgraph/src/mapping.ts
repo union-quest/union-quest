@@ -100,6 +100,7 @@ export function handleAddItemType(event: AddItemType): void {
   let entity = getOrCreateItem(event.params._index.toString());
 
   entity.name = event.params._itemType.name;
+  entity.description = event.params._itemType.description;
   entity.symbol = event.params._itemType.symbol;
   entity.stake = event.params._itemType.stake;
 

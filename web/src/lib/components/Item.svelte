@@ -2,10 +2,8 @@
   import {flow, wallet} from '$lib/blockchain/wallet';
 
   import {getItem} from '$lib/item/item';
-  import type {Player} from '$lib/player/player';
 
   export let id: string;
-  export let currentPlayer: Player | null;
 
   async function transfer(id: string) {
     await flow.execute((contracts) =>
@@ -28,6 +26,7 @@
   {:else}
     <div class="text-2xl">Item #{$item.data.id}</div>
     <div>Name: {$item.data.name}</div>
+    <div>Description: {$item.data.description}</div>
     <div>Symbol: {$item.data.symbol}</div>
     <div>Stake: {$item.data.stake}</div>
     <button on:click={() => transfer(id)}>Transfer 1</button>
