@@ -65,7 +65,13 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
 
         return
             string(
-                abi.encodePacked('data:text/plain,{"name":"', item.name, '", "description":"', item.description, '"}')
+                abi.encodePacked(
+                    'data:text/plain,{"name":"',
+                    item.name,
+                    '","description":"',
+                    item.description,
+                    '","image":"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect x="25" y="25" width="50" height="50" fill="red"/></svg>"}'
+                )
             );
     }
 
