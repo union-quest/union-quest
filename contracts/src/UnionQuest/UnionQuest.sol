@@ -77,7 +77,7 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         Player storage player = players[account];
 
         uint256 tileItem = getItem(player.endX, player.endY);
-        if (hasTool(account, tileItem)) {
+        if (id == tileItem && hasTool(account, tileItem)) {
             int256 vX = player.endX - player.startX;
             int256 vY = player.endY - player.startY;
 
