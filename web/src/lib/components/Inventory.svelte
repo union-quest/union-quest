@@ -20,14 +20,18 @@
 
 <div>
   <div class="text-xl">Inventory</div>
-  {#if player.balances.filter((balance) => Math.round(getBalanceStreamed(player, currentTimestamp / 1000, balance.item.id)) > 0).length > 0}
-    {#each player.balances.filter((balance) => Math.round(getBalanceStreamed(player, currentTimestamp / 1000, balance.item.id)) > 0) as balance}
-      <div class="border-2">
-        <ItemButton item={balance.item} />
-        : {Math.round(getBalanceStreamed(player, currentTimestamp / 1000, balance.item.id))}
-      </div>
-    {/each}
-  {:else}
-    You don't own any items.
-  {/if}
+  <div class="flex">
+    {#if player.balances.filter((balance) => Math.round(getBalanceStreamed(player, currentTimestamp / 1000, balance.item.id)) > 0).length > 0}
+      {#each player.balances.filter((balance) => Math.round(getBalanceStreamed(player, currentTimestamp / 1000, balance.item.id)) > 0) as balance}
+        <div class="border-2">
+          <ItemButton item={balance.item} />
+          <div>
+            {Math.round(getBalanceStreamed(player, currentTimestamp / 1000, balance.item.id))}
+          </div>
+        </div>
+      {/each}
+    {:else}
+      You don't own any items.
+    {/if}
+  </div>
 </div>
