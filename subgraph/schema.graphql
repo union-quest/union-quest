@@ -23,6 +23,7 @@ type Tile @entity {
   x: BigInt!
   y: BigInt!
   item: Item
+  players: [Player!]! @derivedFrom(field: "endTile")
 }
 
 type Input @entity {

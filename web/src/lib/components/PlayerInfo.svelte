@@ -148,10 +148,19 @@
                   )}
                 </div>
               </div>
-              {#if currentPlayer.endTile.item.id === '1' && !currentPlayer.balances.some((b) => currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0)}
-                <div class="text-red-500">You do not have an axe.</div>
-              {:else if currentPlayer.endTile.item.id === '2' && !currentPlayer.balances.some((b) => currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0)}
-                <div class="text-red-500">You do not have a pickaxe.</div>
+              {#if !currentPlayer.balances.some((b) => currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0)}
+                {#if currentPlayer.endTile.item.id === '1'}
+                  <div class="text-red-500">You do not have an axe.</div>
+                {:else if currentPlayer.endTile.item.id === '2'}
+                  <div class="text-red-500">You do not have a pickaxe.</div>
+                {/if}
+              {:else}
+                <div class="text-green-800">
+                  You are equipped with a {currentPlayer.balances.find(
+                    (b) =>
+                      currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0
+                  ).item.name}.
+                </div>
               {/if}
             </div>
           {/if}
