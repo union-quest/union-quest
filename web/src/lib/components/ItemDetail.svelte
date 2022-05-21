@@ -2,6 +2,7 @@
   import {flow, wallet} from '$lib/blockchain/wallet';
 
   import {getItem} from '$lib/item/item';
+  import ItemButton from './ItemButton.svelte';
 
   export let id: string;
 
@@ -25,18 +26,15 @@
     <div>Item failed to load!</div>
   {:else}
     <div class="text-2xl">Item #{$item.data.id}</div>
-    <div>Name: {$item.data.name}</div>
+    <ItemButton item={$item.data} />
     <div>Description: {$item.data.description}</div>
-    <div>Symbol: {$item.data.symbol}</div>
     <div>Stake: {$item.data.stake}</div>
     <button class="border-2" on:click={() => transfer(id)}>Transfer 1</button>
     <div class="flex flex-col">
       <div class="text-xl">Can be mined with:</div>
       {#if $item.data.tools.length > 0}
         {#each $item.data.tools as t}
-          <div>
-            {t.tool.symbol}{t.tool.name}
-          </div>
+          <ItemButton item={t.tool} />
         {/each}
       {:else}
         This item cannot be mined.
@@ -46,9 +44,7 @@
       <div class="text-xl">Is used to mine:</div>
       {#if $item.data.isTools.length > 0}
         {#each $item.data.isTools as t}
-          <div>
-            {t.item.symbol}{t.item.name}
-          </div>
+          <ItemButton item={t.item} />
         {/each}
       {:else}
         This item isn't used to mine anything.
@@ -63,16 +59,15 @@
             <div>
               {#each recipe.inputs as input, i}
                 <div class="border-2">
-                  <div class="border-2 bg-gray-300">{recipe.inputs[i].quantity}</div>
-                  <div class="border-2 text-xl">{input.item.symbol}</div>
+                  <div class="border-2 bg-gray-300">{input.quantity}</div>
+                  <ItemButton item={input.item} />
                 </div>
               {/each}
             </div>
             <div class="text-2xl">➡️</div>
             <div class="flex flex-col">
               <div class="border-2 text-center">
-                <div class="border-2 text-2xl">{recipe.output.symbol}</div>
-                <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
+                <ItemButton item={recipe.output} />
               </div>
             </div>
           </div>
@@ -91,15 +86,14 @@
               {#each input.recipe.inputs as input, i}
                 <div class="border-2">
                   <div class="border-2 bg-gray-300">{input.quantity}</div>
-                  <div class="border-2 text-xl">{input.item.symbol}</div>
+                  <ItemButton item={input.item} />
                 </div>
               {/each}
             </div>
             <div class="text-2xl">➡️</div>
             <div class="flex flex-col">
               <div class="border-2 text-center">
-                <div class="border-2 text-2xl">{input.recipe.output.symbol}</div>
-                <div class="border-2 text-xl bg-gray-300">{input.recipe.output.name}</div>
+                <ItemButton item={input.recipe.output} />
               </div>
             </div>
           </div>

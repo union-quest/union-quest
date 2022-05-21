@@ -1,5 +1,6 @@
 <script lang="ts">
   import {getPlayer} from '$lib/player/player';
+  import ItemButton from './ItemButton.svelte';
 
   export let id: string;
 
@@ -22,7 +23,8 @@
       <div class="text-xl">Inventory</div>
       {#each $player.data.balances as b}
         <div>
-          {b.item.symbol}{b.item.name} | balance:{b.value} | skill:{b.skill}
+          <ItemButton item={b.item} />
+          | balance:{b.value} | skill:{b.skill}
         </div>
       {/each}
     </div>

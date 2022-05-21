@@ -63,7 +63,7 @@ class UserStore implements QueryStore<Players> {
           item {
             id
             name
-            symbol
+            image
             tools {
               tool {
                 id

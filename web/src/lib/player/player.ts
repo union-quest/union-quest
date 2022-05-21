@@ -11,8 +11,7 @@ import { chainTempo } from '$lib/blockchain/chainTempo';
 import { AbiCoder } from '@ethersproject/abi';
 import { keccak256 } from '@ethersproject/keccak256';
 import { BigNumber } from '@ethersproject/bignumber';
-import type { Item } from '$lib/item/items';
-
+import type { Item } from '$lib/item/item';
 
 export type Player = {
   id: string;
@@ -76,7 +75,7 @@ class UserStore implements QueryStore<Player> {
           item {
             id
             name
-            symbol
+            image
             tools {
               tool {
                 id

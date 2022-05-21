@@ -51,7 +51,7 @@ class ItemsStore implements QueryStore<Items> {
       items(where: {stake_gt: 0}) {
         id
         name
-        symbol
+        image
         stake
       }
     }`,

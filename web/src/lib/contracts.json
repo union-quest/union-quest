@@ -6652,7 +6652,7 @@
                 },
                 {
                   "internalType": "string",
-                  "name": "symbol",
+                  "name": "image",
                   "type": "string"
                 },
                 {
@@ -6914,7 +6914,7 @@
                 },
                 {
                   "internalType": "string",
-                  "name": "symbol",
+                  "name": "image",
                   "type": "string"
                 },
                 {

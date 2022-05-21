@@ -57,13 +57,13 @@ class RecipesStore implements QueryStore<Recipes> {
           item {
             id
             name
-            symbol
+            image
           }
         }
         output {
           id
           name
-          symbol
+          image
         }
       }
     }`,

@@ -22,7 +22,7 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
     struct ItemType {
         string name;
         string description;
-        string symbol;
+        string image;
         uint256 stake;
         uint256[] toolIds;
     }
@@ -70,7 +70,9 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
                     item.name,
                     '","description":"',
                     item.description,
-                    '","image":"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect x="25" y="25" width="50" height="50" fill="red"/></svg>"}'
+                    '","image":"data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">',
+                    item.image,
+                    '</svg>"}'
                 )
             );
     }

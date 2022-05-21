@@ -5,6 +5,7 @@
   import Modal from './styled/Modal.svelte';
   import DaiSymbol from './DaiSymbol.svelte';
   import {BigNumber} from '@ethersproject/bignumber';
+  import ItemButton from './ItemButton.svelte';
 
   export let currentPlayer: Player | null;
   export let balance: BigNumber;
@@ -42,9 +43,7 @@
             {#each $shopItems.data as item}
               <div class="flex flex-col border-2 border-dotted p-1 m-1">
                 <div class="flex flex-row justify-between">
-                  <div>
-                    {item.symbol}{item.name}
-                  </div>
+                  <ItemButton {item} />
                   <div class="flex">
                     {item.stake}
                     <DaiSymbol />

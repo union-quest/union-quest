@@ -54,14 +54,22 @@
                 {#each recipe.inputs as input, i}
                   <div class="border-2">
                     <div class="border-2 bg-gray-300">{input.quantity}</div>
-                    <div class="border-2 text-xl">{input.item.symbol}</div>
+                    <div class="border-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+                        {@html input.item.image}
+                      </svg>
+                    </div>
                   </div>
                 {/each}
               </div>
               <div class="text-2xl">➡️</div>
               <div class="flex flex-col">
                 <div class="border-2 text-center">
-                  <div class="border-2 text-2xl">{recipe.output.symbol}</div>
+                  <div class="border-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+                      {@html recipe.output.image}
+                    </svg>
+                  </div>
                   <div class="border-2 text-xl bg-gray-300">{recipe.output.name}</div>
                 </div>
                 {#if getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[0].item.id) > parseInt(recipe.inputs[0].quantity) && getBalanceStreamed(currentPlayer, currentTimestamp / 1000, recipe.inputs[1].item.id) > parseInt(recipe.inputs[1].quantity)}

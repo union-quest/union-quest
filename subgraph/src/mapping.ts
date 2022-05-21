@@ -41,7 +41,8 @@ export function getOrCreateItem(
   if (!entity) {
     entity = new Item(id);
     entity.name = "";
-    entity.symbol = "";
+    entity.description = "";
+    entity.image = "";
     entity.stake = BigInt.fromString("0");
   }
 
@@ -101,7 +102,7 @@ export function handleAddItemType(event: AddItemType): void {
 
   entity.name = event.params._itemType.name;
   entity.description = event.params._itemType.description;
-  entity.symbol = event.params._itemType.symbol;
+  entity.image = event.params._itemType.image;
   entity.stake = event.params._itemType.stake;
 
   for (let i = 0; i < event.params._itemType.toolIds.length; i++) {

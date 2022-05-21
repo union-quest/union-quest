@@ -11,7 +11,7 @@
   import {chainId} from '$lib/config';
   import Inventory from './Inventory.svelte';
   import Players from './Players.svelte';
-  import Item from './Item.svelte';
+  import Item from './ItemDetail.svelte';
 
   export let players: Player[];
   export let currentPlayer: Player | null;
@@ -98,18 +98,6 @@
   <div class="flex text-2xl justify-center p-2">
     {$wallet.address.slice(0, 4)}...{$wallet.address.slice(-4)}
     <Blockie address={$wallet.address} class="m-1 h-6 w-6" />
-  </div>
-  <div class="flex text-2xl justify-between text-base">
-    <div class="border-2 w-full border-gray-500">
-      {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '1'))} 🪵
-    </div>
-    <div class="border-2 w-full border-gray-500">
-      {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '2'))} 🪨
-    </div>
-    <div class="flex border-2 border-gray-500 w-full justify-center">
-      {balance.div('1000000000000000000')}
-      <DaiSymbol />
-    </div>
   </div>
   <div class="flex text-2xl justify-start">
     {#each ['🎮', '📊', '🎒', '🏪', '🛠️', '🏦', '🏅', '⚙️'] as icon, i}
