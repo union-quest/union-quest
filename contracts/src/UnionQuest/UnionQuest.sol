@@ -25,6 +25,7 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         string image;
         uint256 stake;
         uint256[] toolIds;
+        uint256[] toolBonuses;
     }
 
     struct Recipe {
@@ -84,8 +85,7 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
 
         Player storage player = players[account];
 
-        uint256 tileItem = getItem(player.endX, player.endY);
-        if (id == tileItem && hasTool(account, tileItem)) {
+        if (id == getItem(player.endX, player.endY)) {
             int256 vX = player.endX - player.startX;
             int256 vY = player.endY - player.startY;
 
@@ -93,10 +93,11 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
             uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
 
             if (distanceTravelled >= distanceNeeded) {
-                uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
+                uint256 skillIncrease = (miningBonus(account, id) *
+                    (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR))) /
                     SKILL_INCREASE_DIVISOR;
 
-                balance += skillIncrease * skills[_msgSender()][tileItem] + (skillIncrease * skillIncrease) / 2;
+                balance += skillIncrease * skills[_msgSender()][id] + (skillIncrease * skillIncrease) / 2;
             }
         }
     }
@@ -335,14 +336,14 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         _move(_msgSender(), x, y);
     }
 
-    function hasTool(address account, uint256 id) private view returns (bool) {
+    function miningBonus(address account, uint256 id) private view returns (uint256) {
         for (uint256 i; i < itemTypes[id].toolIds.length; i++) {
             if (balanceOf(account, itemTypes[id].toolIds[i]) > 0) {
-                return true;
+                return 1;
             }
         }
 
-        return false;
+        return 0;
     }
 
     function _move(
@@ -365,21 +366,19 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
             player.startY = player.endY;
 
             uint256 tileItem = getItem(player.endX, player.endY);
-            if (hasTool(account, tileItem)) {
-                uint256 skillIncrease = (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR)) /
-                    SKILL_INCREASE_DIVISOR;
+            uint256 skillIncrease = (miningBonus(account, tileItem) *
+                (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR))) / SKILL_INCREASE_DIVISOR;
 
-                _mint(
-                    account,
-                    tileItem,
-                    skillIncrease * skills[account][tileItem] + (skillIncrease * skillIncrease) / 2,
-                    ""
-                );
+            _mint(
+                account,
+                tileItem,
+                (skillIncrease * skills[account][tileItem] + (skillIncrease * skillIncrease) / 2),
+                ""
+            );
 
-                skills[account][tileItem] += skillIncrease;
+            skills[account][tileItem] += skillIncrease;
 
-                emit IncreaseSkill(account, tileItem, skillIncrease);
-            }
+            emit IncreaseSkill(account, tileItem, skillIncrease);
         }
 
         player.endX = x;

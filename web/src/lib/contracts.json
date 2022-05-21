@@ -6664,6 +6664,11 @@
                   "internalType": "uint256[]",
                   "name": "toolIds",
                   "type": "uint256[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "toolBonuses",
+                  "type": "uint256[]"
                 }
               ],
               "indexed": false,
@@ -6925,6 +6930,11 @@
                 {
                   "internalType": "uint256[]",
                   "name": "toolIds",
+                  "type": "uint256[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "toolBonuses",
                   "type": "uint256[]"
                 }
               ],

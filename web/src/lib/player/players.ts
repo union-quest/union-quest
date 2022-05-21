@@ -62,6 +62,7 @@ class UserStore implements QueryStore<Players> {
           item {
             id
             tools {
+              bonus
               tool {
                 id
               }
@@ -77,6 +78,7 @@ class UserStore implements QueryStore<Players> {
             name
             image
             tools {
+              bonus
               tool {
                 id
               }

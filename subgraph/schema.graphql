@@ -2,6 +2,7 @@ type Tool @entity {
   id: ID!
   item: Item!
   tool: Item!
+  bonus: BigInt!
 }
 
 type Item @entity {

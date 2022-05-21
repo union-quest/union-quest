@@ -10,7 +10,7 @@ import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
 import type { Input, Recipe } from '$lib/recipe/recipes';
 
-type Tool = { id: string, tool: Item, item: Item };
+type Tool = { id: string, tool: Item, item: Item, bonus: string };
 export type Item = { id: string, name: string, description: string, image: string, stake: string, tools: Tool[], isTools: Tool[], inputs: Input[], outputRecipes: Recipe[] }
 
 // TODO web3w needs to export the type
@@ -56,6 +56,7 @@ class ItemStore implements QueryStore<Item> {
         image
         stake
         tools {
+          bonus
           tool {
             id
             name
@@ -63,6 +64,7 @@ class ItemStore implements QueryStore<Item> {
           }
         }
         isTools {
+          bonus
           item {
             id
             name

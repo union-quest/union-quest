@@ -2,7 +2,7 @@
 import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
 import { Balance, Player, Item, Recipe, Input, Tool, Tile } from '../generated/schema';
-import { BigInt, Bytes, crypto, ethereum, log } from '@graphprotocol/graph-ts';
+import { BigInt, Bytes, crypto, ethereum } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
@@ -65,7 +65,6 @@ const getItem = (x: BigInt, y: BigInt): string => {
   let encoded = ethereum.encode(ethereum.Value.fromTuple(tuple))
   if (encoded) {
     const res = BigInt.fromUnsignedBytes(crypto.keccak256(encoded)).mod(BigInt.fromString("5"));
-    log.warning("NUMBAR: {}", [res.toString()]);
     if (res.lt(BigInt.fromString("2"))) {
       return "0";
     } else if (res.lt(BigInt.fromString("4"))) {
@@ -150,6 +149,7 @@ export function handleAddItemType(event: AddItemType): void {
     let tool = getOrCreateTool(event.params._index.toString(), event.params._itemType.toolIds[i].toString());
     tool.item = event.params._index.toString();
     tool.tool = event.params._itemType.toolIds[i].toString();
+    tool.bonus = event.params._itemType.toolBonuses[i];
     tool.save();
   }
 

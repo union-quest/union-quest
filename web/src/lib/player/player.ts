@@ -92,6 +92,7 @@ class UserStore implements QueryStore<Player> {
             name
             image
             tools {
+              bonus
               tool {
                 id
               }

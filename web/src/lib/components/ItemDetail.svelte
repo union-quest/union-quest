@@ -35,6 +35,7 @@
       {#if $item.data.tools.length > 0}
         {#each $item.data.tools as t}
           <ItemButton item={t.tool} />
+          <div>Bonus: {t.bonus}</div>
         {/each}
       {:else}
         This item cannot be mined.
@@ -45,6 +46,7 @@
       {#if $item.data.isTools.length > 0}
         {#each $item.data.isTools as t}
           <ItemButton item={t.item} />
+          <div>Bonus: {t.bonus}</div>
         {/each}
       {:else}
         This item isn't used to mine anything.
