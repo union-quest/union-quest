@@ -10,6 +10,7 @@ type Item @entity {
   description: String!
   image: String!
   stake: BigInt!
+  tiles: [Tile!]! @derivedFrom(field: "item")
   tools: [Tool!]! @derivedFrom(field: "item")
   isTools: [Tool!]! @derivedFrom(field: "tool")
   balances: [Balance!]! @derivedFrom(field: "item")
