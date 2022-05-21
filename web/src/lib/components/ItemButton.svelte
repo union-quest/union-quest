@@ -21,7 +21,7 @@
     }}
   >
     <div class="border-2">
-      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
         {@html item.image}
       </svg>
     </div>

@@ -83,8 +83,6 @@ class UserStore implements QueryStore<Player> {
             id
           }
         }
-        endTile.x
-        endTile.y
         balances {
           id
           value

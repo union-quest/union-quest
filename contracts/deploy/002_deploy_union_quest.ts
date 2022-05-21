@@ -111,12 +111,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ["", "", "", 0, []],
     ["Wood", "A piece of wood.", '<rect x="25" y="25" width="50" height="50" fill="brown"/>', 0, [3, 5, 7]],
     ["Stone", "A piece of stone.", '<rect x="25" y="25" width="50" height="50" fill="gray"/>', 0, [4, 6, 8]],
-    ["Basic Axe", "Just an axe.", '<rect x="25" y="25" width="50" height="50" fill="red"/>', "100", []],
-    ["Basic Pickaxe", "Just a pickaxe.", '<rect x="25" y="25" width="50" height="50" fill="white"/>', "100", []],
-    ["Superior Axe", "A decent axe.", '<rect x="25" y="25" width="50" height="50" fill="pink"/>', "500", []],
-    ["Superior Pickaxe", "A decent pickaxe.", '<rect x="25" y="25" width="50" height="50" fill="green"/>', "500", []],
-    ["Golden Axe", "The greatest axe in the land.", '<rect x="25" y="25" width="50" height="50" fill="yellow"/>', 0, []],
-    ["Golden Pickaxe", "The greatest pickaxe in the land.", '<rect x="25" y="25" width="50" height="50" fill="gold"/>', 0, []]
+    ["Basic Axe", "Just an axe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="50" height="50" fill="silver"/>', "100", []],
+    ["Basic Pickaxe", "Just a pickaxe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="silver"/>', "100", []],
+    ["Superior Axe", "A decent axe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="50" height="50" fill="red"/>', "500", []],
+    ["Superior Pickaxe", "A decent pickaxe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="red"/>', "500", []],
+    ["Golden Axe", "The greatest axe in the land.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="50" height="50" fill="gold"/>', 0, []],
+    ["Golden Pickaxe", "The greatest pickaxe in the land.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="gold"/>', 0, []]
   ]);
   await execute("UnionQuest", { from: deployer, log: true }, "addRecipes", [[[1, 2], [100, 50], 7], [[1, 2], [100, 50], 8]]);
 };
