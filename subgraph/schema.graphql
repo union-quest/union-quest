@@ -17,6 +17,13 @@ type Item @entity {
   outputRecipes: [Recipe!]! @derivedFrom(field: "output")
 }
 
+type Tile @entity {
+  id: ID!
+  x: BigInt!
+  y: BigInt!
+  item: Item
+}
+
 type Input @entity {
   id: ID!
   item: Item!

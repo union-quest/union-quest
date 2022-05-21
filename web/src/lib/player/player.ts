@@ -143,7 +143,6 @@ export const getItem = (x: number, y: number) => {
   }
 
   return 2;
-
 }
 
 export const getPosition = (player: Player, currentTimestamp: number): [number, number] => {

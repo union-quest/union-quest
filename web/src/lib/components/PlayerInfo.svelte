@@ -149,6 +149,12 @@
                   )}
                 </div>
               </div>
+              <!-- fixme, this must check all tools -->
+              {#if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1 && !currentPlayer.balances.some((b) => b.item.id === '3' && parseInt(b.value) > 0)}
+                <div class="text-red-500">You do not have an axe.</div>
+              {:else if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 2 && !currentPlayer.balances.some((b) => b.item.id === '4' && parseInt(b.value) > 0)}
+                <div class="text-red-500">You do not have an pickaxe.</div>
+              {/if}
             </div>
           {/if}
         {:else}

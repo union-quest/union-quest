@@ -1,8 +1,8 @@
 /* eslint-disable prefer-const */
 import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Balance, Player, Item, Recipe, Input, Tool } from '../generated/schema';
-import { BigInt, Bytes } from '@graphprotocol/graph-ts';
+import { Balance, Player, Item, Recipe, Input, Tool, Tile } from '../generated/schema';
+import { BigInt, ByteArray, Bytes, crypto, ethereum, log } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
@@ -24,6 +24,7 @@ export function getOrCreatePlayer(
     entity = new Player(id);
     getOrCreateBalance("1", id).save()
     getOrCreateBalance("2", id).save()
+    getOrCreateTile(BigInt.fromString("0"), BigInt.fromString("0")).save();
     entity.startX = BigInt.fromString("0");
     entity.startY = BigInt.fromString("0");
     entity.endX = BigInt.fromString("0");
@@ -44,6 +45,47 @@ export function getOrCreateItem(
     entity.description = "";
     entity.image = "";
     entity.stake = BigInt.fromString("0");
+  }
+
+  return entity;
+}
+
+const getItem = (x: BigInt, y: BigInt): string => {
+  if ((x.equals(BigInt.fromString("0")) && y.equals(BigInt.fromString("0"))) ||
+    x.gt(BigInt.fromString("10")) || x.lt(BigInt.fromString("-9")) || x.gt(BigInt.fromString("10")) || y.lt(BigInt.fromString("-9"))) {
+    return "0";
+  }
+
+  let tupleArray: Array<ethereum.Value> = [
+    ethereum.Value.fromSignedBigInt(x),
+    ethereum.Value.fromSignedBigInt(y),
+  ]
+
+  let tuple = changetype<ethereum.Tuple>(tupleArray);
+
+  let encoded = ethereum.encode(ethereum.Value.fromTuple(tuple))
+  if (encoded) {
+    const res = BigInt.fromUnsignedBytes(crypto.keccak256(encoded)).mod(BigInt.fromString("5"));
+    log.warning("NUMBAR: {}", [res.toString()]);
+    if (res.lt(BigInt.fromString("2"))) {
+      return "0";
+    } else if (res.lt(BigInt.fromString("4"))) {
+      return "1";
+    }
+  }
+
+  return "2";
+}
+
+export function getOrCreateTile(
+  x: BigInt, y: BigInt
+): Tile {
+  let entity = Tile.load(x.toString() + "_" + y.toString());
+  if (!entity) {
+    entity = new Tile(x.toString() + "_" + y.toString());
+    entity.x = x;
+    entity.y = y;
+    entity.item = getItem(x, y);
   }
 
   return entity;
@@ -157,6 +199,8 @@ export function handleMove(event: Move): void {
   entity.endY = event.params.y;
   entity.startTimestamp = event.block.timestamp;
 
+  getOrCreateTile(entity.startX, entity.startY).save();
+  getOrCreateTile(entity.endX, entity.endY).save();
   entity.save();
 }
 
