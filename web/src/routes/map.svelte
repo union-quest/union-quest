@@ -6,7 +6,6 @@
   import MapCanvas from '$lib/components/MapCanvas.svelte';
   import NavButton from '$lib/components/styled/navigation/NavButton.svelte';
   import {url} from '$lib/utils/url';
-  import Player from '$lib/components/Player.svelte';
 
   async function join() {
     await flow.execute((contracts) => contracts.UnionQuest.move(0, 0));

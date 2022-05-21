@@ -11,7 +11,6 @@
   import {chainId} from '$lib/config';
   import Inventory from './Inventory.svelte';
   import Players from './Players.svelte';
-  import Item from './ItemDetail.svelte';
 
   export let players: Player[];
   export let currentPlayer: Player | null;
@@ -114,14 +113,14 @@
       <div>
         <div class="text-xl">Status</div>
         <div>Location: ({Math.round(currentX)}, {Math.round(currentY)})</div>
-        {#if currentX === parseInt(currentPlayer.endX) && currentY === parseInt(currentPlayer.endY)}
-          {#if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 0}
+        {#if currentX === parseInt(currentPlayer.endTile.x) && currentY === parseInt(currentPlayer.endTile.y)}
+          {#if getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 0}
             <div class="border-2 border-gray-600">There's nothing to do here!</div>
           {:else}
             <div class="border-2 border-gray-600">
               <div>
                 Activity:
-                {#if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1}
+                {#if getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 1}
                   Woodcutting
                 {:else}
                   Mining
@@ -129,31 +128,30 @@
               </div>
               <div class="text-left">
                 <div>
-                  {getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1 ? '🪓' : '⛏️'}
+                  {getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 1 ? '🪓' : '⛏️'}
                   {Math.round(
                     getSkill(
                       currentPlayer,
                       currentTimestamp / 1000,
-                      getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
+                      getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
                     )
                   )}
                 </div>
                 <div>
-                  {getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1 ? '🪵' : '🪨'}
+                  {getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 1 ? '🪵' : '🪨'}
                   {Math.round(
                     getBalanceStreamed(
                       currentPlayer,
                       currentTimestamp / 1000,
-                      getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)).toString()
+                      getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)).toString()
                     )
                   )}
                 </div>
               </div>
-              <!-- fixme, this must check all tools -->
-              {#if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 1 && !currentPlayer.balances.some((b) => b.item.id === '3' && parseInt(b.value) > 0)}
+              {#if currentPlayer.endTile.item.id === '1' && !currentPlayer.balances.some((b) => currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0)}
                 <div class="text-red-500">You do not have an axe.</div>
-              {:else if getItem(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY)) === 2 && !currentPlayer.balances.some((b) => b.item.id === '4' && parseInt(b.value) > 0)}
-                <div class="text-red-500">You do not have an pickaxe.</div>
+              {:else if currentPlayer.endTile.item.id === '2' && !currentPlayer.balances.some((b) => currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0)}
+                <div class="text-red-500">You do not have a pickaxe.</div>
               {/if}
             </div>
           {/if}
@@ -162,11 +160,11 @@
             <div>Walking</div>
             <div class="text-left">
               <div>
-                Walking to: ({currentPlayer.endX}, {currentPlayer.endY})
+                Walking to: ({currentPlayer.endTile.x}, {currentPlayer.endTile.y})
               </div>
               <div>
                 Distance: {roundBest(
-                  distance(currentX, currentY, parseInt(currentPlayer.endX), parseInt(currentPlayer.endY))
+                  distance(currentX, currentY, parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y))
                 )} tiles
                 <div class="inline text-sm text-green-700">(-0.1 tiles/s)</div>
               </div>

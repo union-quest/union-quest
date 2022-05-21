@@ -12,7 +12,7 @@ dataSources:
       startBlock: {{contracts.UnionQuest.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - User
@@ -40,7 +40,7 @@ dataSources:
       startBlock: {{contracts.UserManager.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - User

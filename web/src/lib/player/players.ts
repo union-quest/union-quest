@@ -52,10 +52,22 @@ class UserStore implements QueryStore<Players> {
         id
         startTimestamp
         vouch
-        startX
-        startY
-        endX
-        endY
+        startTile {
+          x
+          y
+        }
+        endTile {
+          x
+          y
+          item {
+            id
+            tools {
+              tool {
+                id
+              }
+            }
+          }
+        }
         balances {
           id
           value

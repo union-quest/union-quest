@@ -13,12 +13,17 @@ import { keccak256 } from '@ethersproject/keccak256';
 import { BigNumber } from '@ethersproject/bignumber';
 import type { Item } from '$lib/item/item';
 
+export type Tile = {
+  id: string;
+  x: string;
+  y: string;
+  item: Item;
+}
+
 export type Player = {
   id: string;
-  startX: string;
-  startY: string;
-  endX: string;
-  endY: string;
+  startTile: Tile;
+  endTile: Tile;
   startTimestamp: string;
   vouch: string;
   balances: { id: string; player: string, item: Item, value: string, skill: string }[];
@@ -64,10 +69,22 @@ class UserStore implements QueryStore<Player> {
         id
         startTimestamp
         vouch
-        startX
-        startY
-        endX
-        endY
+        startTile {
+          x
+          y
+          item {
+            id
+          }
+        }
+        endTile {
+          x
+          y
+          item {
+            id
+          }
+        }
+        endTile.x
+        endTile.y
         balances {
           id
           value
@@ -148,32 +165,32 @@ export const getItem = (x: number, y: number) => {
 export const getPosition = (player: Player, currentTimestamp: number): [number, number] => {
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / 10;
   const distanceNeeded = distance(
-    parseInt(player.startX),
-    parseInt(player.startY),
-    parseInt(player.endX),
-    parseInt(player.endY)
+    parseInt(player.startTile.x),
+    parseInt(player.startTile.y),
+    parseInt(player.endTile.x),
+    parseInt(player.endTile.y)
   );
 
   if (distanceTravelled < distanceNeeded) {
-    const vX = parseInt(player.endX) - parseInt(player.startX);
-    const vY = parseInt(player.endY) - parseInt(player.startY);
+    const vX = parseInt(player.endTile.x) - parseInt(player.startTile.x);
+    const vY = parseInt(player.endTile.y) - parseInt(player.startTile.y);
 
     return [
-      parseInt(player.startX) + (vX * distanceTravelled) / distanceNeeded,
-      parseInt(player.startY) + (vY * distanceTravelled) / distanceNeeded,
+      parseInt(player.startTile.x) + (vX * distanceTravelled) / distanceNeeded,
+      parseInt(player.startTile.y) + (vY * distanceTravelled) / distanceNeeded,
     ];
   }
 
-  return [parseInt(player.endX), parseInt(player.endY)];
+  return [parseInt(player.endTile.x), parseInt(player.endTile.y)];
 }
 
 export const getSkill = (player: Player, currentTimestamp: number, resourceId: number): number => {
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
   const distanceNeeded = distance(
-    parseInt(player.startX),
-    parseInt(player.startY),
-    parseInt(player.endX),
-    parseInt(player.endY)
+    parseInt(player.startTile.x),
+    parseInt(player.startTile.y),
+    parseInt(player.endTile.x),
+    parseInt(player.endTile.y)
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
@@ -182,7 +199,7 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
   const hasTool = toolBalances.some(b => parseInt(b.value) > 0);
 
-  const tileItem = getItem(parseInt(player.endX), parseInt(player.endY));
+  const tileItem = getItem(parseInt(player.endTile.x), parseInt(player.endTile.y));
 
   if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && hasTool) {
     return savedSkill +
@@ -196,10 +213,10 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
 export const getBalanceStreamed = (player: Player, currentTimestamp: number, resourceId: string): number => {
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
   const distanceNeeded = distance(
-    parseInt(player.startX),
-    parseInt(player.startY),
-    parseInt(player.endX),
-    parseInt(player.endY)
+    parseInt(player.startTile.x),
+    parseInt(player.startTile.y),
+    parseInt(player.endTile.x),
+    parseInt(player.endTile.y)
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
@@ -210,7 +227,7 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
   const hasTool = toolBalances.some(b => parseInt(b.value) > 0);
 
-  const tileItem = getItem(parseInt(player.endX), parseInt(player.endY));
+  const tileItem = getItem(parseInt(player.endTile.x), parseInt(player.endTile.y));
   if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && hasTool) {
     const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;

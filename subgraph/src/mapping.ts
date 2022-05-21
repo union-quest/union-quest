@@ -2,7 +2,7 @@
 import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
 import { Balance, Player, Item, Recipe, Input, Tool, Tile } from '../generated/schema';
-import { BigInt, ByteArray, Bytes, crypto, ethereum, log } from '@graphprotocol/graph-ts';
+import { BigInt, Bytes, crypto, ethereum, log } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
@@ -24,11 +24,10 @@ export function getOrCreatePlayer(
     entity = new Player(id);
     getOrCreateBalance("1", id).save()
     getOrCreateBalance("2", id).save()
-    getOrCreateTile(BigInt.fromString("0"), BigInt.fromString("0")).save();
-    entity.startX = BigInt.fromString("0");
-    entity.startY = BigInt.fromString("0");
-    entity.endX = BigInt.fromString("0");
-    entity.endY = BigInt.fromString("0");
+    const tile = getOrCreateTile(BigInt.fromString("0"), BigInt.fromString("0"));
+    tile.save();
+    entity.startTile = tile.id;
+    entity.endTile = tile.id;
     entity.startTimestamp = BigInt.fromString("0");
   }
 
@@ -175,32 +174,35 @@ export function handleAddRecipe(event: AddRecipe): void {
 
 export function handleMove(event: Move): void {
   let entity = getOrCreatePlayer(event.params.account.toHexString());
+  const startTile = getOrCreateTile(BigInt.fromString(entity.startTile.split("_")[0]), BigInt.fromString(entity.startTile.split("_")[1]));
+  const endTile = getOrCreateTile(BigInt.fromString(entity.endTile.split("_")[0]), BigInt.fromString(entity.endTile.split("_")[1]));
 
   const distanceTravelled = (event.block.timestamp.minus(entity.startTimestamp)).div(BigInt.fromString("10"));
   const distanceNeeded = distance(
-    entity.startX,
-    entity.startY,
-    entity.endX,
-    entity.endY
+    startTile.x,
+    startTile.y,
+    endTile.x,
+    endTile.y
   );
 
   if (distanceTravelled.lt(distanceNeeded)) {
-    const vX = entity.endX.minus(entity.startX);
-    const vY = entity.endY.minus(entity.startY);
+    const vX = endTile.x.minus(startTile.x);
+    const vY = endTile.y.minus(startTile.y);
 
-    entity.startX = entity.startX.plus((vX.times(distanceTravelled)).div(distanceNeeded));
-    entity.startY = entity.startY.plus((vY.times(distanceTravelled)).div(distanceNeeded));
+    const newStartTile = getOrCreateTile(startTile.x.plus((vX.times(distanceTravelled)).div(distanceNeeded)), startTile.y.plus((vY.times(distanceTravelled)).div(distanceNeeded)));
+    newStartTile.save();
+    entity.startTile = newStartTile.id;
   } else {
-    entity.startX = entity.endX;
-    entity.startY = entity.endY;
+    const newStartTile = getOrCreateTile(endTile.x, endTile.y);
+    newStartTile.save();
+    entity.startTile = newStartTile.id;
   }
 
-  entity.endX = event.params.x;
-  entity.endY = event.params.y;
+  const newEndTile = getOrCreateTile(event.params.x, event.params.y);
+  newEndTile.save();
+  entity.endTile = newEndTile.id;
   entity.startTimestamp = event.block.timestamp;
 
-  getOrCreateTile(entity.startX, entity.startY).save();
-  getOrCreateTile(entity.endX, entity.endY).save();
   entity.save();
 }
 

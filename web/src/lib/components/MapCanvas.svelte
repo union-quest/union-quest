@@ -83,7 +83,7 @@
 
     if (currentPlayer) {
       ctx.strokeStyle = '#FF0000';
-      ctx.strokeRect(parseInt(currentPlayer.endX) - 0.5, parseInt(currentPlayer.endY) - 0.5, 1, 1);
+      ctx.strokeRect(parseInt(currentPlayer.endTile.x) - 0.5, parseInt(currentPlayer.endTile.y) - 0.5, 1, 1);
 
       ctx.fillStyle = '#FF0000';
 
@@ -92,7 +92,7 @@
       // Filled triangle
       ctx.beginPath();
       ctx.moveTo(position[0], position[1]);
-      ctx.lineTo(parseInt(currentPlayer.endX), parseInt(currentPlayer.endY));
+      ctx.lineTo(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y));
       ctx.stroke();
     }
 
@@ -104,9 +104,9 @@
       ctx.strokeStyle = '#ffffff';
       ctx.strokeRect(position[0] - 0.25, position[1] - 0.25, 0.5, 0.5);
 
-      if (position[0] === parseInt(p.endX) && position[1] === parseInt(p.endY)) {
-        if (getItem(parseInt(p.endX), parseInt(p.endY))) {
-          if (getItem(parseInt(p.endX), parseInt(p.endY)) === 1) {
+      if (position[0] === parseInt(p.endTile.x) && position[1] === parseInt(p.endTile.y)) {
+        if (getItem(parseInt(p.endTile.x), parseInt(p.endTile.y))) {
+          if (getItem(parseInt(p.endTile.x), parseInt(p.endTile.y)) === 1) {
             ctx.fillText('🪓', position[0], position[1]);
           } else {
             ctx.fillText('⛏️', position[0], position[1]);
