@@ -336,14 +336,13 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         _move(_msgSender(), x, y);
     }
 
-    function miningBonus(address account, uint256 id) private view returns (uint256) {
-        for (uint256 i; i < itemTypes[id].toolIds.length; i++) {
-            if (balanceOf(account, itemTypes[id].toolIds[i]) > 0) {
-                return 1;
+    function miningBonus(address account, uint256 id) private view returns (uint256 bonus) {
+        ItemType storage item = itemTypes[id];
+        for (uint256 i; i < item.toolIds.length; i++) {
+            if (item.toolBonuses[i] > bonus && balanceOf(account, item.toolIds[i]) > 0) {
+                bonus = item.toolBonuses[i];
             }
         }
-
-        return 0;
     }
 
     function _move(

@@ -183,6 +183,7 @@ export const getPosition = (player: Player, currentTimestamp: number): [number, 
   return [parseInt(player.endTile.x), parseInt(player.endTile.y)];
 }
 
+// todo multiply by bonus
 export const getSkill = (player: Player, currentTimestamp: number, resourceId: number): number => {
   const distanceTravelled = (currentTimestamp - parseInt(player.startTimestamp)) / SPEED_DIVISOR;
   const distanceNeeded = distance(
@@ -193,16 +194,17 @@ export const getSkill = (player: Player, currentTimestamp: number, resourceId: n
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
-  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.tool.id === b.item.id));
 
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
-  const hasTool = toolBalances.some(b => parseInt(b.value) > 0);
+
+  const validTools = resourceBalance.item.tools.filter(t => player.balances.some(b => t.tool.id === b.item.id && parseInt(b.value) > 0)).map(t => parseInt(t.bonus));
+  const bonus = validTools.length > 0 ? Math.max(...validTools) : 0;
 
   const tileItem = getItem(parseInt(player.endTile.x), parseInt(player.endTile.y));
 
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && hasTool) {
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString()) {
     return savedSkill +
-      (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
+      bonus * (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
   }
 
@@ -219,16 +221,16 @@ export const getBalanceStreamed = (player: Player, currentTimestamp: number, res
   );
 
   const resourceBalance = player.balances.find(b => b.item.id === resourceId.toString());
-  // fixme, assumes that user has resource balance
-  const toolBalances = player.balances.filter(b => resourceBalance.item.tools.some(t => t.tool.id === b.item.id));
 
   const savedBalance = resourceBalance ? parseInt(resourceBalance.value) : 0;
   const savedSkill = resourceBalance ? parseInt(resourceBalance.skill) : 0;
-  const hasTool = toolBalances.some(b => parseInt(b.value) > 0);
+
+  const validTools = resourceBalance.item.tools.filter(t => player.balances.some(b => t.tool.id === b.item.id && parseInt(b.value) > 0)).map(t => parseInt(t.bonus));
+  const bonus = validTools.length > 0 ? Math.max(...validTools) : 0;
 
   const tileItem = getItem(parseInt(player.endTile.x), parseInt(player.endTile.y));
-  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString() && hasTool) {
-    const skillIncrease = (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
+  if (distanceTravelled >= distanceNeeded && resourceId.toString() === tileItem.toString()) {
+    const skillIncrease = bonus * (currentTimestamp - (parseInt(player.startTimestamp) + distanceNeeded * SPEED_DIVISOR)) /
       SKILL_INCREASE_DIVISOR;
 
     return savedBalance + skillIncrease * savedSkill + (skillIncrease * skillIncrease) / 2;
