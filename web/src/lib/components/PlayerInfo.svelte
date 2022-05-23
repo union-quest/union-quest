@@ -156,10 +156,20 @@
                 {/if}
               {:else}
                 <div class="text-green-800">
-                  You are equipped with a {currentPlayer.balances.find(
-                    (b) =>
-                      currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0
-                  ).item.name}.
+                  You are equipped with a bonus of {currentPlayer.balances
+                    .find((b) => b.item.id === currentPlayer.endTile.item.id)
+                    .item.tools.filter((t) =>
+                      currentPlayer.balances.some((b) => t.tool.id === b.item.id && parseInt(b.value) > 0)
+                    )
+                    ? Math.max(
+                        ...currentPlayer.balances
+                          .find((b) => b.item.id === currentPlayer.endTile.item.id)
+                          .item.tools.filter((t) =>
+                            currentPlayer.balances.some((b) => t.tool.id === b.item.id && parseInt(b.value) > 0)
+                          )
+                          .map((t) => parseInt(t.bonus))
+                      )
+                    : 0}.
                 </div>
               {/if}
             </div>
