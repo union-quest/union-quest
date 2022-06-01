@@ -7,7 +7,7 @@ import { BigInt, Bytes, crypto, ethereum } from '@graphprotocol/graph-ts';
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
 let ZERO_ADDRESS: Bytes = Bytes.fromHexString(ZERO_ADDRESS_STRING) as Bytes;
 
-let UNION_QUEST_ADDRESS_STRING = '0xFa4330DC07143e2c163cABc6780C167B9969D5F9';
+let UNION_QUEST_ADDRESS_STRING = '0x631C2dC1236760172Dd9c2A6d6311Ab489D8291E';
 let UNION_QUEST_ADDRESS: Bytes = Bytes.fromHexString(UNION_QUEST_ADDRESS_STRING) as Bytes;
 
 function distance(x0: BigInt, y0: BigInt, x1: BigInt, y1: BigInt): BigInt {

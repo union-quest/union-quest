@@ -50,7 +50,7 @@ const config: HardhatUserConfig = {
       accounts: accounts('rinkeby'),
     },
     kovan: {
-      url: node_url('kovan'),
+      url: "https://kovan.infura.io/v3/32a0199129ad47f9bd933f965f7b75e9",
       accounts: accounts('kovan'),
     },
     goerli: {

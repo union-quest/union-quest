@@ -1,6 +1,6 @@
 {
   ".svelte-kit/build/runtime/internal/start.js": {
-    "file": "start-625938d6.js",
+    "file": "start-922e74ac.js",
     "src": ".svelte-kit/build/runtime/internal/start.js",
     "isEntry": true,
     "imports": [
@@ -18,17 +18,17 @@
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-52f52818.js",
+    "file": "pages/__layout.svelte-9b31233a.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js",
-      "_wallet-f19ba47f.js"
+      "_wallet-81752772.js"
     ],
     "css": [
-      "assets/pages/__layout.svelte-fa4af0df.css",
+      "assets/pages/__layout.svelte-03f40976.css",
       "assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css"
     ]
   },
@@ -42,26 +42,26 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-f4168b8b.js",
+    "file": "pages/index.svelte-2f52ae6e.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
-      "_wallet-f19ba47f.js",
-      "_url-6a45ccd3.js",
+      "_wallet-81752772.js",
+      "_url-d2045865.js",
       "_paths-28a87002.js"
     ]
   },
   "src/routes/map.svelte": {
-    "file": "pages/map.svelte-c5a09c13.js",
+    "file": "pages/map.svelte-aa3bdda0.js",
     "src": "src/routes/map.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
-      "_wallet-f19ba47f.js",
-      "_url-6a45ccd3.js",
+      "_wallet-81752772.js",
+      "_url-d2045865.js",
       "_paths-28a87002.js"
     ],
     "css": [
@@ -75,19 +75,19 @@
   "_paths-28a87002.js": {
     "file": "chunks/paths-28a87002.js"
   },
-  "_wallet-f19ba47f.js": {
-    "file": "chunks/wallet-f19ba47f.js",
+  "_wallet-81752772.js": {
+    "file": "chunks/wallet-81752772.js",
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js"
     ]
   },
-  "_url-6a45ccd3.js": {
-    "file": "chunks/url-6a45ccd3.js",
+  "_url-d2045865.js": {
+    "file": "chunks/url-d2045865.js",
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js",
-      "_wallet-f19ba47f.js"
+      "_wallet-81752772.js"
     ]
   }
 }
