@@ -87,9 +87,18 @@
         <a
           rel="noopener"
           target="_blank"
-          href={`https://kovan.union.finance/profile/${chain.contracts.UnionQuest.address}`}
+          href={`https://${chainId === '42161' ? 'arbitrum' : 'kovan'}.union.finance/profile/${
+            chain.contracts.UnionQuest.address
+          }`}
         >
-          View the Bank on union.finance
+          View the Bank on
+          {#if chainId === '42161'}
+            arbitrum.union.finance
+          {:else if chainId === '42'}
+            kovan.union.finance
+          {:else}
+            arbitrum.union.finance
+          {/if}
         </a>
       </div>
     </Modal>
@@ -156,7 +165,7 @@
                 {/if}
               {:else}
                 <div class="text-green-800">
-                  You are equipped with a bonus of {currentPlayer.balances
+                  Equipment boost: {currentPlayer.balances
                     .find((b) => b.item.id === currentPlayer.endTile.item.id)
                     .item.tools.filter((t) =>
                       currentPlayer.balances.some((b) => t.tool.id === b.item.id && parseInt(b.value) > 0)
@@ -169,7 +178,7 @@
                           )
                           .map((t) => parseInt(t.bonus))
                       )
-                    : 0}.
+                    : 0}
                 </div>
               {/if}
             </div>

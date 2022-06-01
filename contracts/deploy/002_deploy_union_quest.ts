@@ -93,6 +93,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true
   }) : (await get("UserManager"));
 
+  if (hre.network.name === "hardhat") {
+    await execute("MarketRegistry", { from: deployer, log: true }, "addUserManager", DAI.address, userManager.address);
+  }
+
   const unionQuest = await deploy('UnionQuest', {
     from: deployer,
     args: [marketRegistry.address, unionToken.address, DAI.address],
@@ -102,8 +106,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   });
 
   if (hre.network.name === "hardhat") {
-    await execute("MarketRegistry", { from: deployer, log: true }, "addUserManager", DAI.address, userManager.address);
-    await execute("UnionToken", { from: deployer, log: true }, "approve", userManager.address, "1000000000000000000");
     await execute("UserManager", { from: deployer, log: true }, "addMember", unionQuest.address);
   }
 
@@ -118,6 +120,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ["Golden Axe", "The greatest axe in the land.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="50" height="50" fill="gold"/>', 0, [], []],
     ["Golden Pickaxe", "The greatest pickaxe in the land.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="gold"/>', 0, [], []]
   ]);
+
   await execute("UnionQuest", { from: deployer, log: true }, "addRecipes", [[[1, 2], [100, 50], 7], [[1, 2], [100, 50], 8]]);
 };
 export default func;

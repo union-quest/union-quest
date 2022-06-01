@@ -318,6 +318,14 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
 
     function unstake(uint256 amount) external onlyOwner {
         _unstake(amount);
+
+        underlyingToken.transfer(owner(), amount);
+    }
+
+    function withdrawRewards() external onlyOwner {
+        _withdrawRewards();
+
+        unionToken.transfer(owner(), unionToken.balanceOf(address(this)));
     }
 
     function updateTrust(address borrower_) external {
@@ -334,15 +342,6 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
 
     function move(int256 x, int256 y) external {
         _move(_msgSender(), x, y);
-    }
-
-    function miningBonus(address account, uint256 id) private view returns (uint256 bonus) {
-        ItemType storage item = itemTypes[id];
-        for (uint256 i; i < item.toolIds.length; i++) {
-            if (item.toolBonuses[i] > bonus && balanceOf(account, item.toolIds[i]) > 0) {
-                bonus = item.toolBonuses[i];
-            }
-        }
     }
 
     function _move(
@@ -421,6 +420,15 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         }
 
         _mint(_msgSender(), recipe.output, 1, "");
+    }
+
+    function miningBonus(address account, uint256 id) private view returns (uint256 bonus) {
+        ItemType storage item = itemTypes[id];
+        for (uint256 i; i < item.toolIds.length; i++) {
+            if (item.toolBonuses[i] > bonus && balanceOf(account, item.toolIds[i]) > 0) {
+                bonus = item.toolBonuses[i];
+            }
+        }
     }
 
     function sqrt(int256 x) private pure returns (int256 y) {
