@@ -87,9 +87,9 @@
         <a
           rel="noopener"
           target="_blank"
-          href={`https://${chainId === '42161' ? 'arbitrum' : 'kovan'}.union.finance/profile/${
-            chain.contracts.UnionQuest.address
-          }`}
+          href={`https://${
+            chainId === '42161' ? 'arbitrum' : chainId === '42' ? 'kovan' : 'app'
+          }.union.finance/profile/${chain.contracts.UnionQuest.address}`}
         >
           View the Bank on
           {#if chainId === '42161'}
@@ -97,7 +97,7 @@
           {:else if chainId === '42'}
             kovan.union.finance
           {:else}
-            arbitrum.union.finance
+            app.union.finance
           {/if}
         </a>
       </div>

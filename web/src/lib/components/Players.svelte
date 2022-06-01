@@ -49,10 +49,3 @@
     {/each}
   </div>
 </div>
-
-<!-- <a rel="noopener" target="_blank" href={`https://kovan.union.finance/profile/${player.id}`}>
-  <div class="flex">
-    <Blockie address={player.id} class="h-6 w-6" />
-    {player.id.slice(0, 4)}...{player.id.slice(-4)}
-  </div>
-</a> -->
