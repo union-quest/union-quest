@@ -3,7 +3,6 @@
   import {distance, getBalanceStreamed, getItem, getPosition, getSkill, Player} from '$lib/player/player';
   import {onMount} from 'svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
-  import DaiSymbol from './DaiSymbol.svelte';
   import Modal from './styled/Modal.svelte';
   import Shop from './Shop.svelte';
   import Crafting from './Crafting.svelte';
@@ -12,6 +11,7 @@
   import Inventory from './Inventory.svelte';
   import Players from './Players.svelte';
   import DaiValue from './DaiValue.svelte';
+  import DarkSwitch from './styled/DarkSwitch.svelte';
 
   export let players: Player[];
   export let currentPlayer: Player | null;
@@ -263,6 +263,7 @@
           {/if}
           <div on:click={approve} class="border-2">Allow DAI transfers for The Shop</div>
           <div on:click={approveNFT} class="border-2">Allow NFT transfers for The Shop</div>
+          <DarkSwitch />
         </div>
       </div>
     {/if}
