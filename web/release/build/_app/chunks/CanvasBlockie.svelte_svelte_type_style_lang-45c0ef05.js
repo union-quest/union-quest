@@ -1,0 +1,2 @@
+import{C as t}from"./vendor-ec6c92af.js";const o=typeof document!="undefined"&&document.documentElement.classList.contains("dark"),d=t(o);typeof localStorage!="undefined"&&d.subscribe(e=>{localStorage.setItem("theme",e?"dark":"light"),e?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")});export{d};
+//# sourceMappingURL=CanvasBlockie.svelte_svelte_type_style_lang-45c0ef05.js.map

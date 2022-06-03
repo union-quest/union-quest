@@ -2,6 +2,9 @@
   import {chainId} from '$lib/config';
 
   import {getPlayer} from '$lib/player/player';
+  import {BigNumber} from '@ethersproject/bignumber';
+  import {fromArray} from 'wonka';
+  import DaiValue from './DaiValue.svelte';
   import ItemButton from './ItemButton.svelte';
 
   export let id: string;
@@ -20,7 +23,7 @@
     <div>Player failed to load!</div>
   {:else}
     <div class="text-2xl">Player {$player.data.id}</div>
-    <div>Vouch: {$player.data.vouch}</div>
+    <div>Vouch: <DaiValue value={BigNumber.from($player.data.vouch)} /></div>
     <div class="border-2 bg-gray-200 border-gray-500 m-1 p-2">
       <a
         rel="noopener"

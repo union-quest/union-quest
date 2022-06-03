@@ -1,6 +1,6 @@
 {
   ".svelte-kit/build/runtime/internal/start.js": {
-    "file": "start-922e74ac.js",
+    "file": "start-3c078775.js",
     "src": ".svelte-kit/build/runtime/internal/start.js",
     "isEntry": true,
     "imports": [
@@ -18,18 +18,18 @@
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-9b31233a.js",
+    "file": "pages/__layout.svelte-215e67ce.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js",
-      "_wallet-81752772.js"
+      "_wallet-9a25ca5e.js",
+      "_CanvasBlockie.svelte_svelte_type_style_lang-45c0ef05.js"
     ],
     "css": [
-      "assets/pages/__layout.svelte-03f40976.css",
-      "assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css"
+      "assets/pages/__layout.svelte-03f40976.css"
     ]
   },
   ".svelte-kit/build/components/error.svelte": {
@@ -42,31 +42,31 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-2f52ae6e.js",
+    "file": "pages/index.svelte-e3a8a61f.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
-      "_wallet-81752772.js",
-      "_url-d2045865.js",
+      "_wallet-9a25ca5e.js",
+      "_url-e44ef79e.js",
       "_paths-28a87002.js"
     ]
   },
   "src/routes/map.svelte": {
-    "file": "pages/map.svelte-aa3bdda0.js",
+    "file": "pages/map.svelte-6aa35081.js",
     "src": "src/routes/map.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_vendor-ec6c92af.js",
-      "_wallet-81752772.js",
-      "_url-d2045865.js",
-      "_paths-28a87002.js"
+      "_wallet-9a25ca5e.js",
+      "_url-e44ef79e.js",
+      "_paths-28a87002.js",
+      "_CanvasBlockie.svelte_svelte_type_style_lang-45c0ef05.js"
     ],
     "css": [
-      "assets/pages/map.svelte-1e7ae53b.css",
-      "assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css"
+      "assets/pages/map.svelte-1e7ae53b.css"
     ]
   },
   "_vendor-ec6c92af.js": {
@@ -75,19 +75,28 @@
   "_paths-28a87002.js": {
     "file": "chunks/paths-28a87002.js"
   },
-  "_wallet-81752772.js": {
-    "file": "chunks/wallet-81752772.js",
+  "_CanvasBlockie.svelte_svelte_type_style_lang-45c0ef05.js": {
+    "file": "chunks/CanvasBlockie.svelte_svelte_type_style_lang-45c0ef05.js",
+    "imports": [
+      "_vendor-ec6c92af.js"
+    ],
+    "css": [
+      "assets/CanvasBlockie.svelte_svelte_type_style_lang-10790f56.css"
+    ]
+  },
+  "_wallet-9a25ca5e.js": {
+    "file": "chunks/wallet-9a25ca5e.js",
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js"
     ]
   },
-  "_url-d2045865.js": {
-    "file": "chunks/url-d2045865.js",
+  "_url-e44ef79e.js": {
+    "file": "chunks/url-e44ef79e.js",
     "imports": [
       "_vendor-ec6c92af.js",
       "_paths-28a87002.js",
-      "_wallet-81752772.js"
+      "_wallet-9a25ca5e.js"
     ]
   }
 }
