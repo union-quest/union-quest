@@ -11,6 +11,7 @@
   import {chainId} from '$lib/config';
   import Inventory from './Inventory.svelte';
   import Players from './Players.svelte';
+  import DaiValue from './DaiValue.svelte';
 
   export let players: Player[];
   export let currentPlayer: Player | null;
@@ -235,21 +236,18 @@
         <div class="p-1">
           <div class="text-left flex">
             <div class="font-bold">Actual Vouch:</div>
-            <div class="flex">
-              {roundGood(parseInt(currentPlayer.vouch) / 10 ** 18)}
-              <DaiSymbol />
-            </div>
+            <DaiValue value={BigNumber.from(currentPlayer.vouch)} />
           </div>
           <div class="text-left flex">
             <div class="font-bold">Potential Vouch:</div>
-            <div class="flex">
-              {roundGood(
-                (getSkill(currentPlayer, currentTimestamp / 1000, 1) +
-                  getSkill(currentPlayer, currentTimestamp / 1000, 2)) /
-                  10 ** 2
-              )}
-              <DaiSymbol />
-            </div>
+            <DaiValue
+              value={BigNumber.from(
+                Math.round(
+                  getSkill(currentPlayer, currentTimestamp / 1000, 1) +
+                    getSkill(currentPlayer, currentTimestamp / 1000, 2)
+                )
+              ).mul('10000000000000000')}
+            />
           </div>
           <button class="border-2 bg-yellow-400 border-gray-500 p-1" on:click={updateTrust}>Update</button>
         </div>
