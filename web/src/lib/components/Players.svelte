@@ -22,30 +22,27 @@
   });
 </script>
 
-<div>
+<div class="flex flex-col">
   {#if showModal}
     <Modal on:close={() => (showModal = false)} closeButton={true}><Player id={selectedPlayer} /></Modal>
   {/if}
-  <div class="text-xl">Players</div>
-  <div class="flex flex-col">
-    {#each players as player}
-      <div class="flex justify-between p-1">
-        <div
-          class="flex"
-          on:click={() => {
-            showModal = true;
-            selectedPlayer = player.id;
-          }}
-        >
-          <Blockie address={player.id} class="h-6 w-6" />
-          {player.id.slice(0, 4)}...{player.id.slice(-4)}
-        </div>
-        <div>
-          <div class="inline font-medium">Total level:</div>
-          {Math.round(getSkill(player, currentTimestamp / 1000, 1) + getSkill(player, currentTimestamp / 1000, 2))}
-        </div>
+  {#each players as player}
+    <div class="flex justify-between p-1">
+      <div
+        class="flex"
+        on:click={() => {
+          showModal = true;
+          selectedPlayer = player.id;
+        }}
+      >
+        <Blockie address={player.id} class="h-6 w-6" />
+        {player.id.slice(0, 4)}...{player.id.slice(-4)}
       </div>
-      <div />
-    {/each}
-  </div>
+      <div>
+        <div class="inline font-medium">Total level:</div>
+        {Math.round(getSkill(player, currentTimestamp / 1000, 1) + getSkill(player, currentTimestamp / 1000, 2))}
+      </div>
+    </div>
+    <div />
+  {/each}
 </div>

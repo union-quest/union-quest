@@ -6,10 +6,14 @@
   import MapCanvas from '$lib/components/MapCanvas.svelte';
   import NavButton from '$lib/components/styled/navigation/NavButton.svelte';
   import {url} from '$lib/utils/url';
+  import Players from '../lib/components/Players.svelte';
+  import Modal from '$lib/components/styled/Modal.svelte';
 
   async function join() {
     await flow.execute((contracts) => contracts.UnionQuest.move(0, 0));
   }
+
+  let showModal = false;
 </script>
 
 <symbol id="icon-spinner6" viewBox="0 0 32 32">
@@ -18,6 +22,11 @@
   />
 </symbol>
 <WalletAccess>
+  {#if showModal}
+    <Modal title="Players" on:close={() => (showModal = false)} closeButton={true}>
+      <Players players={$players.data} />
+    </Modal>
+  {/if}
   {#if !$players.step}
     <div>Messages not loaded</div>
   {:else if $players.error}
@@ -41,19 +50,18 @@
           </svg>
         </NavButton>
       </div>
-
-      <div class="fixed bottom-0 right-0 border-8 border-double border-gray-700 bg-gray-300 p-1">
+      <div class="fixed bottom-0 right-0">
+        <button class="border-2 border-gray-700 bg-red-500 h-min" on:click={() => (showModal = true)}>🏆</button>
         {#if $wallet.address && $players.data.find((p) => p.id === $wallet.address.toLowerCase())}
           <PlayerInfo
-            players={$players.data}
             currentPlayer={$players.data.find((p) =>
               $wallet.address ? p.id === $wallet.address.toLowerCase() : false
             )}
           />
         {:else}
           <button
-            class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600 text-xl border-4
-        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
+            class="flex-shrink-0 bg-yellow-500 hover:bg-yellow-600  text-xl
+        text-white py-1 px-2 rounded disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed border-8 border-double border-gray-700 p-1"
             type="button"
             on:click={() => join()}>Click here to join the game!</button
           >

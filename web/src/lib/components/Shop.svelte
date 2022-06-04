@@ -1,14 +1,15 @@
 <script lang="ts">
-  import {flow} from '$lib/blockchain/wallet';
+  import {chain, flow, wallet} from '$lib/blockchain/wallet';
   import type {Player} from '$lib/player/player';
   import {shopItems} from '$lib/item/items';
   import Modal from './styled/Modal.svelte';
   import {BigNumber} from '@ethersproject/bignumber';
   import ItemButton from './ItemButton.svelte';
   import DaiValue from './DaiValue.svelte';
+  import {chainId} from '$lib/config';
+  import {onMount} from 'svelte';
 
   export let currentPlayer: Player | null;
-  export let balance: BigNumber;
 
   async function buy(id: string, amount: string) {
     await flow.execute((contracts) => contracts.UnionQuest.buy(id, amount));
@@ -19,11 +20,18 @@
   }
 
   let showModal = false;
+  let balance = BigNumber.from('0');
+
+  onMount(() => {
+    chainId === '1337'
+      ? chain.contracts.FaucetERC20.balanceOf($wallet.address).then((x) => (balance = x))
+      : chain.contracts.DAI.balanceOf($wallet.address).then((x) => (balance = x));
+  });
 </script>
 
 <div class="h-full">
   {#if showModal}
-    <Modal title={`Shop`} on:close={() => (showModal = false)} closeButton={true}>
+    <Modal title="Shop" on:close={() => (showModal = false)} closeButton={true}>
       <div class="flex flex-col">
         <DaiValue value={balance} />
         <div class="border-2 p-2">

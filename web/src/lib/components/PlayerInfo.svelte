@@ -9,11 +9,9 @@
   import {BigNumber} from '@ethersproject/bignumber/src.ts';
   import {chainId} from '$lib/config';
   import Inventory from './Inventory.svelte';
-  import Players from './Players.svelte';
   import DaiValue from './DaiValue.svelte';
   import DarkSwitch from './styled/DarkSwitch.svelte';
 
-  export let players: Player[];
   export let currentPlayer: Player | null;
 
   async function mint() {
@@ -46,18 +44,10 @@
   let currentTimestamp = Date.now();
   let currentX = 0;
   let currentY = 0;
-  let balance = BigNumber.from('0');
 
   const roundBest = (n: number) => Math.round(n * 10) / 10;
-  const roundGood = (n: number) => Math.round(n * 100) / 100;
 
   onMount(() => {
-    flow.execute((contracts) =>
-      chainId === '1337'
-        ? contracts.FaucetERC20.balanceOf($wallet.address).then((x) => (balance = x))
-        : contracts.DAI.balanceOf($wallet.address).then((x) => (balance = x))
-    );
-
     const interval = setInterval(() => {
       currentTimestamp = Date.now();
 
@@ -72,9 +62,9 @@
   });
 </script>
 
-<div class="flex flex-col text-center bg-neutral-300 w-64 h-72">
+<div class="flex flex-col text-center bg-neutral-300 w-64 h-72 border-8 border-double border-gray-700 p-1">
   {#if showModal}
-    <Modal title={`Info`} on:close={() => (showModal = false)} closeButton={true}>
+    <Modal title="Info" on:close={() => (showModal = false)} closeButton={true}>
       <div class="p-1">
         As a reward for improving your skills, you are entitled to a credit line from the Bank of UnionQuest.
       </div>
@@ -109,7 +99,7 @@
     <Blockie address={$wallet.address} class="m-1 h-6 w-6" />
   </div>
   <div class="flex text-2xl justify-start">
-    {#each ['🎮', '📊', '🎒', '🏪', '🛠️', '🏦', '🏅', '⚙️'] as icon, i}
+    {#each ['🎮', '📊', '🎒', '🏪', '🛠️', '🏦', '⚙️'] as icon, i}
       <button
         class="w-12 border-2 border-gray-700 {tab === i ? 'bg-red-700' : 'bg-neutral-400'}"
         on:click={() => (tab = i)}
@@ -224,7 +214,7 @@
     {:else if tab === 2}
       <Inventory player={currentPlayer} />
     {:else if tab === 3}
-      <Shop {currentPlayer} {balance} />
+      <Shop {currentPlayer} />
     {:else if tab === 4}
       <Crafting {currentPlayer} />
     {:else if tab === 5}
@@ -252,8 +242,6 @@
           <button class="border-2 bg-yellow-400 border-gray-500 p-1" on:click={updateTrust}>Update</button>
         </div>
       </div>
-    {:else if tab === 6}
-      <Players {players} />
     {:else}
       <div>
         <div class="text-xl">Settings</div>
