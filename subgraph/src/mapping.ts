@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle } from '../generated/UnionQuest/UnionQuest';
+import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle, Deposit, Withdraw } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
 import { Balance, Player, Item, Recipe, Input, Tool, Tile } from '../generated/schema';
 import { BigInt, Bytes, crypto, ethereum } from '@graphprotocol/graph-ts';
@@ -248,4 +248,16 @@ export function handleUpdateTrust(event: LogUpdateTrust): void {
 
     borrower.save();
   }
+}
+
+export function handleDeposit(event: Deposit): void {
+  let player = getOrCreatePlayer(event.params.owner.toHexString());
+
+  player.shares = player.shares.plus(event.params.shares);
+}
+
+export function handleWithdraw(event: Withdraw): void {
+  let player = getOrCreatePlayer(event.params.owner.toHexString());
+
+  player.shares = player.shares.minus(event.params.shares);
 }

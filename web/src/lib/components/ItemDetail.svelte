@@ -2,7 +2,9 @@
   import {flow, wallet} from '$lib/blockchain/wallet';
 
   import {getItem} from '$lib/item/item';
+  import DaiValue from './DaiValue.svelte';
   import ItemButton from './ItemButton.svelte';
+  import {BigNumber} from '@ethersproject/bignumber/src.ts';
 
   export let id: string;
 
@@ -28,7 +30,7 @@
     <div class="text-2xl">Item #{$item.data.id}</div>
     <ItemButton item={$item.data} />
     <div>Description: {$item.data.description}</div>
-    <div>Stake: {$item.data.stake}</div>
+    <div>Stake: <DaiValue value={BigNumber.from($item.data.stake)} /></div>
     <button class="border-2" on:click={() => transfer(id)}>Transfer 1</button>
     <div class="flex flex-col">
       <div class="text-xl">Can be mined with:</div>

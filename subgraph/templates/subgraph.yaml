@@ -30,6 +30,10 @@ dataSources:
           handler: handleTransferSingle
         - event: IncreaseSkill(indexed address,uint256,uint256)
           handler: handleIncreaseSkill
+        - event: Deposit(indexed address,indexed address,uint256,uint256)
+          handler: handleDeposit
+        - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleWithdraw
       file: ./src/mapping.ts
   - kind: ethereum/contract
     name: UserManager

@@ -5,7 +5,7 @@
   export let value: BigNumber;
 </script>
 
-<div class="flex justify-center">
+<div class="flex ">
   {value.div('1000000000000000000')}
   <DaiSymbol />
 </div>

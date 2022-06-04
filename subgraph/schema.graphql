@@ -46,6 +46,7 @@ type Player @entity {
   endTile: Tile!
   startTimestamp: BigInt!
   vouch: BigInt!
+  shares: BigInt!
   balances: [Balance!]! @derivedFrom(field: "player")
 }
 
