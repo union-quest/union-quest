@@ -15,6 +15,7 @@
   let currentTimestamp = Date.now();
 
   let canvas: HTMLCanvasElement;
+  let ctx;
   let cameraZoom = 50;
   let cameraOffset;
   let isDragging = false;
@@ -31,8 +32,6 @@
   const draw = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    let ctx = canvas.getContext('2d');
 
     ctx.translate(window.innerWidth / 2, window.innerHeight / 2);
     ctx.scale(cameraZoom, cameraZoom);
@@ -209,8 +208,10 @@
   }
 
   onMount(() => {
+    // FIXME this is sort of fixed
     cameraOffset = {x: window.innerWidth / 2, y: window.innerHeight / 2};
 
+    ctx = canvas.getContext('2d');
     canvas.addEventListener('mousedown', onPointerDown);
     canvas.addEventListener('touchstart', (e) => handleTouch(e, onPointerDown));
     canvas.addEventListener('mouseup', onPointerUp);
