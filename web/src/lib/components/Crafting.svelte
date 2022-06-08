@@ -40,21 +40,16 @@
         <div>Recipes failed to load!</div>
       {:else}
         <div class="flex flex-col">
-          <div class="flex justify-between text-center">
-            <div class="border-2 w-full border-gray-500">
-              {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '1'))} 🪵
-            </div>
-            <div class="border-2 w-full border-gray-500">
-              {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, '2'))} 🪨
-            </div>
-          </div>
           {#each $recipes.data as recipe}
             <div class="text-xl ">Recipe {recipe.id}</div>
             <div class="flex flex-row justify-between m-2 border-2">
               <div>
                 {#each recipe.inputs as input, i}
                   <div class="border-2">
-                    <div class="border-2 bg-gray-300">{input.quantity}</div>
+                    <div>
+                      {Math.round(getBalanceStreamed(currentPlayer, currentTimestamp / 1000, input.item.id))} /
+                      <div class="font-bold inline">{input.quantity}</div>
+                    </div>
                     <ItemButton item={input.item} />
                   </div>
                 {/each}

@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
-import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle, Deposit, Withdraw } from '../generated/UnionQuest/UnionQuest';
+import { AddItemType, AddRecipe, Move, IncreaseSkill, TransferSingle, Deposit, Withdraw, SetConstants } from '../generated/UnionQuest/UnionQuest';
 import { LogUpdateTrust } from '../generated/UserManager/UserManagerContract';
-import { Balance, Player, Item, Recipe, Input, Tool, Tile } from '../generated/schema';
+import { Balance, Player, Item, Recipe, Input, Tool, Tile, World } from '../generated/schema';
 import { BigInt, Bytes, crypto, ethereum } from '@graphprotocol/graph-ts';
 
 let ZERO_ADDRESS_STRING = '0x0000000000000000000000000000000000000000';
@@ -260,4 +260,14 @@ export function handleWithdraw(event: Withdraw): void {
   let player = getOrCreatePlayer(event.params.owner.toHexString());
 
   player.shares = player.shares.minus(event.params.shares);
+}
+
+export function handleSetConstants(event: SetConstants): void {
+  let entity = new World("0");
+
+  entity.speedDivisor = event.params.speedDivisor;
+  entity.skillDivisor = event.params.skillDivisor;
+  entity.trustFactor = event.params.trustFactor;
+
+  entity.save();
 }

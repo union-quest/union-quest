@@ -11,6 +11,7 @@
   import Inventory from './Inventory.svelte';
   import DaiValue from './DaiValue.svelte';
   import DarkSwitch from './styled/DarkSwitch.svelte';
+  import ItemButton from './ItemButton.svelte';
 
   export let currentPlayer: Player | null;
 
@@ -126,7 +127,7 @@
                   Mining
                 {/if}
               </div>
-              <div class="text-left">
+              <div class="flex">
                 <div>
                   {getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 1 ? '🪓' : '⛏️'}
                   {Math.round(
@@ -137,41 +138,39 @@
                     )
                   )}
                 </div>
-                <div>
-                  {getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)) === 1 ? '🪵' : '🪨'}
-                  {Math.round(
-                    getBalanceStreamed(
-                      currentPlayer,
-                      currentTimestamp / 1000,
-                      getItem(parseInt(currentPlayer.endTile.x), parseInt(currentPlayer.endTile.y)).toString()
-                    )
-                  )}
+                <div class="border-2">
+                  <ItemButton item={currentPlayer.endTile.item} />
+                  <div>
+                    {Math.round(
+                      getBalanceStreamed(currentPlayer, currentTimestamp / 1000, currentPlayer.endTile.item.id)
+                    )}
+                  </div>
                 </div>
-              </div>
-              {#if !currentPlayer.balances.some((b) => currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0)}
-                {#if currentPlayer.endTile.item.id === '1'}
-                  <div class="text-red-500">You do not have an axe.</div>
-                {:else if currentPlayer.endTile.item.id === '2'}
-                  <div class="text-red-500">You do not have a pickaxe.</div>
-                {/if}
-              {:else}
-                <div class="text-green-800">
-                  Equipment boost: {currentPlayer.balances
-                    .find((b) => b.item.id === currentPlayer.endTile.item.id)
-                    .item.tools.filter((t) =>
-                      currentPlayer.balances.some((b) => t.tool.id === b.item.id && parseInt(b.value) > 0)
-                    )
-                    ? Math.max(
-                        ...currentPlayer.balances
-                          .find((b) => b.item.id === currentPlayer.endTile.item.id)
-                          .item.tools.filter((t) =>
-                            currentPlayer.balances.some((b) => t.tool.id === b.item.id && parseInt(b.value) > 0)
-                          )
-                          .map((t) => parseInt(t.bonus))
+                {#if !currentPlayer.balances.some((b) => currentPlayer.endTile.item.tools.some((t) => t.tool.id === b.item.id) && parseInt(b.value) > 0)}
+                  {#if currentPlayer.endTile.item.id === '1'}
+                    <div class="text-red-500">You do not have an axe.</div>
+                  {:else if currentPlayer.endTile.item.id === '2'}
+                    <div class="text-red-500">You do not have a pickaxe.</div>
+                  {/if}
+                {:else}
+                  <div class="text-green-800">
+                    Equipment boost: {currentPlayer.balances
+                      .find((b) => b.item.id === currentPlayer.endTile.item.id)
+                      .item.tools.filter((t) =>
+                        currentPlayer.balances.some((b) => t.tool.id === b.item.id && parseInt(b.value) > 0)
                       )
-                    : 0}
-                </div>
-              {/if}
+                      ? Math.max(
+                          ...currentPlayer.balances
+                            .find((b) => b.item.id === currentPlayer.endTile.item.id)
+                            .item.tools.filter((t) =>
+                              currentPlayer.balances.some((b) => t.tool.id === b.item.id && parseInt(b.value) > 0)
+                            )
+                            .map((t) => parseInt(t.bonus))
+                        )
+                      : 0}
+                  </div>
+                {/if}
+              </div>
             </div>
           {/if}
         {:else}

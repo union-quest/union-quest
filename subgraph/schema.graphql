@@ -1,3 +1,10 @@
+type World @entity {
+  id: ID!
+  speedDivisor: BigInt!
+  skillDivisor: BigInt!
+  trustFactor: BigInt!
+}
+
 type Tool @entity {
   id: ID!
   item: Item!

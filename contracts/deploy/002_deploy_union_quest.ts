@@ -99,7 +99,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const unionQuest = await deploy('UnionQuest', {
     from: deployer,
-    args: [marketRegistry.address, unionToken.address, DAI.address],
+    args: [marketRegistry.address, unionToken.address, DAI.address, 300, 60, "10000000000000000"],
     log: true,
     autoMine: true,
     skipIfAlreadyDeployed: false
@@ -111,12 +111,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await execute("UnionQuest", { from: deployer, log: true }, "addItemTypes", [
     ["", "", "", 0, [], []],
-    ["Wood", "A piece of wood.", '<rect x="25" y="25" width="50" height="50" fill="brown"/>', 0, [3, 5, 7], [1, 2, 5]],
-    ["Stone", "A piece of stone.", '<rect x="25" y="25" width="50" height="50" fill="gray"/>', 0, [4, 6, 8], [1, 2, 5]],
-    ["Basic Axe", "Just an axe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="50" height="50" fill="silver"/>', "100", [], []],
-    ["Basic Pickaxe", "Just a pickaxe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="silver"/>', "100", [], []],
-    ["Superior Axe", "A decent axe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="50" height="50" fill="red"/>', "500", [], []],
-    ["Superior Pickaxe", "A decent pickaxe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="red"/>', "500", [], []],
+    ["Wood", "A piece of wood.", "<rect x='25' y='25' width='50' height='50' fill='brown'/>", 0, [3, 5, 7], [1, 2, 5]],
+    ["Stone", "A piece of stone.", "<rect x='25' y='25' width='50' height='50' fill='gray'/>", 0, [4, 6, 8], [1, 2, 5]],
+    ["Basic Axe", "Just an axe.", "<rect x='50' y='0' width='20' height='100' fill='gray'/><rect x='20' y='0' width='50' height='50' fill='silver'/>", "1000000000000000000", [], []],
+    ["Basic Pickaxe", "Just a pickaxe.", "<rect x='50' y='0' width='20' height='100' fill='gray'/><rect x='20' y='0' width='80' height='40' fill='silver'/>", "1000000000000000000", [], []],
+    ["Superior Axe", "A decent axe.", "<rect x='50' y='0' width='20' height='100' fill='gray'/><rect x='20' y='0' width='50' height='50' fill='red'/>", "5000000000000000000", [], []],
+    ["Superior Pickaxe", "A decent pickaxe.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="red"/>', "5000000000000000000", [], []],
     ["Golden Axe", "The greatest axe in the land.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="50" height="50" fill="gold"/>', 0, [], []],
     ["Golden Pickaxe", "The greatest pickaxe in the land.", '<rect x="50" y="0" width="20" height="100" fill="gray"/><rect x="20" y="0" width="80" height="40" fill="gold"/>', 0, [], []]
   ]);
@@ -124,4 +124,3 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await execute("UnionQuest", { from: deployer, log: true }, "addRecipes", [[[1, 2], [100, 50], 7], [[1, 2], [100, 50], 8]]);
 };
 export default func;
-

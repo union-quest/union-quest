@@ -20,6 +20,8 @@ dataSources:
         - name: UnionQuest
           file: ./abis/UnionQuest.json
       eventHandlers:
+        - event: SetConstants(uint256,uint256,uint256)
+          handler: handleSetConstants
         - event: AddItemType(uint256,(string,string,string,uint256,uint256[],uint256[]))
           handler: handleAddItemType
         - event: AddRecipe(uint256,(uint256[],uint256[],uint256))

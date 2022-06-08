@@ -8,9 +8,13 @@ import type { QueryState, QueryStore } from '$lib/utils/stores/graphql';
 import { HookedQueryStore } from '$lib/utils/stores/graphql';
 import type { EndPoint } from '$lib/utils/graphql/endpoint';
 import { chainTempo } from '$lib/blockchain/chainTempo';
-import type { Player } from './player';
 
-export type Players = Player[];
+export type World = {
+  id: string;
+  speedDivisor: string;
+  skillDivisor: string;
+  trustFactor: string;
+}
 
 // TODO web3w needs to export the type
 type TransactionStatus = 'pending' | 'cancelled' | 'success' | 'failure' | 'mined';
@@ -40,61 +44,27 @@ type TransactionRecord = {
   events?: unknown[]; // TODO
 };
 
-class UserStore implements QueryStore<Players> {
-  private queryStore: QueryStore<Players>;
-  private store: Readable<QueryState<Players>>;
+class UserStore implements QueryStore<World> {
+  private queryStore: QueryStore<World>;
+  private store: Readable<QueryState<World>>;
   constructor(endpoint: EndPoint, private transactions: TransactionStore) {
     this.queryStore = new HookedQueryStore(
       endpoint,
       `
     query {
-      players {
+      world(id: 0) {
         id
-        startTimestamp
-        vouch
-        startTile {
-          x
-          y
-        }
-        endTile {
-          x
-          y
-          item {
-            id
-            name
-            image
-            tools {
-              bonus
-              tool {
-                id
-              }
-            }
-          }
-        }
-        balances {
-          id
-          value
-          skill
-          item {
-            id
-            name
-            image
-            tools {
-              bonus
-              tool {
-                id
-              }
-            }
-          }
-        }
+        speedDivisor
+        skillDivisor
+        trustModifier
       }
     }`,
       chainTempo,
-      { path: 'players' }
+      { path: 'world' }
     );
     this.store = derived([this.queryStore, this.transactions], (values) => this.update(values));
   }
-  private update([$query]: [QueryState<Players>, TransactionRecord[]]): QueryState<Players> {
+  private update([$query]: [QueryState<World>, TransactionRecord[]]): QueryState<World> {
     if (!$query.data) {
       return $query;
     } else {
@@ -112,11 +82,11 @@ class UserStore implements QueryStore<Players> {
   }
 
   subscribe(
-    run: Subscriber<QueryState<Players>>,
-    invalidate?: Invalidator<QueryState<Players>> | undefined
+    run: Subscriber<QueryState<World>>,
+    invalidate?: Invalidator<QueryState<World>> | undefined
   ): Unsubscriber {
     return this.store.subscribe(run, invalidate);
   }
 }
 
-export const players = new UserStore(SUBGRAPH_ENDPOINT, transactions);
+export const world = new UserStore(SUBGRAPH_ENDPOINT, transactions);

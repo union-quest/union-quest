@@ -13,11 +13,9 @@ import "@unioncredit/v1-sdk/contracts/UnionVoucher.sol";
 contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVoucher {
     using Address for address;
 
-    uint256 private constant SPEED_DIVISOR = 10;
-    uint256 private constant SKILL_INCREASE_DIVISOR = 10;
-    uint256 private constant TRUST_MODIFIER = 0.01 ether;
-    uint256 private constant MIN_SKILL = 1;
-    uint256 private constant MAX_SKILL = 3;
+    /*//////////////////////////////////////////////////////////////
+                                 STRUCTS
+    //////////////////////////////////////////////////////////////*/
 
     struct ItemType {
         string name;
@@ -40,7 +38,19 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         int256 endX;
         int256 endY;
         uint256 startTimestamp;
+        uint256 share;
     }
+
+    /*//////////////////////////////////////////////////////////////
+                                 STORAGE
+    //////////////////////////////////////////////////////////////*/
+
+    uint256 private constant MIN_SKILL = 1;
+    uint256 private constant MAX_SKILL = 3;
+
+    uint256 private speedDivisor;
+    uint256 private skillDivisor;
+    uint256 private trustFactor;
 
     ItemType[] private itemTypes;
     Recipe[] private recipes;
@@ -50,16 +60,42 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
     mapping(uint256 => mapping(address => uint256)) private _balances;
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
+    /*//////////////////////////////////////////////////////////////
+                                 EVENTS
+    //////////////////////////////////////////////////////////////*/
+
+    event SetConstants(uint256 speedDivisor, uint256 skillDivisor, uint256 trustFactor);
     event AddItemType(uint256 _index, ItemType _itemType);
     event AddRecipe(uint256 _index, Recipe _recipe);
     event Move(address account, int256 x, int256 y);
     event IncreaseSkill(address indexed account, uint256 id, uint256 value);
+    event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares);
+    event Withdraw(
+        address indexed caller,
+        address indexed receiver,
+        address indexed owner,
+        uint256 assets,
+        uint256 shares
+    );
+
+    /*//////////////////////////////////////////////////////////////
+                                 CONSTRUCTOR
+    //////////////////////////////////////////////////////////////*/
 
     constructor(
         address _marketRegistry,
         address _unionToken,
-        address _underlyingToken
-    ) BaseUnionMember(_marketRegistry, _unionToken, _underlyingToken) {}
+        address _underlyingToken,
+        uint256 _speedDivisor,
+        uint256 _skillDivisor,
+        uint256 _trustFactor
+    ) BaseUnionMember(_marketRegistry, _unionToken, _underlyingToken) {
+        speedDivisor = _speedDivisor;
+        skillDivisor = _skillDivisor;
+        trustFactor = _trustFactor;
+
+        emit SetConstants(speedDivisor, skillDivisor, trustFactor);
+    }
 
     function uri(uint256 id) external view virtual override returns (string memory) {
         ItemType storage item = itemTypes[id];
@@ -71,7 +107,7 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
                     item.name,
                     '","description":"',
                     item.description,
-                    '","image":"data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">',
+                    "\",\"image\":\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'>",
                     item.image,
                     '</svg>"}'
                 )
@@ -90,12 +126,11 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
             int256 vY = player.endY - player.startY;
 
             uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
-            uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
+            uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / speedDivisor;
 
             if (distanceTravelled >= distanceNeeded) {
                 uint256 skillIncrease = (miningBonus(account, id) *
-                    (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR))) /
-                    SKILL_INCREASE_DIVISOR;
+                    (block.timestamp - (player.startTimestamp + distanceNeeded * speedDivisor))) / skillDivisor;
 
                 balance += skillIncrease * skills[_msgSender()][id] + (skillIncrease * skillIncrease) / 2;
             }
@@ -312,20 +347,32 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         }
     }
 
-    function stake(uint256 amount) external onlyOwner {
-        _stake(amount);
-    }
-
-    function unstake(uint256 amount) external onlyOwner {
-        _unstake(amount);
-
-        underlyingToken.transfer(owner(), amount);
-    }
-
     function withdrawRewards() external onlyOwner {
         _withdrawRewards();
 
         unionToken.transfer(owner(), unionToken.balanceOf(address(this)));
+    }
+
+    function deposit(uint256 assets, address receiver) external {
+        underlyingToken.transferFrom(msg.sender, address(this), assets);
+        _stake(assets);
+
+        players[receiver].share += assets;
+
+        emit Deposit(msg.sender, receiver, assets, assets);
+    }
+
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner
+    ) external {
+        players[owner].share -= assets;
+
+        emit Withdraw(msg.sender, receiver, owner, assets, assets);
+
+        _unstake(assets);
+        underlyingToken.transfer(receiver, assets);
     }
 
     function updateTrust(address borrower_) external {
@@ -337,53 +384,11 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
             totalSkill += skills[borrower_][i];
         }
 
-        _updateTrust(borrower_, totalSkill * TRUST_MODIFIER);
+        _updateTrust(borrower_, totalSkill * trustFactor);
     }
 
     function move(int256 x, int256 y) external {
         _move(_msgSender(), x, y);
-    }
-
-    function _move(
-        address account,
-        int256 x,
-        int256 y
-    ) internal {
-        Player storage player = players[account];
-
-        int256 vX = player.endX - player.startX;
-        int256 vY = player.endY - player.startY;
-
-        uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
-        uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / SPEED_DIVISOR;
-        if (distanceTravelled < distanceNeeded) {
-            player.startX += (vX * int256(distanceTravelled)) / int256(distanceNeeded);
-            player.startY += (vY * int256(distanceTravelled)) / int256(distanceNeeded);
-        } else {
-            player.startX = player.endX;
-            player.startY = player.endY;
-
-            uint256 tileItem = getItem(player.endX, player.endY);
-            uint256 skillIncrease = (miningBonus(account, tileItem) *
-                (block.timestamp - (player.startTimestamp + distanceNeeded * SPEED_DIVISOR))) / SKILL_INCREASE_DIVISOR;
-
-            _mint(
-                account,
-                tileItem,
-                (skillIncrease * skills[account][tileItem] + (skillIncrease * skillIncrease) / 2),
-                ""
-            );
-
-            skills[account][tileItem] += skillIncrease;
-
-            emit IncreaseSkill(account, tileItem, skillIncrease);
-        }
-
-        player.endX = x;
-        player.endY = y;
-        player.startTimestamp = block.timestamp;
-
-        emit Move(_msgSender(), x, y);
     }
 
     function buy(uint256 id, uint256 amount) external {
@@ -422,21 +427,54 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         _mint(_msgSender(), recipe.output, 1, "");
     }
 
+    function _move(
+        address account,
+        int256 x,
+        int256 y
+    ) internal {
+        Player storage player = players[account];
+
+        int256 vX = player.endX - player.startX;
+        int256 vY = player.endY - player.startY;
+
+        uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
+        uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / speedDivisor;
+        if (distanceTravelled < distanceNeeded) {
+            player.startX += (vX * int256(distanceTravelled)) / int256(distanceNeeded);
+            player.startY += (vY * int256(distanceTravelled)) / int256(distanceNeeded);
+        } else {
+            player.startX = player.endX;
+            player.startY = player.endY;
+
+            uint256 tileItem = getItem(player.endX, player.endY);
+            uint256 skillIncrease = (miningBonus(account, tileItem) *
+                (block.timestamp - (player.startTimestamp + distanceNeeded * speedDivisor))) / skillDivisor;
+
+            _mint(
+                account,
+                tileItem,
+                (skillIncrease * skills[account][tileItem] + (skillIncrease * skillIncrease) / 2),
+                ""
+            );
+
+            skills[account][tileItem] += skillIncrease;
+
+            emit IncreaseSkill(account, tileItem, skillIncrease);
+        }
+
+        player.endX = x;
+        player.endY = y;
+        player.startTimestamp = block.timestamp;
+
+        emit Move(_msgSender(), x, y);
+    }
+
     function miningBonus(address account, uint256 id) private view returns (uint256 bonus) {
         ItemType storage item = itemTypes[id];
         for (uint256 i; i < item.toolIds.length; i++) {
             if (item.toolBonuses[i] > bonus && balanceOf(account, item.toolIds[i]) > 0) {
                 bonus = item.toolBonuses[i];
             }
-        }
-    }
-
-    function sqrt(int256 x) private pure returns (int256 y) {
-        int256 z = (x + 1) / 2;
-        y = x;
-        while (z < y) {
-            y = z;
-            z = (x / z + z) / 2;
         }
     }
 
@@ -453,5 +491,14 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         }
 
         return 2;
+    }
+
+    function sqrt(int256 x) private pure returns (int256 y) {
+        int256 z = (x + 1) / 2;
+        y = x;
+        while (z < y) {
+            y = z;
+            z = (x / z + z) / 2;
+        }
     }
 }
