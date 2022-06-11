@@ -56,7 +56,7 @@ class UserStore implements QueryStore<World> {
         id
         speedDivisor
         skillDivisor
-        trustModifier
+        trustFactor
       }
     }`,
       chainTempo,

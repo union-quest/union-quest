@@ -1,6 +1,6 @@
 <script lang="ts">
   import {chain, flow, wallet} from '$lib/blockchain/wallet';
-  import {distance, getBalanceStreamed, getItem, getPosition, getSkill, Player} from '$lib/player/player';
+  import {distance, getBalanceStreamed, getItem, getPosition, getSkill, Player, TRUST_FACTOR} from '$lib/player/player';
   import {onMount} from 'svelte';
   import Blockie from '$lib/components/generic/CanvasBlockie.svelte';
   import Modal from './styled/Modal.svelte';
@@ -12,6 +12,7 @@
   import DaiValue from './DaiValue.svelte';
   import DarkSwitch from './styled/DarkSwitch.svelte';
   import ItemButton from './ItemButton.svelte';
+  import DaiSymbol from './DaiSymbol.svelte';
 
   export let currentPlayer: Player | null;
 
@@ -229,14 +230,14 @@
           </div>
           <div class="text-left flex">
             <div class="font-bold">Potential Vouch:</div>
-            <DaiValue
-              value={BigNumber.from(
-                Math.round(
-                  getSkill(currentPlayer, currentTimestamp / 1000, 1) +
-                    getSkill(currentPlayer, currentTimestamp / 1000, 2)
-                )
-              ).mul('10000000000000000')}
-            />
+
+            <div class="flex">
+              {Math.round(
+                getSkill(currentPlayer, currentTimestamp / 1000, 1) +
+                  getSkill(currentPlayer, currentTimestamp / 1000, 2)
+              ) / 100}
+              <DaiSymbol />
+            </div>
           </div>
           <button class="border-2 bg-yellow-400 border-gray-500 p-1" on:click={updateTrust}>Update</button>
         </div>

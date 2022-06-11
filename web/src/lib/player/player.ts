@@ -135,8 +135,9 @@ export const getPlayer = (id: string) => new UserStore(SUBGRAPH_ENDPOINT, transa
 
 /* Helpers */
 
-const SPEED_DIVISOR = 10;
-const SKILL_DIVISOR = 10;
+export const SPEED_DIVISOR = 300;
+export const SKILL_DIVISOR = 60;
+export const TRUST_FACTOR = "10000000000000000";
 
 export const distance = (x0: number, y0: number, x1: number, y1: number) => {
   const xDiff = x1 - x0;

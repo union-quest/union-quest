@@ -1,6 +1,7 @@
 <script lang="ts">
   import {flow} from '$lib/blockchain/wallet';
-  import {distance, getItem, getPosition, getSkill, Player} from '$lib/player/player';
+  import {distance, getItem, getPosition, Player, SPEED_DIVISOR} from '$lib/player/player';
+  import {world} from '$lib/world/world';
   import Modal from '$lib/components/styled/Modal.svelte';
   import {onMount} from 'svelte';
 
@@ -8,8 +9,6 @@
   export let y: number;
   export let currentPlayer: Player | null;
   export let showModal: boolean;
-
-  const SPEED_DIVISOR = 10;
 
   const roundGood = (n: number) => Math.round(n * 10) / 10;
 
@@ -50,15 +49,26 @@
               <div>
                 It will take
                 <span class="font-bold">
-                  {roundGood(
-                    SPEED_DIVISOR *
-                      distance(
-                        x,
-                        y,
-                        getPosition(currentPlayer, currentTimestamp / 1000)[0],
-                        getPosition(currentPlayer, currentTimestamp / 1000)[1]
-                      )
-                  )} seconds</span
+                  {#if !$world.step}
+                    <div>Messages not loaded</div>
+                  {:else if $world.error}
+                    <div>Error: {$world.error}</div>
+                  {:else if $world.step === 'LOADING'}
+                    <div>Loading Map...</div>
+                  {:else if !$world.data}
+                    <div>Players failed to load!</div>
+                  {:else}
+                    {roundGood(
+                      (parseInt($world.data.speedDivisor) *
+                        distance(
+                          x,
+                          y,
+                          getPosition(currentPlayer, currentTimestamp / 1000)[0],
+                          getPosition(currentPlayer, currentTimestamp / 1000)[1]
+                        )) /
+                        60
+                    )}
+                  {/if} minutes</span
                 >
                 to walk here.
               </div>

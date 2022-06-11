@@ -3,7 +3,6 @@
 
   import {getPlayer} from '$lib/player/player';
   import {BigNumber} from '@ethersproject/bignumber';
-  import {fromArray} from 'wonka';
   import DaiValue from './DaiValue.svelte';
   import ItemButton from './ItemButton.svelte';
 
