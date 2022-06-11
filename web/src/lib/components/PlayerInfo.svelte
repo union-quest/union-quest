@@ -230,7 +230,6 @@
           </div>
           <div class="text-left flex">
             <div class="font-bold">Potential Vouch:</div>
-
             <div class="flex">
               {Math.round(
                 getSkill(currentPlayer, currentTimestamp / 1000, 1) +

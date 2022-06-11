@@ -97,6 +97,100 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         emit SetConstants(speedDivisor, skillDivisor, trustFactor);
     }
 
+    function addItemTypes(ItemType[] memory _itemTypes) external onlyOwner {
+        for (uint256 i; i < _itemTypes.length; i++) {
+            itemTypes.push(_itemTypes[i]);
+            emit AddItemType(itemTypes.length - 1, _itemTypes[i]);
+        }
+    }
+
+    function addRecipes(Recipe[] memory _recipes) external onlyOwner {
+        for (uint256 i; i < _recipes.length; i++) {
+            recipes.push(_recipes[i]);
+            emit AddRecipe(recipes.length - 1, _recipes[i]);
+        }
+    }
+
+    function withdrawRewards() external onlyOwner {
+        _withdrawRewards();
+
+        unionToken.transfer(owner(), unionToken.balanceOf(address(this)));
+    }
+
+    function deposit(uint256 assets, address receiver) external {
+        underlyingToken.transferFrom(msg.sender, address(this), assets);
+        _stake(assets);
+
+        players[receiver].share += assets;
+
+        emit Deposit(msg.sender, receiver, assets, assets);
+    }
+
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner
+    ) external {
+        players[owner].share -= assets;
+
+        emit Withdraw(msg.sender, receiver, owner, assets, assets);
+
+        _unstake(assets);
+        underlyingToken.transfer(receiver, assets);
+    }
+
+    function updateTrust(address borrower_) external {
+        Player storage player = players[borrower_];
+        _move(_msgSender(), player.endX, player.endY);
+
+        uint256 totalSkill;
+        for (uint256 i = MIN_SKILL; i < MAX_SKILL; i++) {
+            totalSkill += skills[borrower_][i];
+        }
+
+        _updateTrust(borrower_, totalSkill * trustFactor);
+    }
+
+    function move(int256 x, int256 y) external {
+        _move(_msgSender(), x, y);
+    }
+
+    function buy(uint256 id, uint256 amount) external {
+        ItemType storage item = itemTypes[id];
+
+        require(item.stake > 0, "Item stake not set");
+
+        Player storage player = players[_msgSender()];
+        _move(_msgSender(), player.endX, player.endY);
+
+        IERC20(underlyingToken).transferFrom(_msgSender(), address(this), item.stake * amount);
+        _mint(_msgSender(), id, amount, "");
+    }
+
+    function sell(uint256 id, uint256 amount) external {
+        ItemType storage item = itemTypes[id];
+
+        require(item.stake > 0, "Item stake not set");
+
+        Player storage player = players[_msgSender()];
+        _move(_msgSender(), player.endX, player.endY);
+
+        _burn(_msgSender(), id, amount);
+        IERC20(underlyingToken).transfer(_msgSender(), item.stake * amount);
+    }
+
+    function craft(uint256 recipeId) external {
+        Recipe storage recipe = recipes[recipeId];
+        Player storage player = players[_msgSender()];
+
+        _move(_msgSender(), player.endX, player.endY);
+        for (uint256 i; i < recipe.inputIds.length; i++) {
+            _burn(_msgSender(), recipe.inputIds[i], recipe.inputQuantities[i]);
+        }
+
+        _mint(_msgSender(), recipe.output, 1, "");
+    }
+
     function uri(uint256 id) external view virtual override returns (string memory) {
         ItemType storage item = itemTypes[id];
 
@@ -289,6 +383,48 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
         emit ApprovalForAll(owner, operator, approved);
     }
 
+    function _move(
+        address account,
+        int256 x,
+        int256 y
+    ) internal {
+        Player storage player = players[account];
+
+        int256 vX = player.endX - player.startX;
+        int256 vY = player.endY - player.startY;
+
+        uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
+        uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / speedDivisor;
+        if (distanceTravelled < distanceNeeded) {
+            player.startX += (vX * int256(distanceTravelled)) / int256(distanceNeeded);
+            player.startY += (vY * int256(distanceTravelled)) / int256(distanceNeeded);
+        } else {
+            player.startX = player.endX;
+            player.startY = player.endY;
+
+            uint256 tileItem = getItem(player.endX, player.endY);
+            uint256 skillIncrease = (miningBonus(account, tileItem) *
+                (block.timestamp - (player.startTimestamp + distanceNeeded * speedDivisor))) / skillDivisor;
+
+            _mint(
+                account,
+                tileItem,
+                (skillIncrease * skills[account][tileItem] + (skillIncrease * skillIncrease) / 2),
+                ""
+            );
+
+            skills[account][tileItem] += skillIncrease;
+
+            emit IncreaseSkill(account, tileItem, skillIncrease);
+        }
+
+        player.endX = x;
+        player.endY = y;
+        player.startTimestamp = block.timestamp;
+
+        emit Move(_msgSender(), x, y);
+    }
+
     function _doSafeTransferAcceptanceCheck(
         address operator,
         address from,
@@ -331,142 +467,6 @@ contract UnionQuest is Context, ERC165, IERC1155MetadataURI, Ownable, UnionVouch
                 revert("ERC1155: transfer to non ERC1155Receiver implementer");
             }
         }
-    }
-
-    function addItemTypes(ItemType[] memory _itemTypes) external onlyOwner {
-        for (uint256 i; i < _itemTypes.length; i++) {
-            itemTypes.push(_itemTypes[i]);
-            emit AddItemType(itemTypes.length - 1, _itemTypes[i]);
-        }
-    }
-
-    function addRecipes(Recipe[] memory _recipes) external onlyOwner {
-        for (uint256 i; i < _recipes.length; i++) {
-            recipes.push(_recipes[i]);
-            emit AddRecipe(recipes.length - 1, _recipes[i]);
-        }
-    }
-
-    function withdrawRewards() external onlyOwner {
-        _withdrawRewards();
-
-        unionToken.transfer(owner(), unionToken.balanceOf(address(this)));
-    }
-
-    function deposit(uint256 assets, address receiver) external {
-        underlyingToken.transferFrom(msg.sender, address(this), assets);
-        _stake(assets);
-
-        players[receiver].share += assets;
-
-        emit Deposit(msg.sender, receiver, assets, assets);
-    }
-
-    function withdraw(
-        uint256 assets,
-        address receiver,
-        address owner
-    ) external {
-        players[owner].share -= assets;
-
-        emit Withdraw(msg.sender, receiver, owner, assets, assets);
-
-        _unstake(assets);
-        underlyingToken.transfer(receiver, assets);
-    }
-
-    function updateTrust(address borrower_) external {
-        Player storage player = players[borrower_];
-        _move(_msgSender(), player.endX, player.endY);
-
-        uint256 totalSkill;
-        for (uint256 i = MIN_SKILL; i < MAX_SKILL; i++) {
-            totalSkill += skills[borrower_][i];
-        }
-
-        _updateTrust(borrower_, totalSkill * trustFactor);
-    }
-
-    function move(int256 x, int256 y) external {
-        _move(_msgSender(), x, y);
-    }
-
-    function buy(uint256 id, uint256 amount) external {
-        ItemType storage item = itemTypes[id];
-
-        require(item.stake > 0, "Item stake not set");
-
-        Player storage player = players[_msgSender()];
-        _move(_msgSender(), player.endX, player.endY);
-
-        IERC20(underlyingToken).transferFrom(_msgSender(), address(this), item.stake * amount);
-        _mint(_msgSender(), id, amount, "");
-    }
-
-    function sell(uint256 id, uint256 amount) external {
-        ItemType storage item = itemTypes[id];
-
-        require(item.stake > 0, "Item stake not set");
-
-        Player storage player = players[_msgSender()];
-        _move(_msgSender(), player.endX, player.endY);
-
-        _burn(_msgSender(), id, amount);
-        IERC20(underlyingToken).transfer(_msgSender(), item.stake * amount);
-    }
-
-    function craft(uint256 recipeId) external {
-        Recipe storage recipe = recipes[recipeId];
-        Player storage player = players[_msgSender()];
-
-        _move(_msgSender(), player.endX, player.endY);
-        for (uint256 i; i < recipe.inputIds.length; i++) {
-            _burn(_msgSender(), recipe.inputIds[i], recipe.inputQuantities[i]);
-        }
-
-        _mint(_msgSender(), recipe.output, 1, "");
-    }
-
-    function _move(
-        address account,
-        int256 x,
-        int256 y
-    ) internal {
-        Player storage player = players[account];
-
-        int256 vX = player.endX - player.startX;
-        int256 vY = player.endY - player.startY;
-
-        uint256 distanceNeeded = uint256(sqrt(vX * vX + vY * vY));
-        uint256 distanceTravelled = (block.timestamp - player.startTimestamp) / speedDivisor;
-        if (distanceTravelled < distanceNeeded) {
-            player.startX += (vX * int256(distanceTravelled)) / int256(distanceNeeded);
-            player.startY += (vY * int256(distanceTravelled)) / int256(distanceNeeded);
-        } else {
-            player.startX = player.endX;
-            player.startY = player.endY;
-
-            uint256 tileItem = getItem(player.endX, player.endY);
-            uint256 skillIncrease = (miningBonus(account, tileItem) *
-                (block.timestamp - (player.startTimestamp + distanceNeeded * speedDivisor))) / skillDivisor;
-
-            _mint(
-                account,
-                tileItem,
-                (skillIncrease * skills[account][tileItem] + (skillIncrease * skillIncrease) / 2),
-                ""
-            );
-
-            skills[account][tileItem] += skillIncrease;
-
-            emit IncreaseSkill(account, tileItem, skillIncrease);
-        }
-
-        player.endX = x;
-        player.endY = y;
-        player.startTimestamp = block.timestamp;
-
-        emit Move(_msgSender(), x, y);
     }
 
     function miningBonus(address account, uint256 id) private view returns (uint256 bonus) {
